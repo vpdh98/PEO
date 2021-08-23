@@ -185,6 +185,11 @@ using System.Linq;
 //2021.8.23
 //몬스터가 죽고 배틀 페이즈를 끝내고 나서 KeyNotFoundException 발생. 원인은 배틀페이즈를 들어갈때 currentChoice에 초이스 이름이 아닌 몬스터 이름을 넣어놓아서
 //CC에서 몬스터 이름을 Dictionary의 key값으로 넣어서 발생한 예외. currentChoice를 다시 초기화해 줌으로써 해결 완료
+//죽인 몬스터를 선택지에서 없에는 기능 필요. 몬스터가 죽었는지 확인하는 bool 변수를 추가해서 죽었으면 selectList에서 해당 이름의 몬스터가 포함된 선택지를 없에려 했으나.. 
+//그냥 선택하는 순간 선택지를 없에는 것이 좋을듯
+//여기서 총체적인 문제 발생. 선택지를 없에려면 ChoiceText,selectList,IndicateChoice를 모두 없에고 IndicateChoice의 키값을 다시 설정해 줘야 되는 문제 발생
+//그냥 MonsterList에 몬스터를 없에고 선택지 객체를 새로 만들면 쉽게 해결되지만, 현재 deapcopy가 구현되어 있지 않고 데이터를 따로 다루고 있지 않으므로
+//새로운 객체를 다시 할당하려면 데이터를모두 일일이 넣어 새로 객체를 생성해야됨. 해결하려면 Clone함수를 구현하거나 데이터를 따로 관리 해야됨
 
 
 namespace Game
@@ -239,8 +244,17 @@ namespace Game
 						currentChoice = DTG.Cho.ChoiceNext(DTG.currentSelectNum);
 						
 						if(CList.GetMonster(currentChoice) != null){ //배틀페이즈
+							for(int i = 0;i<DTG.Cho.MonsterList.Count;i++){//몬스터 List에서 제거함으로써 spawn이 안되게 함으로 선택지에서 제거.. 하려는 의도였음 8.23
+								if(DTG.Cho.MonsterList[i].Name == currentChoice){
+									DTG.Cho.MonsterList.RemoveAt(i);
+									break;
+								}
+							}
+							DTG.Init();
 							Console.Clear();
 							currentChoice = BattlePhase(player,CList.GetMonster(currentChoice),DTG.Cho.Name); //currentChoice에 현제 선택된 몬스터 이름이 들어가 있음 //8.23
+							
+							DTG.Cho = CC.SetChoice(currentChoice);
 							
 							//Console.WriteLine(DTG.Cho.MonsterList[0].GetRandomSpawnMessage().text);
 						}
