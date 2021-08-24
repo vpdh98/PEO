@@ -7,6 +7,7 @@ using Game;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Linq;
+using System.IO;
 
 
 
@@ -190,6 +191,15 @@ using System.Linq;
 //여기서 총체적인 문제 발생. 선택지를 없에려면 ChoiceText,selectList,IndicateChoice를 모두 없에고 IndicateChoice의 키값을 다시 설정해 줘야 되는 문제 발생
 //그냥 MonsterList에 몬스터를 없에고 선택지 객체를 새로 만들면 쉽게 해결되지만, 현재 deapcopy가 구현되어 있지 않고 데이터를 따로 다루고 있지 않으므로
 //새로운 객체를 다시 할당하려면 데이터를모두 일일이 넣어 새로 객체를 생성해야됨. 해결하려면 Clone함수를 구현하거나 데이터를 따로 관리 해야됨
+//DB를 한번 공부해보자
+
+//2021.8.24
+//QuickNext타입의 초이스 실행구문에서 바로 다음 초이스로 넘어가지 않게 수정 함
+//QuickNext타입의 초이스를 실행했을때 배경이 뜨지 않는 버그 발생
+//QuickNext에만 Console.Write(TAndP.text)가 생략되 있어서 Stream에 해당하는 글자만 출력되고 배경은 출력이 안된거였음..
+//DB를 따로 쓰지말고 파일로 데이터를 저장해보자
+//방법 1. 프로토콜을 만들어 특정 규칙으로 텍스트 or 이진 파일로 저장
+//방법 2. C#의 Serialization을 이용하여 데이터를 담은 Dictionary,List등을 이진 파일로 저장
 
 
 namespace Game
@@ -220,6 +230,13 @@ namespace Game
 			DisplayTextGame DTG = new DisplayTextGame();
 			ChoiceControler CC = new ChoiceControler();
 			CharacterList CList = new CharacterList();
+			
+			/* //파일 생성하는 법
+			DirectoryInfo dr = new DirectoryInfo("Data");
+			dr.Create();
+			FileStream fsa = File.Create("Data/a.txt");
+			fsa.Close();
+			*/
 			
 			Player player = CList.GetPlayer("용사");
 			
@@ -265,6 +282,7 @@ namespace Game
 							DTG.Cho = CC.SetChoice(currentChoice);
 							DTG.Show();
 							currentChoice = CC.SetChoice(currentChoice).QuickNext();
+							c = Console.ReadKey();
 						}
 						
 						DTG.Init();
@@ -320,7 +338,7 @@ namespace Game
 				Name = "attackPhase",
 				ChoiceType = ChoiceType.QUICKNEXT,
 				OnlyShowText = new List<TextAndPosition>()
-							{new TextAndPosition(monster.Name+"베기!",5,9,10,ConsoleColor.Red){AlignH = true}},
+							{new TextAndPosition(monster.Name+"베기!",5,9,10,ConsoleColor.Red){AlignH = true,PriorityLayer=1}},
 				IndicateChoice = new Dictionary<int,String>(){{0,"reactionPhase"}},
 				BackgroundText = backgrounds.GetBackground(1)
 			};
@@ -329,7 +347,7 @@ namespace Game
 				Name = "reactionPhase",
 				ChoiceType = ChoiceType.QUICKNEXT,
 				OnlyShowText = new List<TextAndPosition>()
-							{new TextAndPosition("(몬스터 피해 메세지)",5,9,10){AlignH = true}},
+							{new TextAndPosition("(몬스터 피해 메세지)",5,9,10){AlignH = true,PriorityLayer=1}},
 				IndicateChoice = new Dictionary<int,String>(){{0,"movePhase"}},
 				BackgroundText = backgrounds.GetBackground(1)
 			};
@@ -371,34 +389,39 @@ namespace Game
 							
 							if(monster.HpState() == 3){ //8.22 몬스터의 HP상태가 빈사 상태일때 배틀 페이즈 종료 const int Died = 3
 								BDTG.Init();
-								BDTG.Cho = BCC.SetChoice("andPhase");
-								BDTG.Cho.OnlyShowText = new List<TextAndPosition>() //몬스터 상태메세지 초기화
+								Choice cho = BCC.SetChoice("andPhase"); //BDTG의 Cho를 초기화 하면서 OnlyShowText에 있던 텍스트는 integratedList에 들어감으로 choice에 넣기전에 수정해 줘야함
+								cho.OnlyShowText = new List<TextAndPosition>() //몬스터 상태메세지 초기화
 										{new TextAndPosition(monster.CurrentState(),15,3+5,1){AlignH = true}};
+								BDTG.Cho = cho;
+								
 								BDTG.Show();
 								c = Console.ReadKey();
 								return backField;
 							}
 							
-							if(currentChoice == "attackPhase"){
+							if(currentChoice == "attackPhase"){ //Attacker,Defender에 값을 넣으면 서로 데미지 계산 1회 실행
 								Attacker = player;
 								Defender = monster;
 							}
 							
 							if(BCC.SetChoice(currentChoice).ChoiceType == ChoiceType.QUICKNEXT){//QUICKNEXT구현을 위해 추가된 if문
-							BDTG.Init();
-							BDTG.Cho = BCC.SetChoice(currentChoice);
-							BDTG.Show();
-							currentChoice = BCC.SetChoice(currentChoice).QuickNext();
-								if(currentChoice == "reactionPhase"){ //8.22
-									Choice cho = BCC.SetChoice("movePhase");
-									cho.OnlyShowText = new List<TextAndPosition>() //몬스터가 데미지 입을때마다 몬스터 상태메세지 초기화
-										{new TextAndPosition(monster.CurrentState(),15,3+5,1){AlignH = true}};
-								}
+								BDTG.Init();
+								BDTG.Cho = BCC.SetChoice(currentChoice);
+								BDTG.Show();
+								
+								currentChoice = BCC.SetChoice(currentChoice).QuickNext();
+									if(currentChoice == "reactionPhase"){ //8.22
+										Choice cho = BCC.SetChoice("movePhase");
+										cho.OnlyShowText = new List<TextAndPosition>() //몬스터가 데미지 입을때마다 몬스터 상태메세지 초기화
+											{new TextAndPosition(monster.CurrentState(),15,3+5,1){AlignH = true}};
+									}
+								c = Console.ReadKey(); //8.24
 							};
 							
 							BDTG.Init();
 							break;
 						}
+						//방향키나 숫자를 누르면 여기로 넘어옴
 						BDTG.Show();	
 						Console.WriteLine("@@@@@@@@@@@@"+monster.HpState()+";;;;;;;;;;;;;;");
 						c = Console.ReadKey();
@@ -570,29 +593,30 @@ namespace Game
 	}
 	
 	public class DisplayTextGame{
-		public List<TextAndPosition> selectList;
-		public List<TextAndPosition> onlyShowList;
-		public List<TextAndPosition> integratedList;
-		public List<TextAndPosition> streamList;
-		public List<TextAndPosition> backgroundList;
-		public ChoiceType choiceType;
+		public List<TextAndPosition> selectList;       	//한 Choice의 선택지 리스트
+		public List<TextAndPosition> onlyShowList;		//    "      읽기전용 리스트
+		public List<TextAndPosition> integratedList;	//    "      선택지 선택 값 리스트(다음 choice)
+		public List<TextAndPosition> streamList;		//    "      같은줄에 순차적으로 출력하는 텍스트 리스트
+		public List<TextAndPosition> backgroundList;	//	  " 	 뒷배경 리스트
+		public ChoiceType choiceType;					//선택지 타입
 		
-		String currentArrowingText;
+		String currentArrowingText;						//현재 선택된 선택지
 		
-		public int currentSelectNum;
-		public int delay = 0;
-		public int delayBackup = 0;
-		const String ARROW ="=>";
-		String voidARROW="  ";
+		public int currentSelectNum;					//현재 선택된 선택지 번호
+		public int delay = 0;							//문자출력딜레이
+		public int delayBackup = 0;						//딜레이 변경후 이전 딜레이로 다시 돌아오기 위해 선언한 변수
+		const String ARROW ="=>";						//선택 문자열 앞에 생성할 문자
+		String voidARROW="  ";							//Arrow크기만큼 앞을 비운다
 		
-		public int globalPositionX = 20;
-		public int globalPositionY = 3;
+		public int globalPositionX = 20;				//화면 전체의 위치 x값
+		public int globalPositionY = 3;					//y값
 		
-		TextAndPosition previousStream; 
-		int streamCount= 0;
-		int countPoint = 0;
-		bool stopStart = false;
-		TextAndPosition stopText = new TextAndPosition();
+		TextAndPosition previousStream; 				//이전 스트림 텍스트
+		int streamCount= 0;								//이전 문자를 지우기 위한 이전 문자열의 길이 값
+		
+		int countPoint = 0;								//한글자씩 출력하는 기능을 위한 count
+		bool stopStart = false;							//   		"			변수
+		TextAndPosition stopText = new TextAndPosition();//			"			변수
 		
 		public void Init(){
 			selectList = new List<TextAndPosition>();
@@ -728,6 +752,7 @@ namespace Game
 			if(integratedList != null){
 					for(int i = 0;i<integratedList.Count;i++){
 						TextAndPosition TAndP = integratedList[i];
+						
 						if(TAndP.color!=null){
 							tempC = Console.ForegroundColor;
 							Console.ForegroundColor = TAndP.color;
@@ -745,7 +770,7 @@ namespace Game
 							FrontDelay(TAndP);
 							//Console.WriteLine(integratedList[i][0]+globalPositionX+":"+(integratedList[i][1]+globalPositionY));
 							Console.SetCursorPosition(TAndP[0]+globalPositionX,TAndP[1]+globalPositionY);
-							
+							Console.Write(TAndP.text);//8.24 이게 생략되 있엇음.. 왜지..
 						}
 						Console.ForegroundColor = tempC;
 						Thread.Sleep(delay);
@@ -776,7 +801,7 @@ namespace Game
 							delay = 0;
 						}
 						else{ //stopPoint == 0조건 추가하면 순차적으로 출력된다음 다음 내용 출력. 없에면 한꺼번에 출력
-							FrontDelay(TAndP);
+							FrontDelay(TAndP);//해당 텍스트를 딜레이시키고 딜레이 0으로 만듦
 							//Console.WriteLine(integratedList[i][0]+globalPositionX+":"+(integratedList[i][1]+globalPositionY));
 							Console.SetCursorPosition(TAndP[0]+globalPositionX,TAndP[1]+globalPositionY);
 							if(TAndP.isSelect){
@@ -831,8 +856,8 @@ namespace Game
 		
 		public void PrintPieceOfText(TextAndPosition text){ //한글자씩 출력하게 하는 메소드
 			if(countPoint == 0){
-				stopText = text.Clone();
-				stopText.text ="";
+				stopText = text.Clone();  //출력할 텍스트의 위치등의 값 복사
+				stopText.text ="";			//텍스트만 비우기
 				delayBackup = delay;
 			}
 			
@@ -848,10 +873,10 @@ namespace Game
 			delay = delayBackup;
 		}
 		
-		public void FrontDelay(TextAndPosition TAndP){
+		public void FrontDelay(TextAndPosition TAndP){ 
 			if(TAndP.textFrontDelay > 0){
 				Thread.Sleep(TAndP.textFrontDelay);
-				TAndP.textFrontDelay = 0;
+				TAndP.textFrontDelay = 0;//한번 출력한 문자는 딜레이를 없엔다
 			}
 		}
 		
@@ -1198,18 +1223,21 @@ namespace Game
 				BackgroundText = backgrounds.GetBackground(0)
 			});
 			
+			clikX = 20;
+			clikY = 7;
 			choices.Add(new Choice(){
 				Name = "testStream",
 				ChoiceText = new List<TextAndPosition>()         //프로퍼티를 통한 초기화 생성자가 먼저 호출된다, 이게되네
-							{new TextAndPosition(200,"Start",10,5,true),
-							  new TextAndPosition(200,"Exit",10,6,true),
-								new TextAndPosition(200,"옵션",10,7,true)},
+							{new TextAndPosition(200,"Start",10+clikX,5+clikY,true){PriorityLayer = 4},
+							  new TextAndPosition(200,"Exit",10+clikX,6+clikY,true){PriorityLayer = 5},
+								new TextAndPosition(200,"옵션",10+clikX,7+clikY,true){PriorityLayer = 6}},
 				OnlyShowText = new List<TextAndPosition>()
-							{new TextAndPosition("개발:Peo",0,1)},
+							{new TextAndPosition(1000,"개발:Peo",1,1){PriorityLayer = 3}},
 				StreamText = new List<TextAndPosition>()
-							{new TextAndPosition("한 용사가 있었다.",5,3,30),
-							new TextAndPosition(1000,"하지만 그는 죽었다.",5,3,30,ConsoleColor.Red)},
-				IndicateChoice = new Dictionary<int,String>(){{0,"c2"},{1,"test"},{2,"option"}}
+							{new TextAndPosition("한 용사가 있었다.",5+clikX,3+clikY,30){PriorityLayer = 1},
+							new TextAndPosition(1000,"하지만 그는 죽었다.",5+clikX,3+clikY,30,ConsoleColor.Red){PriorityLayer = 2}},
+				IndicateChoice = new Dictionary<int,String>(){{0,"c2"},{1,"test"},{2,"option"}},
+				BackgroundText = backgrounds.GetBackground(0)
 			});
 			
 			choices.Add(new Choice(){
@@ -1270,11 +1298,21 @@ namespace Game
 				StreamText = new List<TextAndPosition>()
 							{new TextAndPosition("함정이였다.",5+clikX,3+clikY,10){PriorityLayer = 1},
 							new TextAndPosition(1000,"You Died",5+clikX,3+clikY,10,ConsoleColor.Red){PriorityLayer = 1}},
-				IndicateChoice = new Dictionary<int,String>(){{0,"c2"}},
+				IndicateChoice = new Dictionary<int,String>(){{0,"QuickNext-test"}},
 				BackgroundText = backgrounds.GetBackground(0)
 			});
 			
-			
+			choices.Add(new Choice(){
+				Name = "QuickNext-test",
+				ChoiceType = ChoiceType.QUICKNEXT,
+				ChoiceText = new List<TextAndPosition>()
+							{new TextAndPosition("다시시작",12+clikX,7+clikY,true){PriorityLayer = 2}},
+				StreamText = new List<TextAndPosition>()
+							{new TextAndPosition("함정이였다.",5+clikX,3+clikY,10){PriorityLayer = 1},
+							new TextAndPosition(1000,"You Died",5+clikX,3+clikY,10,ConsoleColor.Red){PriorityLayer = 1}},
+				IndicateChoice = new Dictionary<int,String>(){{0,"c2"}},
+				BackgroundText = backgrounds.GetBackground(0)
+			});
 			
 			Count = choices.Count;
 		}
