@@ -1,0 +1,43 @@
+이 기능으로 상태이상이나 버프를 넣고 빼는 식으로 쓸 수 있을것 같다.
+
+using System;
+
+public class main{
+	
+	[Flags]
+	enum Flag{
+		NONE = 0,
+		FIRE = 1,
+		ICE = 2,
+		TREE = 4,
+		ROCK = 8,
+		ALL = int.MaxValue
+	};
+	
+	public static void Main(){
+		for(int i = 0;i<10;i++){
+			Console.WriteLine("{0,3} - {1:G}",i,(Flag)i);
+		}
+		
+		Flag f = Flag.FIRE | Flag.ICE | Flag.TREE; //값추가
+		f &= ~Flag.TREE; //해당값 빼기
+		f |= Flag.ROCK; //값추가
+		
+		Console.WriteLine(f);
+		Console.WriteLine((Flag.ROCK|Flag.FIRE|Flag.ICE) == f);
+	}
+}
+
+/////////
+0 - NONE
+  1 - FIRE
+  2 - ICE
+  3 - FIRE, ICE
+  4 - TREE
+  5 - FIRE, TREE
+  6 - ICE, TREE
+  7 - FIRE, ICE, TREE
+  8 - ROCK
+  9 - FIRE, ROCK
+FIRE, ICE, ROCK
+True
