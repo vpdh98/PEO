@@ -1,0 +1,114 @@
+Deep copy를 위한 ICloneable인터페이스의 Clone메소드를 구현 하면
+아래처럼 상속된 클래스의 필드는 복사되지 않는다.
+
+using System;
+
+namespace Example
+{
+    public class Base : ICloneable
+    {
+        public int baseState = 1;
+
+        public object Clone()
+        {
+            Base clone = new Base();
+            clone.baseState = this.baseState;
+            return clone;
+        }
+    }
+
+    public class Derived : Base
+    {
+        public float derivedState = 10;
+    }
+
+    public class ConsoleExample
+    {
+        static int Main()
+        {
+            Derived d1 = new Derived();
+            Derived d2 = d1.Clone() as Derived;
+
+            Console.WriteLine(d2.derivedState);
+
+            return 0;
+        }
+    }
+}
+
+그래서 복사생성자를 이용하는것이 좋다.
+
+using System;
+
+namespace Example
+{
+    class Base : ICloneable
+    {
+        private int baseState;
+
+        public Base()
+        {
+        }
+        protected Base(Base that)
+        {
+            this.baseState = that.baseState;
+        }
+
+        public virtual object Clone()
+        {
+            return new Base(this);
+        }
+    }
+
+    class Derived : Base, ICloneable
+    {
+        private float derivedState;
+
+        public Derived()
+        {
+        }
+
+        protected Derived(Derived that)
+            : base(that)
+        {
+            this.derivedState = that.derivedState;
+        }
+
+        public override object Clone()
+        {
+            return new Derived(this);
+        }
+
+        public void PrintInfo()
+        {
+            Console.WriteLine(derivedState);
+        }
+
+        public void SetState(float va)
+        {
+            derivedState = va;
+        }
+    }
+
+    public class ConsoleExample
+    {
+        static int Main()
+        {
+            // d1 setting
+            Derived d1 = new Derived();
+            d1.SetState(10.3f);
+
+            // copy
+            Derived d2 = d1.Clone() as Derived;
+
+            // d1 change
+            d1.SetState(20.3f);
+
+            // print info
+            d1.PrintInfo();
+            d2.PrintInfo();
+
+            return 0;
+        }
+    }
+}
