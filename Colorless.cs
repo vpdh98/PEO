@@ -201,6 +201,27 @@ using System.IO;
 //방법 1. 프로토콜을 만들어 특정 규칙으로 텍스트 or 이진 파일로 저장
 //방법 2. C#의 Serialization을 이용하여 데이터를 담은 Dictionary,List등을 이진 파일로 저장
 
+//2021.8.26
+//어젠 초번이라 못왔다.
+//오늘은 DeepCopy를 위한 Clone메소드를 구현해보자
+//찾아보니 그냥 Clone메소드를 구현하는것보단, 복사생성자를 활용하는것이 좋다고 나온다. 이유는 상속관계인 경우 자식클래스에서 복사를 하지 못할 수 있기 때문이다.
+//TextAndPosition,Choice,Characters,Monster,NPC,Player클래스에 복사생성자를 이용한 Clone메소드를 구현하였다.
+//그런데 List<TextAndPosition>같은 사용자 지정 제네릭을 가진 리스트를 복사하려면 따로 메소드를 만들어야 할것같다.
+//List.ConvertAll()메소드를 이용해보려 했는데 안되는듯. 좀더 시도해보고 안되면 메소드를 따로 만들자.
+
+//2021.8.27
+//this.MonsterList = that.MonsterList.ConvertAll(o=>o.Clone());에서
+//this.MonsterList = that.MonsterList.ConvertAll(new Converter<Monster, Monster>(o => (Monster)o.Clone())); 로 바꿧더니 됫다
+//앞에 null이 아닐때 실행시키는 if문 추가
+//근데 코드를 보니 그냥 List를 카피해서 반환하는 메소드를 만드는게 더 나을것 같기도..
+//Choice를 복사했을때 의도한 대로라면 초이스를 오갈때마다 처음처럼 작동해야하는데 한번갓던 초이스를 다시가면 작동한 후의 상태로 유지되있음. 뭐가 문제지
+//Choice를 복사했다면 textDelay값이 계속 동일해야 되는데 0으로 초기화됨, PrintPieceOfText에서 textDelay를 0으로 초기화시키는데 이게 만약 카피된 값이라면 원본값에 영향을 줘서는 안됨.
+//TextAndPosition이 제데로 딮카피가 되지 않은듯.
+//보니까 Choice클래스의 복사생성자의 TextAndPosition를 담은 List들은 복사를 안햇음.. 멍청.. ConvertAll을 사용해서 딮카피 하니 잘됨
+//근데 몬스터 스폰이 안됨..
+//원래 얕은 복사로 Choice를 카피하면 스폰 됫엇는데 그것도 안됨.. 몬스터 리스트가 제데로 값이 들어가있는지 비어있는지 확인해 봐야할듯.
+			
+
 
 namespace Game
 {
@@ -432,18 +453,18 @@ namespace Game
 		}
 	}	
 	
-	public class TextAndPosition{
-		public String text{set;get;}
-		public int x{set;get;}
-		public int y{set;get;}
-		public bool isSelect;
+	public class TextAndPosition : ICloneable{
+		public String text{set;get;}	//나타낼 텍스트
+		public int x{set;get;}			//위치 좌표
+		public int y{set;get;}			
+		public bool isSelect;			//이게 선택지인지
 		//public bool isBackground;
-		public int textDelay = 0;
-		public int textFrontDelay = 0;
-		public ConsoleColor color;
-		public int PriorityLayer{get;set;}
-		public bool isStream;
-		public bool AlignH = false;
+		public int textDelay = 0;		//각 글자 사이의 텀
+		public int textFrontDelay = 0;	//문장 앞에 텀
+		public ConsoleColor color;		//문장색
+		public int PriorityLayer{get;set;}//화면에 나타낼 우선순위, 낮을수록 더 높은 우선순위이다
+		public bool isStream;			//이 텍스트가 Stream인지 
+		public bool AlignH = false;		//텍스트 중앙 정렬 여부
 		public String Highlight{get;set;}
 		public ConsoleColor HighlightColor{get;set;}
 		
@@ -471,35 +492,33 @@ namespace Game
 		}
 		
 		public TextAndPosition(String text,int x,int y,bool isSelect):this(text,x,y){this.isSelect = isSelect;}
-		
 		public TextAndPosition(int textFrontDelay,String text,int x,int y):this(text,x,y){this.textFrontDelay = textFrontDelay;	}
-		
 		public TextAndPosition(String text,int x,int y,bool isSelect,ConsoleColor color):this(text,x,y,isSelect){this.color = color;}
-		
 		public TextAndPosition(String text,int x,int y,int textDelay):this(text,x,y){this.textDelay = textDelay;}
-		
 		public TextAndPosition(String text,int x,int y,int textDelay,ConsoleColor color):this(text,x,y,textDelay){this.color = color;}
-		
 		public TextAndPosition(int textFrontDelay,String text,int x,int y,int textDelay):this(text,x,y,textDelay){this.textFrontDelay = textFrontDelay;}
-		
 		public TextAndPosition(int textFrontDelay,String text,int x,int y,int textDelay,ConsoleColor color):this(text,x,y,textDelay,color){this.textFrontDelay = textFrontDelay;}
-		
 		public TextAndPosition(int textFrontDelay,String text,int x,int y,bool isSelect):this(textFrontDelay,text,x,y){this.isSelect = isSelect;}
 		public TextAndPosition(int textFrontDelay,String text,int x,int y,bool isSelect,ConsoleColor color):this(textFrontDelay,text,x,y,isSelect){this.color = color;}
-		
 		public TextAndPosition(String text,int x,int y,bool isSelect,ConsoleColor color,int textDelay):this(text,x,y,isSelect,color){this.textDelay = textDelay;}
 		
-		public TextAndPosition Clone(){//추가된게 많아서 쓰려면 업데이트 하고 쓰기
-			TextAndPosition clone = new TextAndPosition();
-			clone.text = this.text;
-			clone.x = this.x;
-			clone.y = this.y;
-			clone.isSelect = this.isSelect;
-			clone.textDelay = this.textDelay;
-			clone.color = this.color;
-			clone.textFrontDelay = this.textFrontDelay;
-			clone.PriorityLayer = this.PriorityLayer;
-			return clone;
+		protected TextAndPosition(TextAndPosition that){//추가된게 많아서 쓰려면 업데이트 하고 쓰기 //2021.8.26 업뎃 완료
+			this.text = that.text;
+			this.x = that.x;
+			this.y = that.y;
+			this.isSelect = that.isSelect;
+			this.textDelay = that.textDelay;
+			this.color = that.color;
+			this.textFrontDelay = that.textFrontDelay;
+			this.PriorityLayer = that.PriorityLayer;
+			this.isStream = that.isStream;
+			this.AlignH = that.AlignH;
+			this.Highlight = that.Highlight;
+			this.HighlightColor = that.HighlightColor;
+		}
+		
+		public Object Clone(){//추가된게 많아서 쓰려면 업데이트 하고 쓰기
+			return new TextAndPosition(this);
 		}
 		
 	
@@ -625,10 +644,17 @@ namespace Game
 			streamList = new List<TextAndPosition>();
 			backgroundList = new List<TextAndPosition>();
 			currentArrowingText = null;
-			countPoint = 0;
+			
 			currentSelectNum = 0;
-			stopText = new TextAndPosition();
+			delay = 0;							//문자출력딜레이
+			delayBackup = 0;
+			
+			previousStream = new TextAndPosition(); 				
 			streamCount = 0;
+			
+			countPoint = 0;
+			stopStart = false;	
+			stopText = new TextAndPosition();
 		}
 		
 		public DisplayTextGame(){
@@ -856,7 +882,7 @@ namespace Game
 		
 		public void PrintPieceOfText(TextAndPosition text){ //한글자씩 출력하게 하는 메소드
 			if(countPoint == 0){
-				stopText = text.Clone();  //출력할 텍스트의 위치등의 값 복사
+				stopText = (TextAndPosition)text.Clone();  //출력할 텍스트의 위치등의 값 복사
 				stopText.text ="";			//텍스트만 비우기
 				delayBackup = delay;
 			}
@@ -959,7 +985,7 @@ namespace Game
 		
 	}
 	
-	public class Choice //선택지 부여 하는 클래스
+	public class Choice : ICloneable //선택지 부여 하는 클래스
 	{
 		public int CTNum;      //ChoiceTextNumber
 		public int OSTNum;		//OnlyShowTextNumber
@@ -1117,7 +1143,7 @@ namespace Game
 		public List<TextAndPosition> CopyList(List<TextAndPosition> list){
 			List<TextAndPosition> copy = new List<TextAndPosition>();
 			for(int i = 0;i<list.Count;i++){
-				copy.Add(list[i].Clone());
+				copy.Add((TextAndPosition)list[i].Clone());
 			}
 			return copy;
 		}
@@ -1128,21 +1154,32 @@ namespace Game
 			}
 		}
 		
-		public Choice Clone(){
-			Choice clone = new Choice();
-			clone.QuickDelegate = this.QuickDelegate;
-			clone.ChoiceText = CopyList(ChoiceText);
-			clone.OnlyShowText = CopyList(OnlyShowText);
-			clone.StreamText = CopyList(StreamText);
-			clone.BackgroundText = CopyList(BackgroundText);
-			clone.IndicateChoice = this.IndicateChoice;
-			clone.CTNum = this.CTNum;
-			clone.OSTNum = this.OSTNum;
-			clone.STNum = this.STNum;
-			clone.BGTNum = this.BGTNum;
-			clone.Name = this.Name;
-			clone.ChoiceType = this.ChoiceType;
-			return clone;
+		protected Choice(Choice that){
+			this.QuickDelegate = that.QuickDelegate;
+			//if(ChoiceText != null)
+				this.ChoiceText = that.ChoiceText.ConvertAll(new Converter<TextAndPosition, TextAndPosition>(o => (TextAndPosition)o.Clone()));
+			//if(OnlyShowText != null)
+				this.OnlyShowText = that.OnlyShowText.ConvertAll(new Converter<TextAndPosition, TextAndPosition>(o => (TextAndPosition)o.Clone()));
+			//if(StreamText != null)
+				this.StreamText = that.StreamText.ConvertAll(new Converter<TextAndPosition, TextAndPosition>(o => (TextAndPosition)o.Clone()));
+			//if(BackgroundText != null)
+				this.BackgroundText = that.BackgroundText.ConvertAll(new Converter<TextAndPosition, TextAndPosition>(o => (TextAndPosition)o.Clone()));
+			this.IndicateChoice = that.IndicateChoice;
+			this.CTNum = that.CTNum;
+			this.OSTNum = that.OSTNum;
+			this.STNum = that.STNum;
+			this.BGTNum = that.BGTNum;
+			this.Name = that.Name;
+			this.ChoiceType = that.ChoiceType;
+			if(MonsterList != null)
+				this.MonsterList = that.MonsterList.ConvertAll(new Converter<Monster, Monster>(o => (Monster)o.Clone()));
+			if(NPCList != null)
+				this.NPCList = that.NPCList.ConvertAll(new Converter<NPC, NPC>(o => (NPC)o.Clone()));
+		}
+		
+		public Object Clone(){
+			
+			return new Choice(this);
 		}
 	}
 	
@@ -1178,7 +1215,7 @@ namespace Game
 		
 		public void AddScenario(Scenario scenario){ //선택지들의 뭉치인 시나리오를 통체로 추가할 메소드
 			for(int i = 0;i<scenario.Count;i++){
-				choiceDictionary.Add(scenario[i].Name,scenario[i]);
+				choiceDictionary.Add(scenario[i].Name,(Choice)scenario[i].Clone());
 			}
 		}
 		
@@ -1187,7 +1224,7 @@ namespace Game
 		}
 		
 		public Choice SetChoiceClone(String cName){
-			return choiceDictionary[cName].Clone();
+			return (Choice)choiceDictionary[cName].Clone();
 		}
 		
 	}
@@ -1311,6 +1348,48 @@ namespace Game
 							{new TextAndPosition("함정이였다.",5+clikX,3+clikY,10){PriorityLayer = 1},
 							new TextAndPosition(1000,"You Died",5+clikX,3+clikY,10,ConsoleColor.Red){PriorityLayer = 1}},
 				IndicateChoice = new Dictionary<int,String>(){{0,"c2"}},
+				BackgroundText = backgrounds.GetBackground(0)
+			});
+			
+			clikX = 15;
+			clikY = 5;
+			choices.Add(new Choice(){
+				Name = "t0827-1",
+				ChoiceText = new List<TextAndPosition>()         //프로퍼티를 통한 초기화 생성자가 먼저 호출된다, 이게되네
+							{new TextAndPosition("오른쪽",1,19,true),
+							new TextAndPosition("왼쪽",56,19,true)},
+				OnlyShowText = new List<TextAndPosition>()
+							{new TextAndPosition("Test 1",7+clikX,3+clikY,1),
+							 new TextAndPosition("이것은 테스트 화면입니다.",7+clikX,4+clikY,50),
+							new TextAndPosition("울창한 숲.",7+clikX,2+clikY,1)},
+				ReturnText = new List<TextAndPosition>()
+							{new TextAndPosition("여전히 울창한 숲.",7+clikX,2+clikY,1)},
+				IndicateChoice = new Dictionary<int,String>(){{0,"t0827-1"},{1,"t0827-2"}},
+				
+				MonsterList = new List<Monster>()
+							{characterList.GetMonster("슬라임"),
+							characterList.GetMonster("뒤틀린 망자")},
+				BackgroundText = backgrounds.GetBackground(0)
+			});
+			
+			clikX = 15;
+			clikY = 5;
+			choices.Add(new Choice(){
+				Name = "t0827-2",
+				ChoiceText = new List<TextAndPosition>()         //프로퍼티를 통한 초기화 생성자가 먼저 호출된다, 이게되네
+							{new TextAndPosition("오른쪽",1,19,true),
+							new TextAndPosition("왼쪽",56,19,true)},
+				OnlyShowText = new List<TextAndPosition>()
+							{new TextAndPosition("Test 2",7+clikX,3+clikY,1),
+							 new TextAndPosition("이것은 테스트 화면입니다.",7+clikX,4+clikY,50),
+							new TextAndPosition("울창한 숲.",7+clikX,2+clikY,1)},
+				ReturnText = new List<TextAndPosition>()
+							{new TextAndPosition("여전히 울창한 숲.",7+clikX,2+clikY,1)},
+				IndicateChoice = new Dictionary<int,String>(){{0,"t0827-1"},{1,"t0827-2"}},
+				
+				MonsterList = new List<Monster>()
+							{characterList.GetMonster("슬라임"),
+							characterList.GetMonster("뒤틀린 망자")},
 				BackgroundText = backgrounds.GetBackground(0)
 			});
 			
@@ -1462,7 +1541,7 @@ namespace Characters
 		public static Player CurrentPlayer;
 	}
 	
-	public class Character:IDamageable
+	public class Character:IDamageable,ICloneable
 	{
 		public string Name{get;set;}
 		public int Hp{get;set;}
@@ -1507,6 +1586,20 @@ namespace Characters
 			return new AttackInfo();
 		}
 		
+		protected Character(Character that){
+			this.Name = that.Name ;
+			this.Hp = that.Hp ;
+			this.MaxHp = that.MaxHp ;
+			this.Mp = that.Mp ;
+			this.MaxMp = that.MaxMp ;
+			this.AttackPower = that.AttackPower ;
+			this.Defense = that.Defense ;
+		}
+		
+		public Object Clone(){
+			return new Character(this);
+		}
+		
 	}
 	
 	public class Player : Character,IDamageable,ICharacterState
@@ -1531,6 +1624,14 @@ namespace Characters
 		public string CurrentState(){
 			return "";
 		}
+		
+		protected Player(Player that):base(that){
+			
+		}
+		
+		public Object Clone(){
+			return new Player(this);
+		}
 	}
 	
 	public class Monster : Character,IDamageable,ICharacterState
@@ -1541,7 +1642,6 @@ namespace Characters
 		public List<TextAndPosition> SelectMessage{get;set;}
 		public List<TextAndPosition> SpawnMessage{get;set;}
 		public List<TextAndPosition> StateMessage{get;set;}
-		public TextAndPosition CriticalMessage{get;set;}
 	
 		public Monster(){
 			SelectMessage = new List<TextAndPosition>(){ new TextAndPosition(Name,10)};
@@ -1587,6 +1687,21 @@ namespace Characters
 			else
 				return DIED;
 		}
+		
+		protected Monster(Monster that):base(that){
+			this.SpawnChance = that.SpawnChance;
+			this.IsSpawn = that.IsSpawn;
+			if(SelectMessage != null)
+				this.SelectMessage = that.SelectMessage.ConvertAll(new Converter<TextAndPosition,TextAndPosition>(o => (TextAndPosition)o.Clone()));
+			if(SpawnMessage != null)
+				this.SpawnMessage = that.SpawnMessage.ConvertAll(new Converter<TextAndPosition,TextAndPosition>(o => (TextAndPosition)o.Clone()));
+			if(StateMessage != null)
+				this.StateMessage = that.StateMessage.ConvertAll(new Converter<TextAndPosition,TextAndPosition>(o => (TextAndPosition)o.Clone()));
+		}
+		
+		public Object Clone(){
+			return new Monster(this);
+		}
 	
 	}
 	
@@ -1610,6 +1725,14 @@ namespace Characters
 		
 		public string CurrentState(){
 			return "";
+		}
+		
+		protected NPC(NPC that):base(that){
+			
+		}
+		
+		public Object Clone(){
+			return new NPC(this);
 		}
 	
 	}
@@ -1695,7 +1818,7 @@ namespace Characters
 		
 		public Monster GetMonster(String name){
 			try{
-				return MonsterList[name];
+				return (Monster)MonsterList[name].Clone();
 			}catch(Exception e){
 				return null;
 			}
