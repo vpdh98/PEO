@@ -127,3 +127,9 @@ public static T DeepCopy<T>(T obj)
         return (T)formatter.Deserialize(stream);
     }
 }
+
+List에 내가 지정한 클래스를 넣었을 경우 ConvertAll() 메소드로 DeepCopy할 수 있다
+
+List<MyClass> mc = new MyClass();
+List<MyClass> mc2 = mc.ConvertAll(Converter<MyClass,MyClass>(c => (MyClass)c.Clone));
+이런식으로 가능
