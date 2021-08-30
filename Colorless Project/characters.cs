@@ -146,7 +146,19 @@ namespace Characters
 		public int SpawnChance{get;set;}
 		public bool IsSpawn{get;set;} = false;
 		
-		public List<TextAndPosition> SelectMessage{get;set;}
+		public List<TextAndPosition> selectMessage;
+		public List<TextAndPosition> SelectMessage{
+			get{
+				Console.WriteLine(selectMessage[0].text);
+				return selectMessage;
+			}
+			set{
+				Console.WriteLine("inSet");
+				Console.WriteLine(value[0].text);
+				selectMessage = value;
+			}
+		}
+		
 		public List<TextAndPosition> SpawnMessage{get;set;}
 		public List<TextAndPosition> StateMessage{get;set;}
 	
@@ -171,6 +183,8 @@ namespace Characters
 		
 		public TextAndPosition GetRandomSelectMessage(){
 			Random rand = new Random();
+			Console.WriteLine("in GetRandomSelectMessage");
+			Console.WriteLine(SelectMessage[0]);
 			return SelectMessage[rand.Next(0,SelectMessage.Count)];
 		}
 		
@@ -196,11 +210,19 @@ namespace Characters
 				return DIED;
 		}
 		
+		public List<TextAndPosition> Copy(List<TextAndPosition> m){ //왜 안되지 8.30 ㅣㄴㅇ멀;ㅁ니얼;ㅣㅇㄴ멀ㅇㄴㅁㄹ
+			List<TextAndPosition> clone = new List<TextAndPosition>();
+			for(int i = 0;i<m.Count;i++){
+				clone.Add((TextAndPosition)m[i].Clone());
+			}
+			return clone;
+		}
+		
 		protected Monster(Monster that):base(that){
 			this.SpawnChance = that.SpawnChance;
 			this.IsSpawn = that.IsSpawn;
 			if(SelectMessage != null)
-				this.SelectMessage = that.SelectMessage.ConvertAll(new Converter<TextAndPosition,TextAndPosition>(o => (TextAndPosition)o.Clone()));
+				this.SelectMessage = Copy(that.SelectMessage); ///ㅇㄴㅁ런ㅁ이런ㅇㅁ;ㅣ러;님얼
 			if(SpawnMessage != null)
 				this.SpawnMessage = that.SpawnMessage.ConvertAll(new Converter<TextAndPosition,TextAndPosition>(o => (TextAndPosition)o.Clone()));
 			if(StateMessage != null)
