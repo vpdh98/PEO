@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Game;
 using System.IO;
+using static Convenience;
 
 
 namespace Characters
@@ -103,7 +104,7 @@ namespace Characters
 			this.Defense = that.Defense ;
 		}
 		
-		public Object Clone(){
+		virtual public Object Clone(){
 			return new Character(this);
 		}
 		
@@ -149,12 +150,11 @@ namespace Characters
 		public List<TextAndPosition> selectMessage;
 		public List<TextAndPosition> SelectMessage{
 			get{
-				Console.WriteLine(selectMessage[0].text);
+				testLog("in get");
+				testLog(selectMessage[2].text);
 				return selectMessage;
 			}
 			set{
-				Console.WriteLine("inSet");
-				Console.WriteLine(value[0].text);
 				selectMessage = value;
 			}
 		}
@@ -211,6 +211,7 @@ namespace Characters
 		}
 		
 		public List<TextAndPosition> Copy(List<TextAndPosition> m){ //왜 안되지 8.30 ㅣㄴㅇ멀;ㅁ니얼;ㅣㅇㄴ멀ㅇㄴㅁㄹ
+		testLog("inListCopy");
 			List<TextAndPosition> clone = new List<TextAndPosition>();
 			for(int i = 0;i<m.Count;i++){
 				clone.Add((TextAndPosition)m[i].Clone());
@@ -221,6 +222,13 @@ namespace Characters
 		protected Monster(Monster that):base(that){
 			this.SpawnChance = that.SpawnChance;
 			this.IsSpawn = that.IsSpawn;
+			this.SelectMessage = new List<TextAndPosition>();
+			this.SpawnMessage = new List<TextAndPosition>();
+			this.StateMessage = new List<TextAndPosition>();
+			
+			testLog("in Monster");
+			
+			
 			if(SelectMessage != null)
 				this.SelectMessage = Copy(that.SelectMessage); ///ㅇㄴㅁ런ㅁ이런ㅇㅁ;ㅣ러;님얼
 			if(SpawnMessage != null)
@@ -229,7 +237,7 @@ namespace Characters
 				this.StateMessage = that.StateMessage.ConvertAll(new Converter<TextAndPosition,TextAndPosition>(o => (TextAndPosition)o.Clone()));
 		}
 		
-		public Object Clone(){
+		override public Object Clone(){
 			return new Monster(this);
 		}
 		
@@ -355,6 +363,7 @@ namespace Characters
 			};
 			MonsterList.Add(monster.Name,monster);
 			
+			testLog("in CList");
 			///////////////////NPC/////////////////////////////
 		}
 		
