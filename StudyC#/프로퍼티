@@ -1,0 +1,28 @@
+클래스의 멤버변수를 선언할때 정보은닉과 편의성 사이에서 private를 쓸지 public을 쓸지 고민하게 된다.
+은닉성을 중요시해 private를 사용했다 하더라도 각각 멤버변수마다 getter와 setter를 구현해줘야하는 불편함이 따른다.
+이를 해소하기 위해 C#에 존재하는 요소가 바로 "프로퍼티"다.
+프로퍼티는 속성이라는 의미를 가지고 있는데, 이 프로퍼티를 이용하여 클래스의 속성과 같은 멤버변수를 초기화하거나 값을 가져올 수 있다.
+ex)
+
+class Number{
+
+  public int num;
+  public int Num{
+    get{
+      return num;
+    }
+    set{
+      num = value;
+    }
+  }
+
+  public int Num{get; set;} //자동구현 프로퍼티
+}
+
+Number n1 = new Number();
+n1.Num = 1; //프로퍼티를 이용한 초기화 I
+
+Number n2 = new Number(){Num = 1}; //프로퍼티를 이용한 초기화 II
+
+
+
