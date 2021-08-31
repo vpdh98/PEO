@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Characters;
 using System.Threading;
+using static Convenience;
 
 public enum ChoiceType{
 			CHOICE,		//선택지
@@ -184,14 +185,25 @@ public class Choice : ICloneable //선택지 부여 하는 클래스
 		
 		protected Choice(Choice that){
 			this.QuickDelegate = that.QuickDelegate;
-			//if(ChoiceText != null)
+			
+			this.ChoiceText = new List<TextAndPosition>();
+			this.OnlyShowText = new List<TextAndPosition>();
+			this.StreamText = new List<TextAndPosition>();
+			this.BackgroundText = new List<TextAndPosition>();
+			this.MonsterList = new List<Monster>();
+			this.NPCList = new List<NPC>();
+			
+			
+			
+			if(that.ChoiceText != null)
 				this.ChoiceText = that.ChoiceText.ConvertAll(new Converter<TextAndPosition, TextAndPosition>(o => (TextAndPosition)o.Clone()));
-			//if(OnlyShowText != null)
+			if(that.OnlyShowText != null)
 				this.OnlyShowText = that.OnlyShowText.ConvertAll(new Converter<TextAndPosition, TextAndPosition>(o => (TextAndPosition)o.Clone()));
-			//if(StreamText != null)
+			if(that.StreamText != null)
 				this.StreamText = that.StreamText.ConvertAll(new Converter<TextAndPosition, TextAndPosition>(o => (TextAndPosition)o.Clone()));
-			//if(BackgroundText != null)
+			if(that.BackgroundText != null)
 				this.BackgroundText = that.BackgroundText.ConvertAll(new Converter<TextAndPosition, TextAndPosition>(o => (TextAndPosition)o.Clone()));
+			
 			this.IndicateChoice = that.IndicateChoice;
 			this.CTNum = that.CTNum;
 			this.OSTNum = that.OSTNum;
@@ -199,9 +211,11 @@ public class Choice : ICloneable //선택지 부여 하는 클래스
 			this.BGTNum = that.BGTNum;
 			this.Name = that.Name;
 			this.ChoiceType = that.ChoiceType;
+			
+			testLog("in Choice Clone");
 			if(that.MonsterList != null)
 				this.MonsterList = that.MonsterList.ConvertAll(new Converter<Monster, Monster>(o => (Monster)o.Clone()));
-			
+			testLog("in Choice Clone2");
 			if(that.NPCList != null)
 				this.NPCList = that.NPCList.ConvertAll(new Converter<NPC, NPC>(o => (NPC)o.Clone()));
 		}
