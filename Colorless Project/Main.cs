@@ -9,11 +9,8 @@ using System.Threading.Tasks;
 using System.Linq;
 using System.IO;
 using static BattleSystem;
+using static Convenience;
 //using Battle;
-
-
-
-
 
 
 
@@ -37,6 +34,9 @@ namespace Game
 			DisplayTextGame DTG = new DisplayTextGame();
 			ChoiceControler CC = new ChoiceControler();
 			CharacterList CList = new CharacterList();
+			
+			
+			
 			/* //파일 생성하는 법
 			DirectoryInfo dr = new DirectoryInfo("Data");
 			dr.Create();
@@ -109,8 +109,6 @@ namespace Game
 	
 	public static class GameManager{
 		public static Choice SpawnMonster(Choice choice){ //몬스터 선택지가 중앙에 있는 기존 선택지 마지막 열 다음으로 들어가도록 해주는 메소드
-			Console.WriteLine("in SpawnMonster");
-			Console.WriteLine(choice.MonsterList.Count);
 			if(choice.MonsterList == null){
 				return choice;
 			}
@@ -129,9 +127,13 @@ namespace Game
 					spawnChance = monsterList[i].SpawnChance;
 					if(random.Next(1,101) < spawnChance){
 						//monsterList[i].MonsterInfo();
-						Console.WriteLine(monsterList[i].Name);
+						Console.WriteLine(monsterList[i].Name);//@@@@@@@@@@@@@@@@@@@@@@
 						selectList.Add(new TextAndPosition(monsterList[i].GetRandomSelectMessage().text,mPositionX,mPositionY++,true));
-						choice.IndicateChoice.Add(selectList.Count-1,monsterList[i].Name);                            //배틀페이즈로 들어가는 선택지로 추가
+						try{
+							choice.IndicateChoice.Add(selectList.Count-1,monsterList[i].Name);                            //배틀페이즈로 들어가는 선택지로 추가
+						}catch(Exception e){
+							return choice;
+						}
 						monsterList[i].IsSpawn = true;
 					}
 				}
@@ -404,5 +406,12 @@ namespace Game
 //SpawnMonster메소드에서 Monster객체의 Name필드는 존재하는데 GetRandomSelectMessage를 가져올때 NullReferenceException이 뜸.. 내일 해결해야겟다
 	
 
+//2021.8.30
+//github에 나눠진 소스파일 올림
+//분명 프로퍼티를 통해서 값이 들어갈땐 있는데 get해올땐 NullReferenceException이 뜸.. 왜일까?
+//ConvertAll을 사용한 복사가 문제일까싶어 따로 메소드를 만들어서 Monster의 Clone에 SelectMessage의 복사를해봣는데 안됨.
 
-
+//2021.8.31
+//데이터를 소스코드에서 객체화 시켰기 때문에 객체화된 순서가 문제가 아닐까 생각해봄. 함 보자.
+//첫번째문제를 찾았음. 복사생성자를 구현할때 복사생성자의 this가 새로 생성된 객체여서 따로 객체 초기화를 해주지 않아 null인 상태에서 reference값이 들어가지 않았던거 였음.
+//근데 또 MonsterList를 복사하던중에 NullReferenceException가 뜸.. 내일 해결해야겟음
