@@ -210,15 +210,6 @@ namespace Characters
 				return DIED;
 		}
 		
-		public List<TextAndPosition> Copy(List<TextAndPosition> m){ //왜 안되지 8.30 ㅣㄴㅇ멀;ㅁ니얼;ㅣㅇㄴ멀ㅇㄴㅁㄹ
-		testLog("inListCopy");
-			List<TextAndPosition> clone = new List<TextAndPosition>();
-			for(int i = 0;i<m.Count;i++){
-				clone.Add((TextAndPosition)m[i].Clone());
-			}
-			return clone;
-		}
-		
 		protected Monster(Monster that):base(that){
 			this.SpawnChance = that.SpawnChance;
 			this.IsSpawn = that.IsSpawn;
@@ -230,7 +221,7 @@ namespace Characters
 			
 			
 			if(SelectMessage != null)
-				this.SelectMessage = Copy(that.SelectMessage); ///ㅇㄴㅁ런ㅁ이런ㅇㅁ;ㅣ러;님얼
+				this.SelectMessage = that.SelectMessage.ConvertAll(new Converter<TextAndPosition,TextAndPosition>(o => (TextAndPosition)o.Clone()));
 			if(SpawnMessage != null)
 				this.SpawnMessage = that.SpawnMessage.ConvertAll(new Converter<TextAndPosition,TextAndPosition>(o => (TextAndPosition)o.Clone()));
 			if(StateMessage != null)
