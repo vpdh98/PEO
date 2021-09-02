@@ -1,0 +1,32 @@
+LINQ란 Language Integrated Query 라고해서 특정 데이터들에서 Query를 하여 데이터를 빠르고 편리하게 추출하는 방식이라 할 수 있다. 
+해당기능은 C# 3.0부터 추가가 되기 시작한 문법이다. 기본적으로 람다표현식을 사용하여 간결하고 가독성 좋게 작성 가능하다. 
+Query를 하는데에는 SQL을 사용한다. SQL 이란 Structured Query Language의 약자이다. 
+
+SQL에서 가장 많이 사용하는 문법은 다음 4가지 이다.
+
+from : 어떤 데이터에서 찾을 것인가
+where : 어떤 조건으로 찾을 것인가
+order by : 어떤 항목을 기준으로 정렬할 것인가
+select : 어떤 항목을 추출할 것인가
+
+[https://hijuworld.tistory.com/56]
+
+Any()
+조건을 만족하는 요소들이 있는지 확인할 수 있는 메서드
+if(target.Any(x => Char.IsLower(x)))
+{
+  print("소문자가 포함되어 있습니다.");
+}else
+{
+  print("소문자가 포함되어 있지 않습니다.");
+}
+
+All()
+모든 요소들이 조건을 만족하는지 확인할 수 있는 메서드
+if(target.All(x => Char.IsLower(x)))
+{
+  print("모든 문자가 소문자입니다.");
+}else
+{
+  print("소문자가 아닌문자가 포함되어 있습니다");
+}
