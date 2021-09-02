@@ -30,7 +30,7 @@ namespace Game
 		public static AttackMethod attack;
 		public static void Main()
 		{
-			String currentChoice = "t0828-1"; //첫 화면
+			String currentChoice = "c1"; //첫 화면
 			DisplayTextGame DTG = new DisplayTextGame();
 			ChoiceControler CC = new ChoiceControler();
 			CharacterList CList = new CharacterList();
@@ -415,3 +415,9 @@ namespace Game
 //데이터를 소스코드에서 객체화 시켰기 때문에 객체화된 순서가 문제가 아닐까 생각해봄. 함 보자.
 //첫번째문제를 찾았음. 복사생성자를 구현할때 복사생성자의 this가 새로 생성된 객체여서 따로 객체 초기화를 해주지 않아 null인 상태에서 reference값이 들어가지 않았던거 였음.
 //근데 또 MonsterList를 복사하던중에 NullReferenceException가 뜸.. 내일 해결해야겟음
+
+//2021.9.02
+//원인 발견. MonsterList는 null이 아니지만 List의 각 요소가 null이여서 발생한 것이였음.. 왜 null이 됫는지는..
+//Choice의 복사생성자에서 각 요소도 null인지 검사하게 함
+//근데 이번엔 또 ArgumentOutOfRangeException가 뜸.. 하 디버그 지원 안되니까 너모 힘들다..
+//그냥 그 부분을 예외처리함 그럼 작동은 잘 되지만 몬스터가 스폰이 안됨..
