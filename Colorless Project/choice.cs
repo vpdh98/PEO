@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Characters;
 using System.Threading;
 using static Convenience;
+using System.Linq;
 
 public enum ChoiceType{
 			CHOICE,		//선택지
@@ -213,15 +214,23 @@ public class Choice : ICloneable //선택지 부여 하는 클래스
 			this.ChoiceType = that.ChoiceType;
 			
 			testLog("in Choice Clone");
-			if(that.MonsterList != null)
-				this.MonsterList = that.MonsterList.ConvertAll(new Converter<Monster, Monster>(o => (Monster)o.Clone()));
+			if(that.MonsterList != null){
+				isEmptyList(that.MonsterList);
+				try{
+				if(that.MonsterList[0] != null){
+					testLog("in");
+					this.MonsterList = that.MonsterList.ConvertAll(new Converter<Monster, Monster>(o => (Monster)o.Clone()));
+				}
+				}catch(Exception e){
+					
+				}
+			}
 			testLog("in Choice Clone2");
 			if(that.NPCList != null)
 				this.NPCList = that.NPCList.ConvertAll(new Converter<NPC, NPC>(o => (NPC)o.Clone()));
 		}
 		
 		public Object Clone(){
-			
 			return new Choice(this);
 		}
 }
