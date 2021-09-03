@@ -58,7 +58,7 @@ public static class BattleSystem{
 			Backgrounds backgrounds = new Backgrounds();
 			Choice Start = new Choice(){
 				Name = "firstPhase",
-				ChoiceText = new List<TextAndPosition>()         
+				SelectText = new List<TextAndPosition>()         
 							{new TextAndPosition("공격한다.",16,13,true),
 							new TextAndPosition("도망간다.",40,13,true)},
 				OnlyShowText = new List<TextAndPosition>()
@@ -69,7 +69,7 @@ public static class BattleSystem{
 
 			Choice B2 = new Choice(){
 				Name = "movePhase",
-				ChoiceText = new List<TextAndPosition>()         
+				SelectText = new List<TextAndPosition>()         
 							{new TextAndPosition("공격",16,13,true),
 							 new TextAndPosition("방어",28,13,true),
 							new TextAndPosition("회피",40,13,true)},
@@ -99,7 +99,7 @@ public static class BattleSystem{
 
 			Choice B5 = new Choice(){
 				Name = "andPhase",
-				ChoiceText = new List<TextAndPosition>()         
+				SelectText = new List<TextAndPosition>()         
 							{new TextAndPosition("확인",16,13,true)},
 				OnlyShowText = new List<TextAndPosition>()
 							{new TextAndPosition(monster.CurrentState(),15,3+5,1){AlignH = true}},
@@ -119,22 +119,22 @@ public static class BattleSystem{
 			BCC.AddChoice(B5);
 
 				while(!battleAnd){
-				BDTG.Cho = BCC.SetChoice(currentChoice); //초기 화면
+				BDTG.Cho = BCC.GetChoiceClone(currentChoice); //초기 화면
 				//DTG.PrintListInfo();
 				BDTG.Show();
 				BDTG.delay = 0;
 				ConsoleKeyInfo c = Console.ReadKey();
 
 					while(c.Key != ConsoleKey.Escape){
-						if(BCC.SetChoice(currentChoice).ChoiceType != ChoiceType.QUICKNEXT)//QUICKNEXT를 실행했을때 다음으로 넘어가는중SelectingText에서 ArgumentOutOfRangeException발생하는 문제가 잇음 5.13
+						if(BCC.GetChoiceClone(currentChoice).ChoiceType != ChoiceType.QUICKNEXT)//QUICKNEXT를 실행했을때 다음으로 넘어가는중SelectingText에서 ArgumentOutOfRangeException발생하는 문제가 잇음 5.13
 							BDTG.SelectingText(c);
 
 						if(c.Key == ConsoleKey.Enter){
-							currentChoice = BDTG.Cho.ChoiceNext(BDTG.currentSelectNum);// 선택한 보기에따라 초이스 선택
+							currentChoice = BDTG.Cho.GetChoiceOn(BDTG.currentSelectNum);// 선택한 보기에따라 초이스 선택
 
 							if(monster.HpState() == 3){ //8.22 몬스터의 HP상태가 빈사 상태일때 배틀 페이즈 종료 const int Died = 3
 								BDTG.Init();
-								Choice cho = BCC.SetChoice("andPhase"); //BDTG의 Cho를 초기화 하면서 OnlyShowText에 있던 텍스트는 integratedList에 들어감으로 choice에 넣기전에 수정해 줘야함
+								Choice cho = BCC.GetChoiceClone("andPhase"); //BDTG의 Cho를 초기화 하면서 OnlyShowText에 있던 텍스트는 integratedList에 들어감으로 choice에 넣기전에 수정해 줘야함
 								cho.OnlyShowText = new List<TextAndPosition>() //몬스터 상태메세지 초기화
 										{new TextAndPosition(monster.CurrentState(),15,3+5,1){AlignH = true}};
 								BDTG.Cho = cho;
@@ -149,14 +149,14 @@ public static class BattleSystem{
 								Defender = monster;
 							}
 
-							if(BCC.SetChoice(currentChoice).ChoiceType == ChoiceType.QUICKNEXT){//QUICKNEXT구현을 위해 추가된 if문
+							if(BCC.GetChoiceClone(currentChoice).ChoiceType == ChoiceType.QUICKNEXT){//QUICKNEXT구현을 위해 추가된 if문
 								BDTG.Init();
-								BDTG.Cho = BCC.SetChoice(currentChoice);
+								BDTG.Cho = BCC.GetChoiceClone(currentChoice);
 								BDTG.Show();
 
-								currentChoice = BCC.SetChoice(currentChoice).QuickNext();
+								currentChoice = BCC.GetChoiceClone(currentChoice).QuickNext();
 									if(currentChoice == "reactionPhase"){ //8.22
-										Choice cho = BCC.SetChoice("movePhase");
+										Choice cho = BCC.GetChoiceClone("movePhase");
 										cho.OnlyShowText = new List<TextAndPosition>() //몬스터가 데미지 입을때마다 몬스터 상태메세지 초기화
 											{new TextAndPosition(monster.CurrentState(),15,3+5,1){AlignH = true}};
 									}
