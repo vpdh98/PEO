@@ -163,7 +163,7 @@ public class DisplayTextGame{
 			}
 			set{
 				cho = value;
-				selectList = cho.ChoiceText;
+				selectList = cho.SelectText;
 				onlyShowList = cho.OnlyShowText;
 				choiceType = cho.ChoiceType;
 				backgroundList = cho.BackgroundText;
@@ -241,7 +241,7 @@ public class DisplayTextGame{
 		}
 			
 		public void ShowAllList(){
-			if(choiceType == ChoiceType.CHOICE)
+			if(choiceType == ChoiceType.NORMAL)
 				PrintAlgorithm();
 			if(choiceType == ChoiceType.BATTLE)
 				Battle();
