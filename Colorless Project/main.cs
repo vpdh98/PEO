@@ -32,7 +32,7 @@ namespace Game
 		{
 			String currentChoice = "c1"; //첫 화면
 			DisplayTextGame DTG = new DisplayTextGame();
-			ChoiceControler CC = new ChoiceControler();
+			ChoiceControler CC = new ChoiceControler(new Scenario());
 			CharacterList CList = new CharacterList();
 			
 			
@@ -46,12 +46,11 @@ namespace Game
 			
 			Player player = CList.GetPlayer("용사");
 			
-			CC.AddScenario(new Scenario());
 			
 			Task.Factory.StartNew(BattleCal);
 			
 			while(true){
-			DTG.Cho = GameManager.SpawnMonster(CC.SetChoiceClone(currentChoice)); //초기 화면
+			DTG.Cho = GameManager.SpawnMonster(CC.GetChoiceClone(currentChoice)); //초기 화면
 				
 			//DTG.PrintListInfo();
 			DTG.Show();
@@ -59,13 +58,13 @@ namespace Game
 			
 			ConsoleKeyInfo c = Console.ReadKey();
 				while(c.Key != ConsoleKey.Escape){
-					/*Choice choice = CC.SetChoice(currentChoice);
+					/*Choice choice = CC.GetChoiceClone(currentChoice);
 					if(DTG.Cho != choice){
 						DTG.Cho = choice;
 					}*/
 					DTG.SelectingText(c);
 					if(c.Key == ConsoleKey.Enter){
-						currentChoice = DTG.Cho.ChoiceNext(DTG.currentSelectNum);
+						currentChoice = DTG.Cho.GetChoiceOn(DTG.currentSelectNum);
 						
 						
 						if(CList.GetMonster(currentChoice) != null){ //배틀페이즈
@@ -79,17 +78,17 @@ namespace Game
 							Console.Clear();
 							currentChoice = BattlePhase(player,CList.GetMonster(currentChoice),DTG.Cho.Name); //currentChoice에 현제 선택된 몬스터 이름이 들어가 있음 //8.23
 							
-							DTG.Cho = CC.SetChoice(currentChoice);
+							DTG.Cho = CC.GetChoiceClone(currentChoice);
 							
 							//Console.WriteLine(DTG.Cho.MonsterList[0].GetRandomSpawnMessage().text);
 						}
 						Console.WriteLine(currentChoice);
 						DTG.Cho.LeaveChoice();
-						if(CC.SetChoice(currentChoice).ChoiceType == ChoiceType.QUICKNEXT){//QUICKNEXT구현을 위해 추가된 if문
+						if(CC.GetChoiceClone(currentChoice).ChoiceType == ChoiceType.QUICKNEXT){//QUICKNEXT구현을 위해 추가된 if문
 							DTG.Init();
-							DTG.Cho = CC.SetChoice(currentChoice);
+							DTG.Cho = CC.GetChoiceClone(currentChoice);
 							DTG.Show();
-							currentChoice = CC.SetChoice(currentChoice).QuickNext();
+							currentChoice = CC.GetChoiceClone(currentChoice).QuickNext();
 							c = Console.ReadKey();
 						}
 						
@@ -113,9 +112,9 @@ namespace Game
 				return choice;
 			}
 			Random random = new Random();
-			List<Monster> monsterList = choice.MonsterList;
-			List<TextAndPosition> selectList = choice.ChoiceText;
-			int selectListCount = choice.CTNum;
+			List<Monster> monsterList = choice.MonsterList.ToList();
+			List<TextAndPosition> selectList = choice.SelectText.ToList();
+			int selectListCount = choice.selectTextNum;
 			int monsterListCount = monsterList.Count;
 			int spawnChance;
 			int firstX = selectListFirststPositionX(selectList);
@@ -363,7 +362,7 @@ namespace Game
 //CC에서 몬스터 이름을 Dictionary의 key값으로 넣어서 발생한 예외. currentChoice를 다시 초기화해 줌으로써 해결 완료
 //죽인 몬스터를 선택지에서 없에는 기능 필요. 몬스터가 죽었는지 확인하는 bool 변수를 추가해서 죽었으면 selectList에서 해당 이름의 몬스터가 포함된 선택지를 없에려 했으나.. 
 //그냥 선택하는 순간 선택지를 없에는 것이 좋을듯
-//여기서 총체적인 문제 발생. 선택지를 없에려면 ChoiceText,selectList,IndicateChoice를 모두 없에고 IndicateChoice의 키값을 다시 설정해 줘야 되는 문제 발생
+//여기서 총체적인 문제 발생. 선택지를 없에려면 SelectText,selectList,IndicateChoice를 모두 없에고 IndicateChoice의 키값을 다시 설정해 줘야 되는 문제 발생
 //그냥 MonsterList에 몬스터를 없에고 선택지 객체를 새로 만들면 쉽게 해결되지만, 현재 deapcopy가 구현되어 있지 않고 데이터를 따로 다루고 있지 않으므로
 //새로운 객체를 다시 할당하려면 데이터를모두 일일이 넣어 새로 객체를 생성해야됨. 해결하려면 Clone함수를 구현하거나 데이터를 따로 관리 해야됨
 //DB를 한번 공부해보자
@@ -421,3 +420,10 @@ namespace Game
 //Choice의 복사생성자에서 각 요소도 null인지 검사하게 함
 //근데 이번엔 또 ArgumentOutOfRangeException가 뜸.. 하 디버그 지원 안되니까 너모 힘들다..
 //그냥 그 부분을 예외처리함 그럼 작동은 잘 되지만 몬스터가 스폰이 안됨..
+//MonsterSpawn하는 부분을 좀더 다듬어야 할듯
+//예외처리 대신 isEmptyList()메서드를 만들어서 null이거나 요소 갯수가 0인 list제외시킴. 역시 스폰은 안됨.
+
+//2021.9.03
+//오늘은 마치 예초기에 엉킨 잡초와 같은 이 코드들을 정리해 보기로 했음
+//choice.cs정리함, 모호한 필드 이름 변경, 불필요한 메서드,생성자 제거
+//그리고 노트에 핵심 기능과 필드와 메서드 정리
