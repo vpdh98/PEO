@@ -14,7 +14,7 @@ public class Scenario{
 		}
 		public int Count{get;set;}
 		
-		public Scenario(){ //지금은 choice생성할때 ChoiceText,OnlyShowText중 하나라도 없으면 실행 불가
+		public Scenario(){ //지금은 choice생성할때 SelectText,OnlyShowText중 하나라도 없으면 실행 불가
 			Backgrounds backgrounds = new Backgrounds();
 			CharacterList characterList = new CharacterList();
 			
@@ -22,7 +22,7 @@ public class Scenario{
 			clikY = 7;
 			choices.Add(new Choice(){
 				Name = "c1",
-				ChoiceText = new List<TextAndPosition>()         //프로퍼티를 통한 초기화 생성자가 먼저 호출된다, 이게되네
+				SelectText = new List<TextAndPosition>()         //프로퍼티를 통한 초기화 생성자가 먼저 호출된다, 이게되네
 							{new TextAndPosition(200,"Start",13+clikX,5+clikY,true){PriorityLayer = 3},
 							  new TextAndPosition(200,"Exit",13+clikX,6+clikY,true,ConsoleColor.Yellow){PriorityLayer = 4},
 								new TextAndPosition(200,"옵션",13+clikX,7+clikY,true){PriorityLayer = 5}},
@@ -37,7 +37,7 @@ public class Scenario{
 			clikY = 7;
 			choices.Add(new Choice(){
 				Name = "testStream",
-				ChoiceText = new List<TextAndPosition>()         //프로퍼티를 통한 초기화 생성자가 먼저 호출된다, 이게되네
+				SelectText = new List<TextAndPosition>()         //프로퍼티를 통한 초기화 생성자가 먼저 호출된다, 이게되네
 							{new TextAndPosition(200,"Start",10+clikX,5+clikY,true){PriorityLayer = 4},
 							  new TextAndPosition(200,"Exit",10+clikX,6+clikY,true){PriorityLayer = 5},
 								new TextAndPosition(200,"옵션",10+clikX,7+clikY,true){PriorityLayer = 6}},
@@ -52,7 +52,7 @@ public class Scenario{
 			
 			choices.Add(new Choice(){
 				Name = "option",
-				ChoiceText = new List<TextAndPosition>()         //프로퍼티를 통한 초기화 생성자가 먼저 호출된다, 이게되네
+				SelectText = new List<TextAndPosition>()         //프로퍼티를 통한 초기화 생성자가 먼저 호출된다, 이게되네
 							{new TextAndPosition(200,"Start",10,5,true){PriorityLayer = 2},
 							  new TextAndPosition(200,"Exit",10,6,true){PriorityLayer = 3}},
 				OnlyShowText = new List<TextAndPosition>()
@@ -70,7 +70,7 @@ public class Scenario{
 			choices.Add(new Choice(){
 				Name = "test",
 				ChoiceType = ChoiceType.QUICKNEXT,
-				ChoiceText = new List<TextAndPosition>()         
+				SelectText = new List<TextAndPosition>()         
 							{new TextAndPosition()},
 				OnlyShowText = new List<TextAndPosition>()
 							{new TextAndPosition("나 갈 수 없 다",5,3,100,ConsoleColor.Red)},
@@ -81,7 +81,7 @@ public class Scenario{
 			clikY = 5;
 			choices.Add(new Choice(){
 				Name = "c2",
-				ChoiceText = new List<TextAndPosition>()         //프로퍼티를 통한 초기화 생성자가 먼저 호출된다, 이게되네
+				SelectText = new List<TextAndPosition>()         //프로퍼티를 통한 초기화 생성자가 먼저 호출된다, 이게되네
 							{new TextAndPosition("오른쪽",1,19,true),
 							new TextAndPosition("가만히 있는다",7+clikX,8+clikY,true),
 							new TextAndPosition("아앗.",7+clikX,9+clikY,true),
@@ -91,19 +91,19 @@ public class Scenario{
 							new TextAndPosition("울창한 숲.",7+clikX,2+clikY,1)},
 				ReturnText = new List<TextAndPosition>()
 							{new TextAndPosition("여전히 울창한 숲.",7+clikX,2+clikY,1)},
-				IndicateChoice = new Dictionary<int,String>(){{0,"c2-right"},{1,"testStream"}},
+				IndicateChoice = new Dictionary<int,String>(){{0,"QuickNext-test"},{1,"testStream"}},
 				
 				MonsterList = new List<Monster>()
 							{characterList.GetMonster("슬라임"),
 							characterList.GetMonster("뒤틀린 망자")},
 				BackgroundText = backgrounds.GetBackground(0)
 			});
-			
+			/*
 			clikX = 23;
 			clikY = 7;
 			choices.Add(new Choice(){
 				Name = "c2-right",
-				ChoiceText = new List<TextAndPosition>()
+				SelectText = new List<TextAndPosition>()
 							{new TextAndPosition("다시시작",12+clikX,7+clikY,true){PriorityLayer = 2}},
 				StreamText = new List<TextAndPosition>()
 							{new TextAndPosition("함정이였다.",5+clikX,3+clikY,10){PriorityLayer = 1},
@@ -111,11 +111,11 @@ public class Scenario{
 				IndicateChoice = new Dictionary<int,String>(){{0,"QuickNext-test"}},
 				BackgroundText = backgrounds.GetBackground(0)
 			});
-			
+			*/
 			choices.Add(new Choice(){
 				Name = "QuickNext-test",
 				ChoiceType = ChoiceType.QUICKNEXT,
-				ChoiceText = new List<TextAndPosition>()
+				SelectText = new List<TextAndPosition>()
 							{new TextAndPosition("다시시작",12+clikX,7+clikY,true){PriorityLayer = 2}},
 				StreamText = new List<TextAndPosition>()
 							{new TextAndPosition("함정이였다.",5+clikX,3+clikY,10){PriorityLayer = 1},
@@ -123,12 +123,12 @@ public class Scenario{
 				IndicateChoice = new Dictionary<int,String>(){{0,"c2"}},
 				BackgroundText = backgrounds.GetBackground(0)
 			});
-			
+			/*
 			clikX = 15;
 			clikY = 5;
 			choices.Add(new Choice(){
 				Name = "t0827-1",
-				ChoiceText = new List<TextAndPosition>()         //프로퍼티를 통한 초기화 생성자가 먼저 호출된다, 이게되네
+				SelectText = new List<TextAndPosition>()         //프로퍼티를 통한 초기화 생성자가 먼저 호출된다, 이게되네
 							{new TextAndPosition("오른쪽",1,19,true),
 							new TextAndPosition("왼쪽",56,19,true)},
 				OnlyShowText = new List<TextAndPosition>()
@@ -149,7 +149,7 @@ public class Scenario{
 			clikY = 5;
 			choices.Add(new Choice(){
 				Name = "t0827-2",
-				ChoiceText = new List<TextAndPosition>()         //프로퍼티를 통한 초기화 생성자가 먼저 호출된다, 이게되네
+				SelectText = new List<TextAndPosition>()         //프로퍼티를 통한 초기화 생성자가 먼저 호출된다, 이게되네
 							{new TextAndPosition("오른쪽",1,19,true),
 							new TextAndPosition("왼쪽",56,19,true)},
 				OnlyShowText = new List<TextAndPosition>()
@@ -170,7 +170,7 @@ public class Scenario{
 			clikY = 5;
 			choices.Add(new Choice(){
 				Name = "t0828-1",
-				ChoiceText = new List<TextAndPosition>()         //프로퍼티를 통한 초기화 생성자가 먼저 호출된다, 이게되네
+				SelectText = new List<TextAndPosition>()         //프로퍼티를 통한 초기화 생성자가 먼저 호출된다, 이게되네
 							{new TextAndPosition("오른쪽",1,19,true),
 							new TextAndPosition("왼쪽",56,19,true)},
 				OnlyShowText = new List<TextAndPosition>()
@@ -185,7 +185,7 @@ public class Scenario{
 							{characterList.GetMonster("슬라임"),
 							characterList.GetMonster("뒤틀린 망자")},
 				BackgroundText = backgrounds.GetBackground(0)
-			});
+			});*/
 			
 			Count = choices.Count;
 		}
