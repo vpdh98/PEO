@@ -62,6 +62,7 @@ namespace Characters
 		public const int LOW = 2;
 		public const int DIED = 3;
 		
+		
 		public Character()
 		{
 			Name = "noNamed";
