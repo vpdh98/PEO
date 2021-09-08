@@ -71,11 +71,13 @@ public class TextAndPosition : ICloneable{
 			this.HighlightColor = that.HighlightColor;
 		}
 		
-		public Object Clone(){//추가된게 많아서 쓰려면 업데이트 하고 쓰기
+		public Object Clone(){
 			return new TextAndPosition(this);
 		}
 		
-	
+		public override string ToString(){
+			return text;
+		}
 		
 		
 		
@@ -110,7 +112,7 @@ public class DisplayTextGame{
 		
 		String currentArrowingText;						//현재 선택된 선택지
 		
-		public int currentSelectNum;					//현재 선택된 선택지 번호
+		public int currentSelectNum = 0;					//현재 선택된 선택지 번호
 		public int delay = 0;							//문자출력딜레이
 		public int delayBackup = 0;						//딜레이 변경후 이전 딜레이로 다시 돌아오기 위해 선언한 변수
 		const String ARROW ="=>";						//선택 문자열 앞에 생성할 문자
@@ -152,8 +154,6 @@ public class DisplayTextGame{
 			integratedList = new List<TextAndPosition>();
 			streamList = new List<TextAndPosition>();
 			backgroundList = new List<TextAndPosition>();
-			currentSelectNum = 0;
-			
 		}
 		
 		Choice cho;
@@ -163,16 +163,20 @@ public class DisplayTextGame{
 			}
 			set{
 				cho = value;
-				selectList = cho.SelectText;
-				onlyShowList = cho.OnlyShowText;
 				choiceType = cho.ChoiceType;
-				backgroundList = cho.BackgroundText;
-				streamList = cho.StreamText;
+				InputLists();
 				ListCombiner();
 				BackgroundOverlap();
 			}
 		}
 		
+		public void InputLists(){
+			selectList = cho.SelectText;
+			onlyShowList = cho.OnlyShowText;
+			backgroundList = cho.BackgroundText;
+			streamList = cho.StreamText;
+		}
+	
 		public int SearchSamePosition(List<TextAndPosition> list,TextAndPosition text){
 			for(int i = 0;i<list.Count;i++){
 				if(list[i].y == text.y){
@@ -199,39 +203,34 @@ public class DisplayTextGame{
 		
 		public void ListCombiner(){ //y값을 입력받아 출력되야하는 순서대로 통합하여 정렬한 리스트를 만든다
 			if(selectList != null){
-			foreach(TextAndPosition tp in selectList){
-				if(tp.AlignH)
-					AlignX(tp);
-				integratedList.Add(tp);
-			}
+				foreach(TextAndPosition tp in selectList){
+					if(tp.AlignH){ AlignX(tp); }
+					integratedList.Add(tp);
+				}
 			}
 			if(onlyShowList != null){
-			foreach(TextAndPosition tp in onlyShowList){
-				if(tp.AlignH)
-					AlignX(tp);
-				integratedList.Add(tp);
-			}
+				foreach(TextAndPosition tp in onlyShowList){
+					if(tp.AlignH){ AlignX(tp); }
+					integratedList.Add(tp);
+				}
 			}
 			if(streamList != null){
-			foreach(TextAndPosition tp in streamList){
-				if(tp.AlignH)
-					AlignX(tp);
-				integratedList.Add(tp);
-			}
+				foreach(TextAndPosition tp in streamList){
+					if(tp.AlignH){ AlignX(tp); }
+					integratedList.Add(tp);
+				}
 			}
 			integratedList = integratedList.OrderBy(x => x.PriorityLayer).ToList();
-
 		}
 		
-		public void AlignX(TextAndPosition tap){
-			int length = tap.text.Length;
+		public void AlignX(TextAndPosition TAndP){ // [frontPadding[----text----]backPadding] 중앙정렬
+			int length = TAndP.text.Length;
 			int frontPadding = 0;
 			int backPadding = Define.SCREEN_WIDTH;
 			while(frontPadding < backPadding){
 				backPadding = Define.SCREEN_WIDTH - (frontPadding++ + length);
 			}
-			
-			tap.x = frontPadding - 5;
+			TAndP.x = frontPadding - 5;
 		}
 		
 		public void Show()
@@ -242,7 +241,7 @@ public class DisplayTextGame{
 			
 		public void ShowAllList(){
 			if(choiceType == ChoiceType.NORMAL)
-				PrintAlgorithm();
+				Normal();
 			if(choiceType == ChoiceType.BATTLE)
 				Battle();
 			if(choiceType == ChoiceType.QUICK)
@@ -250,10 +249,12 @@ public class DisplayTextGame{
 			if(choiceType == ChoiceType.QUICKNEXT)
 				QuickChoice();
 		}
+	
+		public void Normal(){
+			PrintAlgorithm();
+		}
 		
 		public void Battle(){
-				
-		
 		}
 		
 		public void Quick(){
@@ -262,74 +263,46 @@ public class DisplayTextGame{
 		
 		public void QuickChoice(){
 			if(selectList != null || onlyShowList != null){
-				ConsoleColor tempC;
-			if(integratedList != null){
-					for(int i = 0;i<integratedList.Count;i++){
-						TextAndPosition TAndP = integratedList[i];
-						
-						if(TAndP.color!=null){
-							tempC = Console.ForegroundColor;
-							Console.ForegroundColor = TAndP.color;
-						}
-						if(TAndP.isStream){
-							StreamPrint(TAndP);
-						}
-						else if(TAndP.textDelay > 0){ //텍스트의 딜레이 속성이 0보다 크면 한글자씩출력하게 함
-							FrontDelay(TAndP);
-							delay = TAndP.textDelay;
-							PrintPieceOfText(TAndP);
-							delay = 0;
-						}
-						else{ //stopPoint == 0조건 추가하면 순차적으로 출력된다음 다음 내용 출력. 없에면 한꺼번에 출력
-							FrontDelay(TAndP);
-							//Console.WriteLine(integratedList[i][0]+globalPositionX+":"+(integratedList[i][1]+globalPositionY));
-							Console.SetCursorPosition(TAndP[0]+globalPositionX,TAndP[1]+globalPositionY);
-							Console.Write(TAndP.text);//8.24 이게 생략되 있엇음.. 왜지..
-						}
-						Console.ForegroundColor = tempC;
-						Thread.Sleep(delay);
-					}
-				delay = 0;
-			}
+				PrintAlgorithm();
 			}
 		}
+	
+		
 		
 		public void PrintAlgorithm(){
 			ConsoleColor tempC;
-			if(currentArrowingText == null && selectList != null) //choice 첫 호출때 화살표가 보이게 하기 위함
+			if(currentArrowingText == null && selectList != null && choiceType != ChoiceType.QUICKNEXT) //choice 첫 호출때 화살표가 보이게 하기 위함
 				currentArrowingText = selectList[0].text;
-			if(integratedList != null){
-					for(int i = 0;i<integratedList.Count;i++){
-						TextAndPosition TAndP = integratedList[i];
-						if(TAndP.color!=null){
-							tempC = Console.ForegroundColor;
-							Console.ForegroundColor = TAndP.color;
-						}
-						if(TAndP.isStream){
-							StreamPrint(TAndP);
-						}
-						else if(TAndP.textDelay > 0){ //텍스트의 딜레이 속성이 0보다 크면 한글자씩출력하게 함
-							FrontDelay(TAndP);
-							delay = TAndP.textDelay;
-							PrintPieceOfText(TAndP);
-							delay = 0;
-						}
-						else{ //stopPoint == 0조건 추가하면 순차적으로 출력된다음 다음 내용 출력. 없에면 한꺼번에 출력
-							FrontDelay(TAndP);//해당 텍스트를 딜레이시키고 딜레이 0으로 만듦
-							//Console.WriteLine(integratedList[i][0]+globalPositionX+":"+(integratedList[i][1]+globalPositionY));
-							Console.SetCursorPosition(TAndP[0]+globalPositionX,TAndP[1]+globalPositionY);
-							if(TAndP.isSelect){
-								int temp = selectList.FindIndex(x => x.text == TAndP.text);
-								voidARROW = temp+1+".";
+				if(integratedList != null){
+						for(int i = 0;i<integratedList.Count;i++){
+							TextAndPosition TAndP = integratedList[i];
+							if(TAndP.color!=null){
+								tempC = Console.ForegroundColor;
+								Console.ForegroundColor = TAndP.color;
 							}
-							Console.Write(TextArrower(TAndP.text,TAndP.isSelect));
+							if(TAndP.isStream){
+								StreamPrint(TAndP);
+							}
+							else if(TAndP.textDelay > 0){ //텍스트의 딜레이 속성이 0보다 크면 한글자씩출력하게 함
+								FrontDelay(TAndP);
+								delay = TAndP.textDelay;
+								PrintPieceOfText(TAndP);
+								delay = 0;
+							}
+							else{ //stopPoint == 0조건 추가하면 순차적으로 출력된다음 다음 내용 출력. 없에면 한꺼번에 출력
+								FrontDelay(TAndP);//해당 텍스트를 딜레이시키고 딜레이 0으로 만듦
+								Console.SetCursorPosition(TAndP[0]+globalPositionX,TAndP[1]+globalPositionY);
+								if(TAndP.isSelect && choiceType != ChoiceType.QUICKNEXT){
+									int temp = selectList.FindIndex(x => x.text == TAndP.text);
+									voidARROW = temp+1+".";
+								}
+								Console.Write(TextArrower(TAndP.text,TAndP.isSelect));
+							}
+							Console.ForegroundColor = tempC;
+							Thread.Sleep(delay);
 						}
-						Console.ForegroundColor = tempC;
-						Thread.Sleep(delay);
-					}
-				
-				delay = 0;
-			}
+					delay = 0;
+				}
 		}
 		
 		public void StreamPrint(TextAndPosition TAndP){
@@ -430,7 +403,7 @@ public class DisplayTextGame{
 		}
 			
 		public String TextArrower(String s,bool isSelect){ //항상 currentArrowingText에 할당된 Text에 화살표를 붙인다
-			if(isSelect){
+			if(isSelect && choiceType != ChoiceType.QUICKNEXT){
 				if(s.Equals(currentArrowingText))
 					return ARROW+currentArrowingText;
 				else
