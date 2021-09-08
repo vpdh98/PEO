@@ -6,7 +6,7 @@ public class Scenario{
 		int clikX;
 		int clikY;
 		
-		List<Choice> choices = new List<Choice>();
+		public List<Choice> choices = new List<Choice>();
 		public Choice this[int index]{
 			get{
 				return choices[index];
@@ -91,14 +91,13 @@ public class Scenario{
 							new TextAndPosition("울창한 숲.",7+clikX,2+clikY,1)},
 				ReturnText = new List<TextAndPosition>()
 							{new TextAndPosition("여전히 울창한 숲.",7+clikX,2+clikY,1)},
-				IndicateChoice = new Dictionary<int,String>(){{0,"QuickNext-test"},{1,"testStream"}},
-				
+				IndicateChoice = new Dictionary<int,String>(){{0,"c2-right"},{1,"testStream"}},
 				MonsterList = new List<Monster>()
-							{characterList.GetMonster("슬라임"),
+							{characterList.("슬라임"),
 							characterList.GetMonster("뒤틀린 망자")},
 				BackgroundText = backgrounds.GetBackground(0)
 			});
-			/*
+			
 			clikX = 23;
 			clikY = 7;
 			choices.Add(new Choice(){
@@ -108,10 +107,11 @@ public class Scenario{
 				StreamText = new List<TextAndPosition>()
 							{new TextAndPosition("함정이였다.",5+clikX,3+clikY,10){PriorityLayer = 1},
 							new TextAndPosition(1000,"You Died",5+clikX,3+clikY,10,ConsoleColor.Red){PriorityLayer = 1}},
-				IndicateChoice = new Dictionary<int,String>(){{0,"QuickNext-test"}},
+				IndicateChoice = new Dictionary<int,String>(){{0,"c2"}},
 				BackgroundText = backgrounds.GetBackground(0)
 			});
-			*/
+			
+			/*
 			choices.Add(new Choice(){
 				Name = "QuickNext-test",
 				ChoiceType = ChoiceType.QUICKNEXT,
@@ -123,7 +123,8 @@ public class Scenario{
 				IndicateChoice = new Dictionary<int,String>(){{0,"c2"}},
 				BackgroundText = backgrounds.GetBackground(0)
 			});
-			/*
+			*/
+			
 			clikX = 15;
 			clikY = 5;
 			choices.Add(new Choice(){
@@ -185,7 +186,7 @@ public class Scenario{
 							{characterList.GetMonster("슬라임"),
 							characterList.GetMonster("뒤틀린 망자")},
 				BackgroundText = backgrounds.GetBackground(0)
-			});*/
+			});
 			
 			Count = choices.Count;
 		}
