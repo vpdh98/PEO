@@ -25,17 +25,38 @@ public static class Convenience{
 		logNum++;
 	}
 	
-	public static bool isEmptyList<T>(List<T> list){
+	public static bool isEmptyList<T>(List<T> list,bool print = false){
 		if(list == null){
-			Console.WriteLine("이 리스트는 null 입니다.");
+			if(print) Console.WriteLine("이 리스트는 null 입니다.");
 			return false;
 		}
-		if(list.Any()){
-			Console.WriteLine("이 리스트는 비었습니다.");
+		if(!list.Any() || list.Count == 0){
+			if(print) Console.WriteLine("이 리스트는 비었습니다.");
 			return false;
 		}else{
-			Console.WriteLine("이 리스트는 비지 않았습니다.");
+			if(print) Console.WriteLine("이 리스트는 비지 않았습니다.");
 			return true;
+		}
+	}
+	
+	public static List<T> Copy<T>(List<T> o) where T:ICloneable {
+		List<T> clone = new List<T>();
+		foreach(T i in o){
+			clone.Add((T)i.Clone());
+		}
+		return clone;
+	}
+	
+	public static void PrintList<T>(List<T> list){
+		for(int i = 0;i<list.Count;i++){
+			Console.WriteLine("[{0}]: {1}",i,list[i].ToString());
+		}
+	}
+	
+	public static void PrintList<T,G>(Dictionary<T,G> dictionary){
+		int count = 0;
+		foreach(var d in dictionary){
+			Console.WriteLine("[{0}]: {1}",count,d.ToString());
 		}
 	}
 }
