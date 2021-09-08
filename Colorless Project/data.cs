@@ -93,7 +93,7 @@ public class Scenario{
 							{new TextAndPosition("여전히 울창한 숲.",7+clikX,2+clikY,1)},
 				IndicateChoice = new Dictionary<int,String>(){{0,"c2-right"},{1,"testStream"}},
 				MonsterList = new List<Monster>()
-							{characterList.("슬라임"),
+							{characterList.GetMonster("슬라임"),
 							characterList.GetMonster("뒤틀린 망자")},
 				BackgroundText = backgrounds.GetBackground(0)
 			});
