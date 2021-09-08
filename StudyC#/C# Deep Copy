@@ -133,3 +133,9 @@ List에 내가 지정한 클래스를 넣었을 경우 ConvertAll() 메소드로
 List<MyClass> mc = new MyClass();
 List<MyClass> mc2 = mc.ConvertAll(Converter<MyClass,MyClass>(c => (MyClass)c.Clone));
 이런식으로 가능
+
+
+Dictionary는 복사생성자가 구현되어 있어 생성자에 Dictionary를 그대로 넘기면 복사가 된다.
+
+Dictionary<string,int> dictionary = new Dictionary<string,int>();
+Dictionary<string,int> copy = new Dictionary<string,int>(dictionary);
