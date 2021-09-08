@@ -156,7 +156,7 @@ public static class BattleSystem{
 
 								currentChoice = BCC.GetChoiceClone(currentChoice).QuickNext();
 									if(currentChoice == "reactionPhase"){ //8.22
-										Choice cho = BCC.GetChoiceClone("movePhase");
+										Choice cho = BCC.GetChoice("movePhase");
 										cho.OnlyShowText = new List<TextAndPosition>() //몬스터가 데미지 입을때마다 몬스터 상태메세지 초기화
 											{new TextAndPosition(monster.CurrentState(),15,3+5,1){AlignH = true}};
 									}
