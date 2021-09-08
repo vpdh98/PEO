@@ -12,7 +12,12 @@ using static BattleSystem;
 using static Convenience;
 //using Battle;
 
-
+			/* //파일 생성하는 법
+			DirectoryInfo dr = new DirectoryInfo("Data");
+			dr.Create();
+			FileStream fsa = File.Create("Data/a.txt");
+			fsa.Close();
+			*/
 
 			
 
@@ -28,92 +33,107 @@ namespace Game
 	public class main{
 		public delegate void AttackMethod(Character Attacker,Character Defender);
 		public static AttackMethod attack;
+		static ConsoleKeyInfo keyInfo;
+		static String currentChoice = "c1"; //첫 화면
+		static DisplayTextGame DTG = new DisplayTextGame();
+		static ChoiceControler CC = new ChoiceControler(new Scenario());
+		static CharacterList CList = new CharacterList();
+		static Player player = CList.GetPlayer("용사");
 		public static void Main()
 		{
-			String currentChoice = "c1"; //첫 화면
-			DisplayTextGame DTG = new DisplayTextGame();
-			ChoiceControler CC = new ChoiceControler(new Scenario());
-			CharacterList CList = new CharacterList();
-			
-			
-			
-			/* //파일 생성하는 법
-			DirectoryInfo dr = new DirectoryInfo("Data");
-			dr.Create();
-			FileStream fsa = File.Create("Data/a.txt");
-			fsa.Close();
-			*/
-			
-			Player player = CList.GetPlayer("용사");
-			
 			
 			Task.Factory.StartNew(BattleCal);
 			
 			while(true){
-			DTG.Cho = GameManager.SpawnMonster(CC.GetChoiceClone(currentChoice)); //초기 화면
-				
-			//DTG.PrintListInfo();
+			DTG.Cho = GameManager.SpawnMonster(CC.GetChoiceClone(currentChoice)); //화면 할당
 			DTG.Show();
 			DTG.delay = 0;
 			
-			ConsoleKeyInfo c = Console.ReadKey();
-				while(c.Key != ConsoleKey.Escape){
-					/*Choice choice = CC.GetChoiceClone(currentChoice);
-					if(DTG.Cho != choice){
-						DTG.Cho = choice;
-					}*/
-					DTG.SelectingText(c);
-					if(c.Key == ConsoleKey.Enter){
+			keyInfo = Console.ReadKey();
+				while(keyInfo.Key != ConsoleKey.Escape){
+					DTG.SelectingText(keyInfo);
+					
+					if(keyInfo.Key == ConsoleKey.Enter){
 						currentChoice = DTG.Cho.GetChoiceOn(DTG.currentSelectNum);
 						
-						
 						if(CList.GetMonster(currentChoice) != null){ //배틀페이즈
-							for(int i = 0;i<DTG.Cho.MonsterList.Count;i++){//몬스터 List에서 제거함으로써 spawn이 안되게 함으로 선택지에서 제거.. 하려는 의도였음 8.23
+							/*for(int i = 0;i<DTG.Cho.MonsterList.Count;i++){//몬스터 List에서 제거함으로써 spawn이 안되게 함으로 선택지에서 제거.. 하려는 의도였음 8.23
 								if(DTG.Cho.MonsterList[i].Name == currentChoice){
 									DTG.Cho.MonsterList.RemoveAt(i);
 									break;
 								}
-							}
+							}*/
 							DTG.Init();
 							Console.Clear();
 							currentChoice = BattlePhase(player,CList.GetMonster(currentChoice),DTG.Cho.Name); //currentChoice에 현제 선택된 몬스터 이름이 들어가 있음 //8.23
-							
 							DTG.Cho = CC.GetChoiceClone(currentChoice);
-							
-							//Console.WriteLine(DTG.Cho.MonsterList[0].GetRandomSpawnMessage().text);
 						}
-						Console.WriteLine(currentChoice);
+						
 						DTG.Cho.LeaveChoice();
+						
 						if(CC.GetChoiceClone(currentChoice).ChoiceType == ChoiceType.QUICKNEXT){//QUICKNEXT구현을 위해 추가된 if문
-							DTG.Init();
-							DTG.Cho = CC.GetChoiceClone(currentChoice);
-							DTG.Show();
-							currentChoice = CC.GetChoiceClone(currentChoice).QuickNext();
-							c = Console.ReadKey();
+							runQuickNext();
 						}
 						
 						DTG.Init();
 						break;
 					}
-					DTG.Show();	
-					c = Console.ReadKey();
+					else{
+						DTG.Show();
+						keyInfo = Console.ReadKey();
+					}
 				}
+				
 			}
 			
 		}
 		
+		/*
+		public static void Main(){
+			Scenario ss = new Scenario();
+			ChoiceControler CCC = new ChoiceControler(ss);
+			Choice choice = ss.choices[0];
+			testLog("클론");
+			Choice choice2 = (Choice)choice.Clone();
+			testLog("choice1:"+choice.MonsterList.Count);
+			testLog("choice2: "+choice2.MonsterList.Count);
+			CharacterList cList = new CharacterList();
+			Monster m1 = cList.GetMonster("슬라임");
+			Monster m2 = cList.GetMonster("슬라임");
+			Monster m3 = (Monster)m1.Clone();
+			Monster m4 = m1;
+			
+			DTG.Cho = SpawnMonster(choice2); //화면 할당
+			DTG.Show();
+
+			
+			
+		}
+		*/
+		
+		public static void runQuickNext(){
+			DTG.Init();
+			DTG.Cho = CC.GetChoiceClone(currentChoice);
+			DTG.Show();
+			currentChoice = CC.GetChoiceClone(currentChoice).QuickNext();
+			keyInfo = Console.ReadKey();
+		}
 		
 	}	
 	
 	
 	public static class GameManager{
+		
 		public static Choice SpawnMonster(Choice choice){ //몬스터 선택지가 중앙에 있는 기존 선택지 마지막 열 다음으로 들어가도록 해주는 메소드
 			if(choice.MonsterList == null){
 				return choice;
 			}
 			Random random = new Random();
-			List<Monster> monsterList = choice.MonsterList.ToList();
-			List<TextAndPosition> selectList = choice.SelectText.ToList();
+			
+			//int count = 0; //2021.09.08추가
+			
+			List<Monster> monsterList = choice.MonsterList;
+			List<TextAndPosition> selectList = choice.SelectText;
 			int selectListCount = choice.selectTextNum;
 			int monsterListCount = monsterList.Count;
 			int spawnChance;
@@ -128,15 +148,12 @@ namespace Game
 						//monsterList[i].MonsterInfo();
 						Console.WriteLine(monsterList[i].Name);//@@@@@@@@@@@@@@@@@@@@@@
 						selectList.Add(new TextAndPosition(monsterList[i].GetRandomSelectMessage().text,mPositionX,mPositionY++,true));
-						try{
-							choice.IndicateChoice.Add(selectList.Count-1,monsterList[i].Name);                            //배틀페이즈로 들어가는 선택지로 추가
-						}catch(Exception e){
-							return choice;
-						}
+						choice.IndicateChoice.Add(selectList.Count-1,monsterList[i].Name);                            //배틀페이즈로 들어가는 선택지로 추가
 						monsterList[i].IsSpawn = true;
 					}
 				}
 			}
+			
 			return choice;
 		}
 		
@@ -427,3 +444,20 @@ namespace Game
 //오늘은 마치 예초기에 엉킨 잡초와 같은 이 코드들을 정리해 보기로 했음
 //choice.cs정리함, 모호한 필드 이름 변경, 불필요한 메서드,생성자 제거
 //그리고 노트에 핵심 기능과 필드와 메서드 정리
+
+//2021.9.06
+//한 3일동안 플로우차트를 그려봄
+//확실히 한장의 플로우차트로 나타내보니 필요한부분과 필요없어보이는 부분이 한눈에 들어옴
+//그리고 여전히 몬스터 스폰이 안되서 원인 분석중
+//여러가지로 실험해본 결과 Choice의 Clone()메소드에서 that의 MonsterList가 비어있는것이 원인
+
+//2021.9.08
+//드디어 해결.. 결과는 굉장히 허무..
+//choice의 clone메소드를 실행할때 조건중에 내가만든 isEmptyList()메소드가 쓰이는 구문이 있는데
+//여기서 isEmptyList()안에 list.Any()가 !list.Any()로 되어있어야 했던 것이였다.
+//이제 다행히 스폰은 잘 되지만 들어가는 선택지 보기와 다른 몬스터 객체가 들어가 있는 경우가 생긴다.
+//문제. 처음으로 스폰된 몬스터만 계속 스폰됨. 특이한점은 선택지가 하나만 추가되는데 선택 메세지는 모든 몬스터 객체중에 하나가 랜덤하게 출력됨.
+//원인을 알았음. IndicateChoice목록이 초기화가 안됫음.
+//IndicateChoice만 deepCopy되지 않고 얕은 복사가 되게 되있었음..
+//그리고 예외처리를 대충 해놔서 이런 문제가 발생한것이였음. 다음부턴 예외처리 제데로 하도록
+//해결! 이제 Clone도 잘되고 스폰도 잘된다!!! 짝짝짝
