@@ -1,9 +1,7 @@
 제네릭을 사용할때 형식 매개변수의 인수로 사용되는 형식에 제약 조건을 달 수 있다.
 
 예를 들어 다음과 같은 방식으로 "형식 매개변수" T가 IComparable<T> 인터페이스를 구현하도록 클래스를 선언할 수 있다.
-
 public class AGenericClass<T> where T : IComparable<T> { }
 
 메소드에도 동일한 방식으로 적용 할 수 있다.
-
 public void MyMethod<T>(T t) where T : IMyInterface { }
