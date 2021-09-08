@@ -151,8 +151,6 @@ namespace Characters
 		public List<TextAndPosition> selectMessage;
 		public List<TextAndPosition> SelectMessage{
 			get{
-				testLog("in get");
-				testLog(selectMessage[2].text);
 				return selectMessage;
 			}
 			set{
@@ -167,6 +165,7 @@ namespace Characters
 			SelectMessage = new List<TextAndPosition>(){ new TextAndPosition(Name,10)};
 			SpawnMessage = new List<TextAndPosition>(){new TextAndPosition(Name+"이다.",10)};
 		}
+		
 		public Monster(string name,int hp,int mp,int attack_power,int defense):base(name,hp,mp,attack_power,defense){}
 		
 		override public AttackInfo Attack(){
@@ -184,14 +183,11 @@ namespace Characters
 		
 		public TextAndPosition GetRandomSelectMessage(){
 			Random rand = new Random();
-			Console.WriteLine("in GetRandomSelectMessage");
-			Console.WriteLine(SelectMessage[0]);
 			return SelectMessage[rand.Next(0,SelectMessage.Count)];
 		}
 		
 		public TextAndPosition GetRandomSpawnMessage(){
 			Random rand = new Random();
-			Console.WriteLine("in GetRandomSpawnMessage");
 			return SpawnMessage[rand.Next(0,SpawnMessage.Count)];
 		}
 		
@@ -218,9 +214,6 @@ namespace Characters
 			this.SpawnMessage = new List<TextAndPosition>();
 			this.StateMessage = new List<TextAndPosition>();
 			
-			testLog("in Monster");
-			
-			
 			if(SelectMessage != null)
 				this.SelectMessage = that.SelectMessage.ConvertAll(new Converter<TextAndPosition,TextAndPosition>(o => (TextAndPosition)o.Clone()));
 			if(SpawnMessage != null)
@@ -244,7 +237,10 @@ namespace Characters
 				Console.WriteLine(m.text);
 			}
 		}
-	
+		
+		public override string ToString(){
+			return Name;
+		}
 	}
 	
 	public class NPC : Character,IDamageable,ICharacterState
@@ -355,7 +351,6 @@ namespace Characters
 			};
 			MonsterList.Add(monster.Name,monster);
 			
-			testLog("in CList");
 			///////////////////NPC/////////////////////////////
 		}
 		
