@@ -113,8 +113,6 @@ public class Choice : ICloneable //선택지 부여 하는 클래스
 			return monsterList;
 		}
 		set{
-			if(isEmptyList(value))
-				testLog("몬스터 리스트 초기화");
 			monsterList = value;
 		}
 	}
@@ -148,9 +146,10 @@ public class Choice : ICloneable //선택지 부여 하는 클래스
 			OnlyShowText = ReturnText;
 		}
 	}
+	
+	
 
 	protected Choice(Choice that):this(){
-		
 		if(that.SelectText != null)
 			this.SelectText = that.SelectText.ConvertAll(new Converter<TextAndPosition, TextAndPosition>(o => (TextAndPosition)o.Clone()));
 		if(that.OnlyShowText != null)
@@ -159,9 +158,10 @@ public class Choice : ICloneable //선택지 부여 하는 클래스
 			this.StreamText = that.StreamText.ConvertAll(new Converter<TextAndPosition, TextAndPosition>(o => (TextAndPosition)o.Clone()));
 		if(that.BackgroundText != null)
 			this.BackgroundText = that.BackgroundText.ConvertAll(new Converter<TextAndPosition, TextAndPosition>(o => (TextAndPosition)o.Clone()));
+		this.IndicateChoice = new Dictionary<int,string>(that.IndicateChoice);
 
 		this.QuickDelegate = that.QuickDelegate;
-		this.IndicateChoice = that.IndicateChoice;
+		
 		this.selectTextNum = that.selectTextNum;
 		this.onlyShowTextNum = that.onlyShowTextNum;
 		this.streamTextNum = that.streamTextNum;
@@ -169,17 +169,13 @@ public class Choice : ICloneable //선택지 부여 하는 클래스
 		this.Name = that.Name;
 		this.ChoiceType = that.ChoiceType;
 
-		testLog("in Choice Clone");
 		if(isEmptyList(that.MonsterList)){
-			testLog(that.MonsterList.Count);
 			//try{
 			if(that.MonsterList[0] != null){
-				testLog("in");
 				this.MonsterList = that.MonsterList.ConvertAll(new Converter<Monster, Monster>(o => (Monster)o.Clone()));
 			}
 			//}catch(Exception e){}
 		}
-		testLog("in Choice Clone2");
 		if(that.NPCList != null)
 			this.NPCList = that.NPCList.ConvertAll(new Converter<NPC, NPC>(o => (NPC)o.Clone()));
 	}
