@@ -1,0 +1,15 @@
+swift에서 array를 다룰때 queue나 stack같은 자료구조를 구현할때
+popFirst나 popLast가 필요한 경우가 있는데 그때 indices를 사용해 아래와 같이 사용할 수 있다.
+
+var array:[Int] = [Int]()
+array[array.indices].popFirst()
+
+그리고 아래와 같이 extension을 사용해 깔끔하게 사용할 수 있다.
+
+extension Array{
+    mutating func popFirst()->Element?{
+        return self[self.indices].popFirst()
+    }
+}
+
+array.popFirst()
