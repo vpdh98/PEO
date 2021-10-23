@@ -39,15 +39,17 @@ namespace Game
 		static ChoiceControler CC = new ChoiceControler(new Scenario());
 		static CharacterList CList = new CharacterList();
 		static Player player = CList.GetPlayer("용사");
+		static Inventory inven = new Inventory();
 		public static void Main()
 		{
-			
-			Task.Factory.StartNew(BattleCal);
+			Task.Factory.StartNew(BattleCal);	
 			
 			while(true){
 			DTG.Cho = GameManager.SpawnMonster(CC.GetChoiceClone(currentChoice)); //화면 할당
 			DTG.Show();
 			DTG.delay = 0;
+				
+			
 			
 			keyInfo = Console.ReadKey();
 				while(keyInfo.Key != ConsoleKey.Escape){
@@ -461,3 +463,14 @@ namespace Game
 //IndicateChoice만 deepCopy되지 않고 얕은 복사가 되게 되있었음..
 //그리고 예외처리를 대충 해놔서 이런 문제가 발생한것이였음. 다음부턴 예외처리 제데로 하도록
 //해결! 이제 Clone도 잘되고 스폰도 잘된다!!! 짝짝짝
+
+//2021.9.10
+//goorm의 문제인지 싸지방 컴터문제인지는 모르겟지만 어제 프로젝트 데이터가 싹다 안보였었음
+//
+
+//2021.10.23
+//파견지에 싸지방이 없어져서 약 한달간 코딩을 할 수 없었다.
+//오늘은 간단하게 Item클래스와 inventory클래스를 구현해 보았다.
+//단순히 Item을 Inventory안에 List에 추가시키는 방식으로 구현했다.
+//이제 더 어려운 문제는 이것을 콘솔 UI로 만드는 것이다.
+//유니티같은 강력한 툴이 얼마나 큰 도움을 주는 것인지 온몸으로 느끼는 중
