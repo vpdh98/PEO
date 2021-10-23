@@ -12,6 +12,13 @@ public static class Convenience{
 	
 	public static void testLog(String s){
 		Console.WriteLine(logNum+":"+s);
+		Console.ReadKey();
+		logNum++;
+	}
+	
+	public static void testLog(Object o){
+		Console.WriteLine(logNum+":"+o);
+		Console.ReadKey();
 		logNum++;
 	}
 	
