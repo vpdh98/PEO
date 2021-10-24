@@ -24,6 +24,7 @@ using static Convenience;
 public static class Define{
 		public const int ERROR = 99999;
 		public const String BATTLEPHASE = "BattlePhase";
+		public const String INVENTORY = "Inventory";
 		public const int SCREEN_WIDTH = 64;
 		public const int SCREEN_HEIGHT = 20;
 }
@@ -42,6 +43,10 @@ namespace Game
 		static Inventory inven = new Inventory();
 		public static void Main()
 		{
+			inven.AddItem(new Item());
+			inven.AddItem(new Item(){Name = "전설의검"});
+			
+			
 			Task.Factory.StartNew(BattleCal);	
 			
 			while(true){
@@ -55,16 +60,14 @@ namespace Game
 				while(keyInfo.Key != ConsoleKey.Escape){
 					DTG.SelectingText(keyInfo);
 					
+					if(keyInfo.Key == ConsoleKey.I){
+							inven.OpenInventory();
+						}
+					
 					if(keyInfo.Key == ConsoleKey.Enter){
 						currentChoice = DTG.Cho.GetChoiceOn(DTG.currentSelectNum);
 						
 						if(CList.GetMonster(currentChoice) != null){ //배틀페이즈
-							/*for(int i = 0;i<DTG.Cho.MonsterList.Count;i++){//몬스터 List에서 제거함으로써 spawn이 안되게 함으로 선택지에서 제거.. 하려는 의도였음 8.23
-								if(DTG.Cho.MonsterList[i].Name == currentChoice){
-									DTG.Cho.MonsterList.RemoveAt(i);
-									break;
-								}
-							}*/
 							DTG.Init();
 							Console.Clear();
 							currentChoice = BattlePhase(player,CList.GetMonster(currentChoice),DTG.Cho.Name); //currentChoice에 현제 선택된 몬스터 이름이 들어가 있음 //8.23
@@ -474,3 +477,9 @@ namespace Game
 //단순히 Item을 Inventory안에 List에 추가시키는 방식으로 구현했다.
 //이제 더 어려운 문제는 이것을 콘솔 UI로 만드는 것이다.
 //유니티같은 강력한 툴이 얼마나 큰 도움을 주는 것인지 온몸으로 느끼는 중
+
+//2021.10.24
+//오늘은 인벤토리를 열고 목록을 불러오는 기능을 넣어보았다.
+//이제 아이템을 선택할때 각 아이템 객체의 정보를 불러오고 사용할 수 있게 하는 기능을 추가해야 한다.
+//좀 걸릴거 같다. 일단 inventory클래스에 openInventory()메소드를 추가해서 main에서 I키를 누르면 열게 해놓았다.
+//BattlePhase처럼 따로 Inventory Choice를 따로 분리해서 사용했다. 
