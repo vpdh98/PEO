@@ -30,7 +30,7 @@ public class Choice : ICloneable //선택지 부여 하는 클래스
 	private List<TextAndPosition> streamText;
 	private List<TextAndPosition> backgroundText;
 	private List<TextAndPosition> returnText;
-	private Dictionary<int,String> indicateChoice;
+	private Dictionary<int,Object> indicateChoice;
 	private List<Monster> monsterList;
 	private List<NPC> npcList;
 	private ChoiceType choiceType;
@@ -44,7 +44,7 @@ public class Choice : ICloneable //선택지 부여 하는 클래스
 		onlyShowText = new List<TextAndPosition>();
 		streamText = new List<TextAndPosition>();
 		backgroundText = new List<TextAndPosition>();
-		indicateChoice = new Dictionary<int,String>();
+		indicateChoice = new Dictionary<int,Object>();
 		monsterList = new List<Monster>();
 		npcList = new List<NPC>();
 		choiceType = ChoiceType.NORMAL;
@@ -100,7 +100,7 @@ public class Choice : ICloneable //선택지 부여 하는 클래스
 			returnText = value;
 		}
 	}
-	public Dictionary<int,String> IndicateChoice{
+	public Dictionary<int,Object> IndicateChoice{
 		get{
 			return indicateChoice;
 		}
@@ -128,7 +128,8 @@ public class Choice : ICloneable //선택지 부여 하는 클래스
 		get;
 		set;
 	}
-	public String GetChoiceOn(int num){ //다음 선택지를 indicateChoice에서 찾아 반환
+	
+	public Object GetValueOn(int num){ //bool을 indicateChoice에서 찾아 반환
 		return indicateChoice[num];
 	}
 
@@ -136,9 +137,9 @@ public class Choice : ICloneable //선택지 부여 하는 클래스
 		QuickDelegate();
 	}
 
-	public String QuickNext(){  //choiceType이 QUICKNEXT일때 빠르게 다음 선택지로 넘어갈때 DTG또는 Main에서 호출하는 함수
+	public Object QuickNext(){  //choiceType이 QUICKNEXT일때 빠르게 다음 선택지로 넘어갈때 DTG또는 Main에서 호출하는 함수
 		//Console.ReadKey();
-		return GetChoiceOn(0);
+		return GetValueOn(0);
 	}
 
 	public void LeaveChoice(){
@@ -158,7 +159,7 @@ public class Choice : ICloneable //선택지 부여 하는 클래스
 			this.StreamText = that.StreamText.ConvertAll(new Converter<TextAndPosition, TextAndPosition>(o => (TextAndPosition)o.Clone()));
 		if(that.BackgroundText != null)
 			this.BackgroundText = that.BackgroundText.ConvertAll(new Converter<TextAndPosition, TextAndPosition>(o => (TextAndPosition)o.Clone()));
-		this.IndicateChoice = new Dictionary<int,string>(that.IndicateChoice);
+		this.IndicateChoice = new Dictionary<int,Object>(that.IndicateChoice);
 
 		this.QuickDelegate = that.QuickDelegate;
 		
