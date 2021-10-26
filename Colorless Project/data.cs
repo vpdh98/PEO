@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Characters;
+using static Define;
 
 public class Scenario{
 		int clikX;
@@ -29,7 +30,7 @@ public class Scenario{
 				OnlyShowText = new List<TextAndPosition>()
 							{new TextAndPosition("The Colorless",10+clikX,3+clikY,10,ConsoleColor.Green){PriorityLayer = 1},
 							new TextAndPosition("개발:Peo",1,1,100){PriorityLayer = 2}},
-				IndicateChoice = new Dictionary<int,String>(){{0,"c2"},{1,"test"},{2,"option"}},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"c2"},{1,"test"},{2,"option"}},
 				BackgroundText = backgrounds.GetBackground(0)
 			});
 			
@@ -46,7 +47,7 @@ public class Scenario{
 				StreamText = new List<TextAndPosition>()
 							{new TextAndPosition("한 용사가 있었다.",5+clikX,3+clikY,30){PriorityLayer = 1},
 							new TextAndPosition(1000,"하지만 그는 죽었다.",5+clikX,3+clikY,30,ConsoleColor.Red){PriorityLayer = 2}},
-				IndicateChoice = new Dictionary<int,String>(){{0,"c2"},{1,"test"},{2,"option"}},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"c2"},{1,"test"},{2,"option"}},
 				BackgroundText = backgrounds.GetBackground(0)
 			});
 			
@@ -57,7 +58,7 @@ public class Scenario{
 							  new TextAndPosition(200,"Exit",10,6,true){PriorityLayer = 3}},
 				OnlyShowText = new List<TextAndPosition>()
 							{new TextAndPosition("옵션은 없다.",5,3,30){PriorityLayer = 1}},
-				IndicateChoice = new Dictionary<int,String>(){{0,"c2"},{1,"exit"}},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"c2"},{1,"exit"}},
 				BackgroundText = backgrounds.GetBackground(0)
 			});
 			
@@ -74,7 +75,7 @@ public class Scenario{
 							{new TextAndPosition()},
 				OnlyShowText = new List<TextAndPosition>()
 							{new TextAndPosition("나 갈 수 없 다",5,3,100,ConsoleColor.Red)},
-				IndicateChoice = new Dictionary<int,String>(){{0,"c2"}}
+				IndicateChoice = new Dictionary<int,Object>(){{0,"c2"}}
 			});
 			
 			clikX = 15;
@@ -91,7 +92,7 @@ public class Scenario{
 							new TextAndPosition("울창한 숲.",7+clikX,2+clikY,1)},
 				ReturnText = new List<TextAndPosition>()
 							{new TextAndPosition("여전히 울창한 숲.",7+clikX,2+clikY,1)},
-				IndicateChoice = new Dictionary<int,String>(){{0,"c2-right"},{1,"testStream"}},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"c2-right"},{1,"testStream"}},
 				MonsterList = new List<Monster>()
 							{characterList.GetMonster("슬라임"),
 							characterList.GetMonster("뒤틀린 망자")},
@@ -107,7 +108,7 @@ public class Scenario{
 				StreamText = new List<TextAndPosition>()
 							{new TextAndPosition("함정이였다.",5+clikX,3+clikY,10){PriorityLayer = 1},
 							new TextAndPosition(1000,"You Died",5+clikX,3+clikY,10,ConsoleColor.Red){PriorityLayer = 1}},
-				IndicateChoice = new Dictionary<int,String>(){{0,"c2"}},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"c2"}},
 				BackgroundText = backgrounds.GetBackground(0)
 			});
 			
@@ -138,7 +139,7 @@ public class Scenario{
 							new TextAndPosition("울창한 숲.",7+clikX,2+clikY,1)},
 				ReturnText = new List<TextAndPosition>()
 							{new TextAndPosition("여전히 울창한 숲.",7+clikX,2+clikY,1)},
-				IndicateChoice = new Dictionary<int,String>(){{0,"t0827-1"},{1,"t0827-2"}},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"t0827-1"},{1,"t0827-2"}},
 				
 				MonsterList = new List<Monster>()
 							{characterList.GetMonster("슬라임"),
@@ -159,7 +160,7 @@ public class Scenario{
 							new TextAndPosition("울창한 숲.",7+clikX,2+clikY,1)},
 				ReturnText = new List<TextAndPosition>()
 							{new TextAndPosition("여전히 울창한 숲.",7+clikX,2+clikY,1)},
-				IndicateChoice = new Dictionary<int,String>(){{0,"t0827-1"},{1,"t0827-2"}},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"t0827-1"},{1,"t0827-2"}},
 				
 				MonsterList = new List<Monster>()
 							{characterList.GetMonster("슬라임"),
@@ -180,13 +181,15 @@ public class Scenario{
 							new TextAndPosition("울창한 숲.",7+clikX,2+clikY,1)},
 				ReturnText = new List<TextAndPosition>()
 							{new TextAndPosition("여전히 울창한 숲.",7+clikX,2+clikY,1)},
-				IndicateChoice = new Dictionary<int,String>(){{0,"t0828-1"},{1,"t0828-1"}},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"t0828-1"},{1,"t0828-1"}},
 				
 				MonsterList = new List<Monster>()
 							{characterList.GetMonster("슬라임"),
 							characterList.GetMonster("뒤틀린 망자")},
 				BackgroundText = backgrounds.GetBackground(0)
 			});
+			
+			
 			
 			Count = choices.Count;
 		}
@@ -226,25 +229,65 @@ public class Backgrounds{
 		background.Add(new List<TextAndPosition>(new TextAndPosition[]{
 			new TextAndPosition("┏━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━┓",0,0),
 			new TextAndPosition("┣",0,1),new TextAndPosition("━",1,1),new TextAndPosition("┛",2,1),new TextAndPosition("━",width-1,1),new TextAndPosition("┗",width-2,1),new TextAndPosition("┫",width,1),
-			new TextAndPosition("┃",0,2),new TextAndPosition("┃",width,2),
-			new TextAndPosition("┃",0,3),new TextAndPosition("┃",width,3),
-			new TextAndPosition("┃",0,4),new TextAndPosition("┃",width,4),
-			new TextAndPosition("┃",0,5),new TextAndPosition("┃",width,5),
-			new TextAndPosition("┃",0,6),new TextAndPosition("┃",width,6),
-			new TextAndPosition("┃",0,7),new TextAndPosition("┃",width,7),
-			new TextAndPosition("┃",0,8),new TextAndPosition("┃",width,8),
-			new TextAndPosition("┃",0,9),new TextAndPosition("┃",width,9),
-			new TextAndPosition("┃",0,10),new TextAndPosition("┃",width,10),
-			new TextAndPosition("┃",0,11),new TextAndPosition("┃",width,11),
-			new TextAndPosition("┃",0,12),new TextAndPosition("┃",width,12),
-			new TextAndPosition("┃",0,13),new TextAndPosition("┃",width,13),
-			new TextAndPosition("┃",0,14),new TextAndPosition("┃",width,14),
-			new TextAndPosition("┃",0,15),new TextAndPosition("┃",width,15),
-			new TextAndPosition("┃",0,16),new TextAndPosition("┃",width,16),
-			new TextAndPosition("┃",0,17),new TextAndPosition("┃",width,17),
-			new TextAndPosition("┃",0,18),new TextAndPosition("┃",width,18),
+			new TextAndPosition("┃",0,2),									new TextAndPosition("┃",width,2),
+			new TextAndPosition("┃",0,3),									new TextAndPosition("┃",width,3),
+			new TextAndPosition("┃",0,4),									new TextAndPosition("┃",width,4),
+			new TextAndPosition("┃",0,5),									new TextAndPosition("┃",width,5),
+			new TextAndPosition("┃",0,6),									new TextAndPosition("┃",width,6),
+			new TextAndPosition("┃",0,7),									new TextAndPosition("┃",width,7),
+			new TextAndPosition("┃",0,8),									new TextAndPosition("┃",width,8),
+			new TextAndPosition("┃",0,9),									new TextAndPosition("┃",width,9),
+			new TextAndPosition("┃",0,10),									new TextAndPosition("┃",width,10),
+			new TextAndPosition("┃",0,11),									new TextAndPosition("┃",width,11),
+			new TextAndPosition("┃",0,12),									new TextAndPosition("┃",width,12),
+			new TextAndPosition("┃",0,13),									new TextAndPosition("┃",width,13),
+			new TextAndPosition("┃",0,14),									new TextAndPosition("┃",width,14),
+			new TextAndPosition("┃",0,15),									new TextAndPosition("┃",width,15),
+			new TextAndPosition("┃",0,16),									new TextAndPosition("┃",width,16),
+			new TextAndPosition("┃",0,17),									new TextAndPosition("┃",width,17),
+			new TextAndPosition("┃",0,18),									new TextAndPosition("┃",width,18),
 			new TextAndPosition("┣",0,19),new TextAndPosition("━",1,19),new TextAndPosition("┓",2,19),new TextAndPosition("━",width-1,19),new TextAndPosition("┏",width-2,19),new TextAndPosition("┫",width,19),
 			new TextAndPosition("┗━┻━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┻━┛",0,20)
+		}));
+		
+		background.Add(new List<TextAndPosition>(new TextAndPosition[]{
+			new TextAndPosition("┏━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━┓",0,0),
+			new TextAndPosition("┣",0,1),new TextAndPosition("━",1,1),new TextAndPosition("┫",2,1),new TextAndPosition("━",width-1,1),new TextAndPosition("┣",width-2,1),new TextAndPosition("┫",width,1),
+			new TextAndPosition("┣",0,2),new TextAndPosition("━",1,2), new TextAndPosition("┫",2,2), new TextAndPosition("┣",width-2,2),new TextAndPosition("━",width-1,2),new TextAndPosition("┫",width,2),
+			new TextAndPosition("┣",0,3),new TextAndPosition("━",1,3), new TextAndPosition("┫",2,3),	new TextAndPosition("┣",width-2,3),new TextAndPosition("━",width-1,3),new TextAndPosition("┫",width,3),
+			new TextAndPosition("┣",0,4),new TextAndPosition("━",1,4), new TextAndPosition("┫",2,4),	new TextAndPosition("┣",width-2,4),new TextAndPosition("━",width-1,4),new TextAndPosition("┫",width,4),
+			new TextAndPosition("┣",0,5),new TextAndPosition("━",1,5), new TextAndPosition("┫",2,5),	new TextAndPosition("┣",width-2,5),new TextAndPosition("━",width-1,5),new TextAndPosition("┫",width,5),
+			new TextAndPosition("┣",0,6),new TextAndPosition("━",1,6), new TextAndPosition("┫",2,6),	new TextAndPosition("┣",width-2,6),new TextAndPosition("━",width-1,6),new TextAndPosition("┫",width,6),
+			new TextAndPosition("┣",0,7),new TextAndPosition("━",1,7), new TextAndPosition("┫",2,7),	new TextAndPosition("┣",width-2,7),new TextAndPosition("━",width-1,7),new TextAndPosition("┫",width,7),
+			new TextAndPosition("┣",0,8),new TextAndPosition("━",1,8), new TextAndPosition("┫",2,8),	new TextAndPosition("┣",width-2,8),new TextAndPosition("━",width-1,8),new TextAndPosition("┫",width,8),
+			new TextAndPosition("┣",0,9),new TextAndPosition("━",1,9), new TextAndPosition("┫",2,9),	new TextAndPosition("┣",width-2,9),new TextAndPosition("━",width-1,9),new TextAndPosition("┫",width,9),
+			new TextAndPosition("┣",0,10),new TextAndPosition("━",1,10), new TextAndPosition("┫",2,10),new TextAndPosition("┣",width-2,10),new TextAndPosition("━",width-1,10),new TextAndPosition("┫",width,10),
+			new TextAndPosition("┣",0,11),new TextAndPosition("━",1,11), new TextAndPosition("┫",2,11),new TextAndPosition("┣",width-2,11),new TextAndPosition("━",width-1,11),new TextAndPosition("┫",width,11),
+			new TextAndPosition("┣",0,12),new TextAndPosition("━",1,12), new TextAndPosition("┫",2,12),new TextAndPosition("┣",width-2,12),new TextAndPosition("━",width-1,12),new TextAndPosition("┫",width,12),
+			new TextAndPosition("┣",0,13),new TextAndPosition("━",1,13), new TextAndPosition("┫",2,13),new TextAndPosition("┣",width-2,13),new TextAndPosition("━",width-1,13),new TextAndPosition("┫",width,13),
+			new TextAndPosition("┣",0,14),new TextAndPosition("━",1,14), new TextAndPosition("┫",2,14),new TextAndPosition("┣",width-2,14),new TextAndPosition("━",width-1,14),new TextAndPosition("┫",width,14),
+			new TextAndPosition("┣",0,15),new TextAndPosition("━",1,15), new TextAndPosition("┫",2,15),new TextAndPosition("┣",width-2,15),new TextAndPosition("━",width-1,15),new TextAndPosition("┫",width,15),
+			new TextAndPosition("┣",0,16),new TextAndPosition("━",1,16), new TextAndPosition("┫",2,16),new TextAndPosition("┣",width-2,16),new TextAndPosition("━",width-1,16),new TextAndPosition("┫",width,16),
+			new TextAndPosition("┣",0,17),new TextAndPosition("━",1,17), new TextAndPosition("┫",2,17),new TextAndPosition("┣",width-2,17),new TextAndPosition("━",width-1,17),new TextAndPosition("┫",width,17),
+			new TextAndPosition("┣",0,18),new TextAndPosition("━",1,18), new TextAndPosition("┫",2,18),new TextAndPosition("┣",width-2,18),new TextAndPosition("━",width-1,18),new TextAndPosition("┫",width,18),
+			new TextAndPosition("┣",0,19),new TextAndPosition("━",1,19),new TextAndPosition("┫",2,19),new TextAndPosition("━",width-1,19),new TextAndPosition("┣",width-2,19),new TextAndPosition("┫",width,19),
+			new TextAndPosition("┗━┻━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┻━┛",0,20)
+		}));
+		background.Add(new List<TextAndPosition>(new TextAndPosition[]{
+			new TextAndPosition("┏━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━┓",16,2),
+			new TextAndPosition("┣",16,3),new TextAndPosition("━",17,3),new TextAndPosition("┛",18,3),new TextAndPosition("━",width-17,3),new TextAndPosition("┗",width-18,3),new TextAndPosition("┫",width-16,3),		new TextAndPosition("┃",16,4),									new TextAndPosition("┃",width-16,4),
+			new TextAndPosition("┃",16,5),									new TextAndPosition("┃",width-16,5),
+			new TextAndPosition("┃",16,6),									new TextAndPosition("┃",width-16,6),
+			new TextAndPosition("┃",16,7),									new TextAndPosition("┃",width-16,7),
+			new TextAndPosition("┃",16,8),									new TextAndPosition("┃",width-16,8),
+			new TextAndPosition("┃",16,9),									new TextAndPosition("┃",width-16,9),
+			new TextAndPosition("┃",16,10),									new TextAndPosition("┃",width-16,10),
+			new TextAndPosition("┃",16,11),									new TextAndPosition("┃",width-16,11),
+			new TextAndPosition("┃",16,12),									new TextAndPosition("┃",width-16,12),
+			new TextAndPosition("┃",16,13),									new TextAndPosition("┃",width-16,13),
+			new TextAndPosition("┃",16,14),									new TextAndPosition("┃",width-16,14),
+			new TextAndPosition("┣",16,15),new TextAndPosition("━",17,15),new TextAndPosition("┓",18,15),new TextAndPosition("━",width-17,15),new TextAndPosition("┏",width-18,15),new TextAndPosition("┫",width-16,15),
+			new TextAndPosition("┗━┻━━━━━━━━━━━━━━━━━━━━━━━━━━━┻━┛",16,16)
 		}));
 
 		Coloring();
