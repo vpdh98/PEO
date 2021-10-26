@@ -63,7 +63,7 @@ public static class BattleSystem{
 							new TextAndPosition("도망간다.",40,13,true)},
 				OnlyShowText = new List<TextAndPosition>()
 							{new TextAndPosition(monster.GetRandomSpawnMessage().text,15,3+5,1){AlignH = true}},
-				IndicateChoice = new Dictionary<int,String>(){{0,"movePhase"},{1,"end"}},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"movePhase"},{1,"end"}},
 				BackgroundText = backgrounds.GetBackground(1)
 			};
 
@@ -75,7 +75,7 @@ public static class BattleSystem{
 							new TextAndPosition("회피",40,13,true)},
 				OnlyShowText = new List<TextAndPosition>()
 							{new TextAndPosition(monster.CurrentState(),15,3+5,1){AlignH = true}},
-				IndicateChoice = new Dictionary<int,String>(){{0,"attackPhase"},{1,"b4"},{2,"b4"}},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"attackPhase"},{1,"b4"},{2,"b4"}},
 				BackgroundText = backgrounds.GetBackground(1)
 			};
 
@@ -84,7 +84,7 @@ public static class BattleSystem{
 				ChoiceType = ChoiceType.QUICKNEXT,
 				OnlyShowText = new List<TextAndPosition>()
 							{new TextAndPosition(monster.Name+"베기!",5,9,10,ConsoleColor.Red){AlignH = true,PriorityLayer=1}},
-				IndicateChoice = new Dictionary<int,String>(){{0,"reactionPhase"}},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"reactionPhase"}},
 				BackgroundText = backgrounds.GetBackground(1)
 			};
 
@@ -93,7 +93,7 @@ public static class BattleSystem{
 				ChoiceType = ChoiceType.QUICKNEXT,
 				OnlyShowText = new List<TextAndPosition>()
 							{new TextAndPosition("(몬스터 피해 메세지)",5,9,10){AlignH = true,PriorityLayer=1}},
-				IndicateChoice = new Dictionary<int,String>(){{0,"movePhase"}},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"movePhase"}},
 				BackgroundText = backgrounds.GetBackground(1)
 			};
 
@@ -103,7 +103,7 @@ public static class BattleSystem{
 							{new TextAndPosition("확인",16,13,true)},
 				OnlyShowText = new List<TextAndPosition>()
 							{new TextAndPosition(monster.CurrentState(),15,3+5,1){AlignH = true}},
-				IndicateChoice = new Dictionary<int,String>(){{0,"backField"}},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"backField"}},
 				BackgroundText = backgrounds.GetBackground(1)
 			};
 
@@ -130,7 +130,7 @@ public static class BattleSystem{
 							BDTG.SelectingText(c);
 
 						if(c.Key == ConsoleKey.Enter){
-							currentChoice = BDTG.Cho.GetChoiceOn(BDTG.currentSelectNum);// 선택한 보기에따라 초이스 선택
+							currentChoice = (String)BDTG.Cho.GetValueOn(BDTG.currentSelectNum);// 선택한 보기에따라 초이스 선택
 
 							if(monster.HpState() == 3){ //8.22 몬스터의 HP상태가 빈사 상태일때 배틀 페이즈 종료 const int Died = 3
 								BDTG.Init();
@@ -154,7 +154,7 @@ public static class BattleSystem{
 								BDTG.Cho = BCC.GetChoiceClone(currentChoice);
 								BDTG.Show();
 
-								currentChoice = BCC.GetChoiceClone(currentChoice).QuickNext();
+								currentChoice = (String)BCC.GetChoiceClone(currentChoice).QuickNext();
 									if(currentChoice == "reactionPhase"){ //8.22
 										Choice cho = BCC.GetChoice("movePhase");
 										cho.OnlyShowText = new List<TextAndPosition>() //몬스터가 데미지 입을때마다 몬스터 상태메세지 초기화
@@ -168,7 +168,6 @@ public static class BattleSystem{
 						}
 						//방향키나 숫자를 누르면 여기로 넘어옴
 						BDTG.Show();	
-						Console.WriteLine("@@@@@@@@@@@@"+monster.HpState()+";;;;;;;;;;;;;;");
 						c = Console.ReadKey();
 					}
 
