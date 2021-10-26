@@ -127,6 +127,8 @@ public class DisplayTextGame{
 		int countPoint = 0;								//한글자씩 출력하는 기능을 위한 count
 		bool stopStart = false;							//   		"			변수
 		TextAndPosition stopText = new TextAndPosition();//			"			변수
+	
+		bool isClear = true;							//화면을 클리어하고 다음 화면을 출력하는지에 대한 변수
 		
 		public void Init(){
 			selectList = new List<TextAndPosition>();
@@ -154,6 +156,10 @@ public class DisplayTextGame{
 			integratedList = new List<TextAndPosition>();
 			streamList = new List<TextAndPosition>();
 			backgroundList = new List<TextAndPosition>();
+		}
+	
+		public DisplayTextGame(bool isClear):this(){
+			this.isClear = isClear;
 		}
 		
 		Choice cho;
@@ -235,7 +241,7 @@ public class DisplayTextGame{
 		
 		public void Show()
 		{
-			Console.Clear();
+			if(isClear) {Console.Clear();}
 			ShowAllList();
 		}
 			
