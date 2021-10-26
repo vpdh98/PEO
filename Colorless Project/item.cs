@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
+using static Convenience;
 
 public class Item{
-	public string Name{get;set;}
+	public String Name{get;set;}
 	
 	bool useable = false;
 	bool stackable = false;
@@ -11,6 +12,10 @@ public class Item{
 	
 	public Item(){
 		Name = "unknown";
+	}
+	
+	public virtual void Use(){
+		testLog("아이템 사용!");
 	}
 }
 
