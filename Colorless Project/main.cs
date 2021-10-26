@@ -62,10 +62,10 @@ namespace Game
 					
 					if(keyInfo.Key == ConsoleKey.I){
 							inven.OpenInventory();
-						}
+					}
 					
 					if(keyInfo.Key == ConsoleKey.Enter){
-						currentChoice = DTG.Cho.GetChoiceOn(DTG.currentSelectNum);
+						currentChoice = (String)DTG.Cho.GetValueOn(DTG.currentSelectNum);
 						
 						if(CList.GetMonster(currentChoice) != null){ //배틀페이즈
 							DTG.Init();
@@ -120,7 +120,7 @@ namespace Game
 			DTG.Init();
 			DTG.Cho = CC.GetChoiceClone(currentChoice);
 			DTG.Show();
-			currentChoice = CC.GetChoiceClone(currentChoice).QuickNext();
+			currentChoice = (String)CC.GetChoiceClone(currentChoice).QuickNext();
 			keyInfo = Console.ReadKey();
 		}
 		
@@ -483,3 +483,11 @@ namespace Game
 //이제 아이템을 선택할때 각 아이템 객체의 정보를 불러오고 사용할 수 있게 하는 기능을 추가해야 한다.
 //좀 걸릴거 같다. 일단 inventory클래스에 openInventory()메소드를 추가해서 main에서 I키를 누르면 열게 해놓았다.
 //BattlePhase처럼 따로 Inventory Choice를 따로 분리해서 사용했다. 
+
+//2021.10.26
+//백신맞고 하루 못했다
+//오늘은 인벤토리의 아이템 사용기능을 구현하기위해 확인창을 띄우는 confirm_window 클래스를 만들었다.
+//Choice로 더 다양한 기능을 사용하고자 현재 선택문장에 해당된 String값을 가져오는 GetChoiceOn()메소드를
+//GetValueOn()메소드로 변경하여 Object형식으로 가져오게 만들었다.
+//그리고 확인창이 기존창 위에 뜬것처럼 보이기 위해 DisplayTextGame클래스에 isClear변수를 추가해 false일 경우 콘솔을 지우지 않고 그위에 그대로 출력하도록 하였다.
+//확인누르면 해당 아이템 객체의 Use()메소드를 호출하도록 함. Use()메소드는 오버라이딩을 통해 무기와 소모품의 사용 방식을 다르게 할 예정
