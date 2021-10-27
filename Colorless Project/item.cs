@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using static Convenience;
+using Game;
+
 
 public class Item{
 	public String Name{get;set;}
@@ -15,16 +17,37 @@ public class Item{
 	}
 	
 	public virtual void Use(){
-		testLog("아이템 사용!");
+		testLog("아이템 사용!: "+Name);
+	}
+	
+	public virtual String Explan(){
+		return "아이템 설명";
 	}
 }
 
 public class Weapon : Item{
-	int attackPower = 0;
-	int durability = 1;
+	public int AttackPower{get;set;} = 0;
+	public int AttackSpeed{get;set;} = 0;
+	
+	public override void Use(){
+		GameManager.Equip(this);
+	}
+	
+}
+
+public class Armor : Item{
+	public int Defense{get;set;} = 0;
+	
+	public override void Use(){
+		GameManager.Equip(this);
+	}
 	
 }
 
 public class Potion : Item{
+	public int Hp{get;set;}
 	
+	public override void Use(){
+		GameManager.Eat(this);
+	}
 }
