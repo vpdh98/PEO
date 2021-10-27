@@ -7,15 +7,19 @@ using static GameWindows;
 public class Inventory{
 	List<Item> inventory;
 	
-	int maximumCount = 10;
+	int maximumCount = 20;
 	
 	public Inventory(){
 		inventory = new List<Item>();
 	}
 	
-	public void AddItem(Item item){
-		if(item != null && inventory.Count<maximumCount)
+	public bool AddItem(Item item){
+		if(item != null && inventory.Count<maximumCount){
 			inventory.Add(item);
+			return true;
+		}
+		else
+			return false;
 	}
 	
 	public Item GetItem(int num){
@@ -32,7 +36,10 @@ public class Inventory{
 		}
 		List<TextAndPosition> itemList = new List<TextAndPosition>();
 		for(int i = 0;i<inventory.Count;i++){
-			itemList.Add(new TextAndPosition(inventory[i].Name,28,i+2,true));
+			if(i < 10)
+				itemList.Add(new TextAndPosition(inventory[i].Name,18,i+2,true));
+			else
+				itemList.Add(new TextAndPosition(inventory[i].Name,36,i-8,true));
 		}
 		Dictionary<String,Item> invenListObject = new Dictionary<String,Item>();
 		for(int i = 0;i<inventory.Count;i++){
@@ -63,8 +70,15 @@ public class Inventory{
 
 					if(c.Key == ConsoleKey.Enter){
 						Item i = invenListObject[(String)IDTG.Cho.GetValueOn(IDTG.currentSelectNum)];
-						if(ConfirmWindow("아이템을 사용하시겠습니까?",24,7)){
-							i.Use();
+						if(i.GetType().Name == "Weapon"){
+							if(ConfirmWindow("장비를 착용 하시겠습니까?",24,7)){
+								i.Use();
+							}
+						}
+						else{
+							if(ConfirmWindow("아이템을 사용하시겠습니까?",24,7)){
+								i.Use();
+							}
 						}
 					}
 					/*if(c.Key == ConsoleKey.Escape){
