@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Game;
 using System.IO;
 using static Convenience;
+using static GameWindows;
 
 
 namespace Characters
@@ -113,19 +114,55 @@ namespace Characters
 	
 	public class Player : Character,IDamageable,ICharacterState
 	{
+		Weapon weapon;
+		public Weapon Weapon{
+			get{
+				return weapon;
+			}
+			set{
+				if(weapon == null)
+					weapon = value;
+				else{
+					if(weapon == value)
+						if(ConfirmWindow("이미 장착된 무기 입니다.해제하시겠습니까?",24,7)){
+							weapon = null;
+						}
+					else
+						ConfirmWindow("이미 무기가 존재합니다.",24,7);
+				}
+			}
+		}
+		Armor armor;
+		public Armor Armor{
+			get{
+				return armor;
+			}
+			set{
+				if(armor == null)
+					armor = value;
+				else{
+					if(armor == value){
+						ConfirmWindow("이미 장착된 방어구 입니다.",24,7);
+					}
+					else{
+						ConfirmWindow("이미 방어구가 존재합니다.",24,7);
+					}
+				}
+			}
+		}
 		
 		public Player():base(){}
 		public Player(string name,int hp,int mp,int attack_power,int defense):base(name,hp,mp,attack_power,defense){}
 		
 		override public AttackInfo Attack(){
 			AttackInfo aInfo = new AttackInfo();
-			aInfo.Final_damage = AttackPower;
+			aInfo.Final_damage = Weapon == null ? AttackPower : (AttackPower + Weapon.AttackPower);
 		 	return aInfo;
 		}
 		
 		override public AttackInfo Damage(AttackInfo attack_info){
 			AttackInfo aInfo = attack_info;
-			aInfo.CalDamage(Defense);
+			aInfo.CalDamage(Weapon == null ? Defense : (Defense + Armor.Defense));
 			Hp -= aInfo.Final_damage;
 			return aInfo;
 		}
@@ -135,7 +172,7 @@ namespace Characters
 		}
 		
 		protected Player(Player that):base(that){
-			
+						
 		}
 		
 		public Object Clone(){
