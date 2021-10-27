@@ -10,6 +10,7 @@ using System.Linq;
 using System.IO;
 using static BattleSystem;
 using static Convenience;
+using Game;
 //using Battle;
 
 			/* //파일 생성하는 법
@@ -39,12 +40,26 @@ namespace Game
 		static DisplayTextGame DTG = new DisplayTextGame();
 		static ChoiceControler CC = new ChoiceControler(new Scenario());
 		static CharacterList CList = new CharacterList();
-		static Player player = CList.GetPlayer("용사");
+		public static Player player = CList.GetPlayer("용사");
 		static Inventory inven = new Inventory();
 		public static void Main()
 		{
 			inven.AddItem(new Item());
 			inven.AddItem(new Item(){Name = "전설의검"});
+			inven.AddItem(new Item(){Name = "HP물약"});
+			inven.AddItem(new Item(){Name = "MP물약"});
+			inven.AddItem(new Item(){Name = "무색 프리즘"});
+			inven.AddItem(new Item(){Name = "???"});
+			inven.AddItem(new Weapon(){Name = "낡은 검",AttackPower = 10,AttackSpeed = 1});
+			inven.AddItem(new Item(){Name = "고장난 시계"});
+			inven.AddItem(new Item(){Name = "꿀"});
+			inven.AddItem(new Item(){Name = "향로"});
+			inven.AddItem(new Item(){Name = "피리"});
+			inven.AddItem(new Item(){Name = "파리"});
+			inven.AddItem(new Item(){Name = "낡은 방패"});
+			inven.AddItem(new Item(){Name = "네후쉽의 수프"});
+			inven.AddItem(new Item(){Name = "Red 프리즘"});
+			inven.AddItem(new Item(){Name = "??????"});
 			
 			
 			Task.Factory.StartNew(BattleCal);	
@@ -199,6 +214,20 @@ namespace Game
 			return firstNum;
 		}
 		
+		public static void Equip(Item item){
+			if(item.GetType().Name == "Weapon"){
+				main.player.Weapon = (Weapon)item;
+			}
+			if(item.GetType().Name == "Armor"){
+				main.player.Armor = (Armor)item;
+			}
+		}
+		
+		public static void Eat(Item item){
+			if(item.GetType().Name == "Potion"){
+				main.player.Hp += ((Potion)item).Hp;
+			}
+		}
 		
 	}
 	
@@ -491,3 +520,15 @@ namespace Game
 //GetValueOn()메소드로 변경하여 Object형식으로 가져오게 만들었다.
 //그리고 확인창이 기존창 위에 뜬것처럼 보이기 위해 DisplayTextGame클래스에 isClear변수를 추가해 false일 경우 콘솔을 지우지 않고 그위에 그대로 출력하도록 하였다.
 //확인누르면 해당 아이템 객체의 Use()메소드를 호출하도록 함. Use()메소드는 오버라이딩을 통해 무기와 소모품의 사용 방식을 다르게 할 예정
+
+//2021.10.27
+//오늘은 인벤토리의 아이템을 사용또는 장비를 착용하는 기능을 구현해 보았다.
+//inventory에서 아이템 목록 선택 -> 아이템 사용 확인 메세지 -> 아이템 사용 or 착용
+//inventory에서 아이템을 선택하면 invenListObject안에 있는 아이템 객체를 가져옴
+//사용 확인 메세지를 띄우고 확인을 누른다면 Item객체안에 있는 Use메소드를 호출
+//Use메소드 안에서는 static 클래스인 GameManager안에 Equip또는 Eat 호출(장비냐 소모품이냐에 따라 달라짐)
+//Equip메소드 안에서 main의 static 맴버 player를 가져와서 player의 Weapon맴버에 장비 장착
+//만약 이미 같은 장비가 장착되어 있다면 아이템 해제 확인메세지 띄운후 확인 누르면 Weapon에 null값을 넣음
+//여기서 장비인지 소모품인지는 if문과 GetType()을 이용해서 구분하게함
+//이제 인벤토리에서 버리는 기능과 아이템 설명을 보여주는 기능을 추가해야함
+//현재 아이템 코드가 따로 없어서 같은 이름을 가진 템은 무조건 같은 템으로 구분됨
