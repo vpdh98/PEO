@@ -16,9 +16,10 @@ public static class Convenience{
 		logNum++;
 	}
 	
-	public static void testLog(Object o){
+	public static void testLog(Object o,bool delay = true){
 		Console.WriteLine(logNum+":"+o);
-		Console.ReadKey();
+		if(delay)
+			Console.ReadKey();
 		logNum++;
 	}
 	
@@ -35,14 +36,17 @@ public static class Convenience{
 	public static bool isEmptyList<T>(List<T> list,bool print = false){
 		if(list == null){
 			if(print) Console.WriteLine("이 리스트는 null 입니다.");
-			return false;
+			//Console.ReadKey();
+			return true;
 		}
 		if(!list.Any() || list.Count == 0){
 			if(print) Console.WriteLine("이 리스트는 비었습니다.");
-			return false;
+			//Console.ReadKey();
+			return true;
 		}else{
 			if(print) Console.WriteLine("이 리스트는 비지 않았습니다.");
-			return true;
+			//Console.ReadKey();
+			return false;
 		}
 	}
 	
