@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Game;
+using static Convenience;
 
 
 
@@ -278,6 +279,7 @@ public class DisplayTextGame{
 		public void PrintAlgorithm(){
 			ConsoleColor tempC;
 			if(currentArrowingText == null && selectList != null && choiceType != ChoiceType.QUICKNEXT) //choice 첫 호출때 화살표가 보이게 하기 위함
+			if(!isEmptyList<TextAndPosition>(selectList))
 				currentArrowingText = selectList[0].text;
 				if(integratedList != null){
 						for(int i = 0;i<integratedList.Count;i++){
@@ -298,9 +300,11 @@ public class DisplayTextGame{
 							else{ //stopPoint == 0조건 추가하면 순차적으로 출력된다음 다음 내용 출력. 없에면 한꺼번에 출력
 								FrontDelay(TAndP);//해당 텍스트를 딜레이시키고 딜레이 0으로 만듦
 								Console.SetCursorPosition(TAndP[0]+globalPositionX,TAndP[1]+globalPositionY);
-								if(TAndP.isSelect && choiceType != ChoiceType.QUICKNEXT){
-									int temp = selectList.FindIndex(x => x.text == TAndP.text);
-									voidARROW = temp+1+".";
+								if(!isEmptyList<TextAndPosition>(selectList)){
+									if(TAndP.isSelect && choiceType != ChoiceType.QUICKNEXT){
+										int temp = selectList.FindIndex(x => x.text == TAndP.text);
+										voidARROW = temp+1+".";
+									}
 								}
 								Console.Write(TextArrower(TAndP.text,TAndP.isSelect));
 							}
