@@ -120,11 +120,14 @@ namespace Characters
 				return weapon;
 			}
 			set{
-				if(weapon == null)
+				if(weapon == null){
 					weapon = value;
+					weapon.IsEquip = true;
+				}
 				else{
 					if(weapon == value)
 						if(ConfirmWindow("이미 장착된 무기 입니다.해제하시겠습니까?",24,7)){
+							weapon.IsEquip = false;
 							weapon = null;
 						}
 					else
@@ -383,6 +386,32 @@ namespace Characters
 					new TextAndPosition("절뚝거리며 달려오는 망자.",10),
 					new TextAndPosition("곧 쓰러질것 같다.",10),
 					new TextAndPosition("망자는 사자가 되었다.",10)
+				}
+				
+			};
+			MonsterList.Add(monster.Name,monster);
+			
+			monster = new Monster(){
+				Name = "헐크",
+				MaxHp = 10000,
+				Hp = 10000,
+				Mp = 0,
+				AttackPower = 100,
+				Defense = 100,
+				SpawnChance = 10,
+				SelectMessage = new List<TextAndPosition> 
+				{new TextAndPosition("저게 뭐야!!!",10),
+				new TextAndPosition("헐..크..?",10),
+				new TextAndPosition("!!!!!!",10)},
+				SpawnMessage = new List<TextAndPosition>()
+				{new TextAndPosition("온몸이 초록색인 이성잃은 괴물..",10),						   
+				 new TextAndPosition("헐크다!!!",10)},
+				StateMessage = new List<TextAndPosition>()
+				{
+					new TextAndPosition("멀뚱히 서있다.",10),
+					new TextAndPosition("화가나 보인다.",10),
+					new TextAndPosition("움직임이 둔해졌다.",10),
+					new TextAndPosition("헐크를.. 죽였다.",10)
 				}
 				
 			};
