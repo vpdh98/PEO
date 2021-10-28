@@ -38,4 +38,20 @@ public static class GameWindows{
 		}
 		return confirm;
 	}
+	
+	public static void AlertWindow(String text,int xPos,int yPos){
+		DisplayTextGame CDTG = new DisplayTextGame(false);
+		
+		Choice ConfirmCho = new Choice(){
+				Name = "ConfirmWindow",
+				SelectText = new List<TextAndPosition>(),
+				OnlyShowText = new List<TextAndPosition>()
+							{new TextAndPosition(text,xPos,yPos){PriorityLayer = 1,AlignH = true}},
+				BackgroundText = backgrounds.GetBackground(3)
+		};
+		
+		CDTG.Cho = ConfirmCho; //화면 할당
+		CDTG.Show();
+		ConsoleKeyInfo keyInfo = Console.ReadKey();
+	}
 }
