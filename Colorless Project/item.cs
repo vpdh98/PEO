@@ -23,9 +23,18 @@ public class Item{
 	public virtual String Explan(){
 		return "아이템 설명";
 	}
+	
+	public bool Equals(Item other){
+		if(other==null) return false;
+		return (this.Name.Equals(other.Name));
+	}
 }
 
-public class Weapon : Item{
+public class Equipment : Item{
+	 public bool IsEquip {get;set;} = false;
+}
+
+public class Weapon : Equipment{
 	public int AttackPower{get;set;} = 0;
 	public int AttackSpeed{get;set;} = 0;
 	
@@ -35,7 +44,7 @@ public class Weapon : Item{
 	
 }
 
-public class Armor : Item{
+public class Armor : Equipment{
 	public int Defense{get;set;} = 0;
 	
 	public override void Use(){
