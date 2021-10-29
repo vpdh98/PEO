@@ -12,6 +12,8 @@ public class Item{
 	
 	int amount; //stackable이 true일때 사용
 	
+	public String ItemExplan{get;set;} = "아이템 설명";
+	
 	public Item(){
 		Name = "unknown";
 	}
@@ -21,7 +23,7 @@ public class Item{
 	}
 	
 	public virtual String Explan(){
-		return "아이템 설명";
+		return ItemExplan;
 	}
 	
 	public bool Equals(Item other){
