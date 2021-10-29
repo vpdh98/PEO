@@ -255,6 +255,8 @@ public class DisplayTextGame{
 				Quick();
 			if(choiceType == ChoiceType.QUICKNEXT)
 				QuickChoice();
+			if(choiceType == ChoiceType.EXPLAN)
+				PrintWriteLine();
 		}
 	
 		public void Normal(){
@@ -310,6 +312,40 @@ public class DisplayTextGame{
 							}
 							Console.ForegroundColor = tempC;
 							Thread.Sleep(delay);
+						}
+					delay = 0;
+				}
+		}
+	
+		public void PrintWriteLine(){
+			ConsoleColor tempC;
+				if(integratedList != null){
+						for(int i = 0;i<integratedList.Count;i++){
+							TextAndPosition TAndP = integratedList[i];
+							if(TAndP.color!=null){
+								tempC = Console.ForegroundColor;
+								Console.ForegroundColor = TAndP.color;
+							}
+							 //stopPoint == 0조건 추가하면 순차적으로 출력된다음 다음 내용 출력. 없에면 한꺼번에 출력
+								FrontDelay(TAndP);//해당 텍스트를 딜레이시키고 딜레이 0으로 만듦
+								int y = 0;
+								int x = 0;
+								Console.SetCursorPosition(TAndP[0]+globalPositionX,TAndP[1]+globalPositionY);
+								String ts = "";
+								for(int j = 0;j<TAndP.text.Length;j++){
+									char c = TAndP.text[j];
+									if(c == '\n'){
+										y++;
+										ts="";
+									}else{
+										Console.SetCursorPosition(TAndP[0]+globalPositionX+x,TAndP[1]+globalPositionY+y);
+										ts+=c;
+										Console.Write(ts);
+										
+									}
+								}
+								
+							
 						}
 					delay = 0;
 				}
@@ -401,25 +437,15 @@ public class DisplayTextGame{
 				}
 			}
 		}*/
-		
-		public void PrintLog(int x,int y,int text){
-			Console.SetCursorPosition(x,y);
-			Console.WriteLine(text);
-		}
-		
-		public void PrintLog(int x,int y,String text){
-			Console.SetCursorPosition(x,y);
-			Console.WriteLine(text);
-		}
 			
 		public String TextArrower(String s,bool isSelect){ //항상 currentArrowingText에 할당된 Text에 화살표를 붙인다
 			if(isSelect && choiceType != ChoiceType.QUICKNEXT){
-				if(s.Equals(currentArrowingText))
+				if(s.Equals(currentArrowingText))			//매개변수 s가 현재 선택된 Text면 화살표를 붙이고 아니면 화살표 없이 반환
 					return ARROW+currentArrowingText;
 				else
 					return voidARROW+s;
 			}
-			return s;
+			return s;										//선택 가능한 text가 아니면 그냥 바로 반환
 		}
 		
 		public void SelectingText(ConsoleKeyInfo key){ //방향키를 누르면 currentArrowingText에 할당되는 Text를 순차적으로 바꾼다.
