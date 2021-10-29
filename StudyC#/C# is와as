@@ -14,3 +14,5 @@ if(AAA is BBB)
   
 if(BBB is AAA)
   print("형변환 가능");
+
+부모의 부모 클래스와의 형변환 여부도 확인 가능한다.
