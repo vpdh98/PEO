@@ -54,4 +54,36 @@ public static class GameWindows{
 		CDTG.Show();
 		ConsoleKeyInfo keyInfo = Console.ReadKey();
 	}
+	
+	public static void ExplanWindow(Item item,int xPos,int yPos){
+		DisplayTextGame CDTG = new DisplayTextGame(false);
+		List<TextAndPosition> tap = new List<TextAndPosition>();
+		if(item is Weapon){
+			Weapon wep = item as Weapon;
+			tap = new List<TextAndPosition>()
+								{new TextAndPosition(item.Explan(),xPos,yPos),
+								new TextAndPosition("공격력: "+wep.AttackPower,xPos,yPos+11),
+								new TextAndPosition("속도: "+wep.AttackSpeed,xPos+15,yPos+11)};
+			
+		}
+		else if(item is Armor){
+			Armor arm = item as Armor;
+			tap = new List<TextAndPosition>()
+								{new TextAndPosition(item.Explan(),xPos,yPos),
+								new TextAndPosition("방어력: "+arm.Defense,xPos,yPos+11)};
+		}
+		else{
+			tap = new List<TextAndPosition>()
+								{new TextAndPosition(item.Explan(),xPos,yPos)};
+		}
+		Choice ConfirmCho = new Choice(){
+					Name = "ExplanWindow",
+					ChoiceType = ChoiceType.EXPLAN,
+					OnlyShowText = tap,
+					BackgroundText = backgrounds.GetBackground(4)
+			};
+		
+		CDTG.Cho = ConfirmCho; //화면 할당
+		CDTG.Show();
+	}
 }
