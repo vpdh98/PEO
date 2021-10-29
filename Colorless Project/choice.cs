@@ -12,7 +12,8 @@ public enum ChoiceType{
 			GET,		//획득
 			SET,		//장착
 			QUICK,		//즉시 실행
-			QUICKNEXT	//즉시 다음 선택지
+			QUICKNEXT,	//즉시 다음 선택지
+			EXPLAN
 }
 
 public class Choice : ICloneable //선택지 부여 하는 클래스
@@ -170,7 +171,7 @@ public class Choice : ICloneable //선택지 부여 하는 클래스
 		this.Name = that.Name;
 		this.ChoiceType = that.ChoiceType;
 
-		if(isEmptyList(that.MonsterList)){
+		if(!isEmptyList(that.MonsterList)){
 			//try{
 			if(that.MonsterList[0] != null){
 				this.MonsterList = that.MonsterList.ConvertAll(new Converter<Monster, Monster>(o => (Monster)o.Clone()));
