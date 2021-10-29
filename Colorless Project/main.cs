@@ -50,7 +50,7 @@ namespace Game
 			inven.AddItem(new Item(){Name = "MP물약"});
 			inven.AddItem(new Item(){Name = "무색 프리즘"});
 			inven.AddItem(new Item(){Name = "???"});
-			inven.AddItem(new Weapon(){Name = "낡은 검",AttackPower = 10,AttackSpeed = 1});
+			inven.AddItem(new Weapon(){Name = "낡은 검",ItemExplan="이것은 네후쉽이 파는 검 중\n하나로 낡아 오히려 도움이\n되지 않을것 같은 검이다.",AttackPower = 10,AttackSpeed = 1,});
 			inven.AddItem(new Item(){Name = "고장난 시계"});
 			inven.AddItem(new Item(){Name = "꿀"});
 			inven.AddItem(new Item(){Name = "향로"});
@@ -540,3 +540,12 @@ namespace Game
 //장착된 장비는 버릴 수 없게 하였다. 
 //AlentWindow를 추가하였다.
 //selectList가 없다면 화면이 출력이 안되는 문제가 있었는데 PrintAlgorithm()에서 selectList를 출력하는 부분에 Empty여부를 확인해주는 코드를 넣어 해결하였다.
+
+//2021.10.29
+//싸지방 연등을 하는 사람이 나밖에 없다.
+//오늘은 인벤토리의 아이템 설명을 보여주는 창을 추가 하였다.
+//방향키로 아이템 목록을 가리킬때마다 설명을 바로 보여주도록 구현 하였다.
+//DisplayTextGame에 PrintWriteLine()메소드를 추가해서 개행 문자가 있는 문장에서 개행되어 출력되도록 하였다.
+//gamewindows(confirm_window의 이름을 바꿈)에 ExplanWindow를 추가하고 ChoiceType에 EXPLAN을 추가하여
+//ExplanWindow를 호출했을때 ChoiceType이 EXPLAN인 Choice를 DisplayTextGame에 넣고 PrintWriteLine을 실행하게 하였다.
+//이때 ExplanWindow안에서 아이템 분류에 따른 구분을 하여 무기일경우 하단에 공격력,공격속도 등이 출력되도록 하였다.
