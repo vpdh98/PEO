@@ -64,3 +64,22 @@ public class Potion : Item{
 		GameManager.Eat(this);
 	}
 }
+
+public class ItemList{
+	Dictionary<String,Item> itemList = new Dictionary<String,Item>();
+	Item item;
+	
+	public ItemList(){
+		item = new Weapon(){
+			Name = "전설의검",
+			ItemExplan="이것은 전설의 괴물\n헐크를 죽일 수 있다는\n전설의 검이다",
+			AttackPower = 9999,
+			AttackSpeed = 99
+		};
+		itemList.Add(item.Name,item);
+	}
+	
+	public Item GetItem(String Name){
+		return itemList[Name];
+	}
+}

@@ -10,7 +10,7 @@ using System.Linq;
 using System.IO;
 using static BattleSystem;
 using static Convenience;
-using Game;
+//using Item;
 //using Battle;
 
 			/* //파일 생성하는 법
@@ -40,12 +40,13 @@ namespace Game
 		static DisplayTextGame DTG = new DisplayTextGame();
 		static ChoiceControler CC = new ChoiceControler(new Scenario());
 		static CharacterList CList = new CharacterList();
+		static ItemList IList = new ItemList();
 		public static Player player = CList.GetPlayer("용사");
 		static Inventory inven = new Inventory();
 		public static void Main()
 		{
 			inven.AddItem(new Item());
-			inven.AddItem(new Weapon(){Name = "전설의검",ItemExplan="이것은 전설의 괴물\n헐크를 죽일 수 있다는\n전설의 검이다",AttackPower = 9999,AttackSpeed = 99});
+			inven.AddItem(IList.GetItem("전설의검"));
 			inven.AddItem(new Item(){Name = "HP물약"});
 			inven.AddItem(new Item(){Name = "MP물약"});
 			inven.AddItem(new Item(){Name = "무색 프리즘"});
@@ -569,3 +570,8 @@ namespace Game
 //Character에 AttackInfo맴버를 추가해 저장할 수 있도록 하였다.
 //Weapon클래스에 AttackMessage 맴버를 추가해 무기를 장착했을때 해당 무기에 맞는 공격 메세지가 출력되도록 하였다.
 //이제 몬스터가 공격할 타이밍과 공격하는 AI를 추가해야겠다.
+//몬스터가 공격하는 턴을 어떻게 표현할까 생각하다가
+//전투가 시작되면 비동기 방식으로 초를 세서 일정 초가 지나면 
+//플레이어의 선택지가 막히고 몬스터의 턴이 진행되었다가 다시 돌아오는 방식으로 생각하였다.
+//하지만 비동기방식으로 몬스터의 턴을 만드니 계속 몬스터의 턴만 진행되게 되었다.
+//어떻게 해결하여야 할까?

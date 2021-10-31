@@ -2,6 +2,7 @@ using System;
 using Characters;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 using static Convenience;
 using static DamageSystem;
 using static GameWindows;
@@ -47,8 +48,12 @@ public static class DamageSystem
 	public static Character Attacker;
 	public static Character Defender;
 	public static ActionType actionType;
+	public static bool battleTurn = true;
+	public static Monster globerMonster;
+	public static Player globerPlayer;
 	public static bool successCheck = false;
 	public static String reactionMessage;
+	public static bool died = false;
 	
 	static int DODGE_CHANCE = 50;
 	static int BLOCK_CHANCE = 50;
@@ -112,6 +117,9 @@ public static class BattleSystem{
 		public static String BattlePhase(Player player,Monster monster,String back){
 			String backField = back;
 			bool battleAnd = false;
+			
+			globerPlayer = player;
+			globerMonster = monster;
 
 			Backgrounds backgrounds = new Backgrounds();
 			Choice Start = new Choice(){
@@ -200,6 +208,8 @@ public static class BattleSystem{
 				IndicateChoice = new Dictionary<int,Object>(){{0,"movePhase"}},
 				BackgroundText = backgrounds.GetBackground(1)
 			};
+			
+			
 
 			//Console.WriteLine(monster.GetRandomSpawnMessage().text);
 			DisplayTextGame BDTG = new DisplayTextGame();
@@ -218,18 +228,28 @@ public static class BattleSystem{
 
 				while(!battleAnd){
 				BDTG.Cho = BCC.GetChoiceClone(currentChoice); //초기 화면
-				//DTG.PrintListInfo();
 				BDTG.Show();
 				BDTG.delay = 0;
 				ConsoleKeyInfo c = Console.ReadKey();
-
 					while(c.Key != ConsoleKey.Escape){
+						Task task = new Task(delegate{MonsterTurn();});
+						task.Start();
+						if(!battleTurn){
+							currentChoice = "movePhase";
+							BDTG.Cho = BCC.GetChoiceClone(currentChoice); //초기 화면
+							BDTG.Show();
+							Thread.Sleep(10);
+							continue;
+						}
+						if(died){
+							backField = "testStream";
+							return backField;
+						}
 						if(BCC.GetChoiceClone(currentChoice).ChoiceType != ChoiceType.QUICKNEXT)//QUICKNEXT를 실행했을때 다음으로 넘어가는중SelectingText에서 ArgumentOutOfRangeException발생하는 문제가 잇음 5.13
 							BDTG.SelectingText(c);
 
 						if(c.Key == ConsoleKey.Enter){
 							currentChoice = (String)BDTG.Cho.GetValueOn(BDTG.currentSelectNum);// 선택한 보기에따라 초이스 선택
-
 							if(monster.HpState() == 3){ //8.22 몬스터의 HP상태가 빈사 상태일때 배틀 페이즈 종료 const int Died = 3
 								BDTG.Init();
 								Choice cho = BCC.GetChoiceClone("andPhase"); //BDTG의 Cho를 초기화 하면서 OnlyShowText에 있던 텍스트는 integratedList에 들어감으로 choice에 넣기전에 수정해 줘야함
@@ -297,19 +317,75 @@ public static class BattleSystem{
 										cho.OnlyShowText = new List<TextAndPosition>() //몬스터가 데미지 입을때마다 몬스터 상태메세지 초기화
 											{new TextAndPosition(monster.CurrentState(),15,3+5,1){AlignH = true}};
 									}
-								c = Console.ReadKey(); //8.24
-							};
-
+								if(battleTurn)
+									c = Console.ReadKey(); //8.24
+								task.Cancel();
+									
+							}
 							BDTG.Init();
 							break;
 						}
 						//방향키나 숫자를 누르면 여기로 넘어옴
 						BDTG.Show();	
-						c = Console.ReadKey();
+						if(battleTurn)
+							c = Console.ReadKey();
 					}
 
 			}
 			return backField;
 		}
+	
+	public static void MonsterTurn(){
+		Thread.Sleep(5000);
+		battleTurn = false;
+		DisplayTextGame BDTG = new DisplayTextGame();
+		ChoiceControler BCC = new ChoiceControler();
+		Backgrounds backgrounds = new Backgrounds();
+		String currentChoice = "monsterAttack"; //첫 화면
+		
+		
+		
+		Choice B1 = new Choice(){
+				Name = "monsterAttack",
+				ChoiceType = ChoiceType.QUICKNEXT,
+				OnlyShowText = new List<TextAndPosition>()
+							{new TextAndPosition(globerMonster.AttackCry(),15,3+5,1){AlignH = true}},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"reactionPhase"}},
+				BackgroundText = backgrounds.GetBackground(1)
+		};
+		BCC.AddChoice(B1);
+		
+		/*Choice B2 = new Choice(){
+				Name = "reactionPhase",
+				ChoiceType = ChoiceType.QUICKNEXT,
+				OnlyShowText = new List<TextAndPosition>()
+							{new TextAndPosition(globerMonster.Reaction(),5,10,10){AlignH = true,PriorityLayer=1}},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"movePhase"}},
+				BackgroundText = backgrounds.GetBackground(1)
+		};*/
+		//BCC.AddChoice(B2);
+		
+		if(BCC.GetChoiceClone(currentChoice).ChoiceType == ChoiceType.QUICKNEXT){//QUICKNEXT구현을 위해 추가된 if문
+			BDTG.Init();
+			BDTG.Cho = BCC.GetChoiceClone(currentChoice);
+			BDTG.Show();
+			
+			Attacking(globerMonster,globerPlayer);
+			currentChoice = (String)BCC.GetChoiceClone(currentChoice).QuickNext();
+			//Console.ReadKey();
+				if(currentChoice == "reactionPhase"){ //8.22
+					Choice cho = BCC.GetChoice(currentChoice);
+					cho.OnlyShowText = new List<TextAndPosition>() 
+						{new TextAndPosition(globerPlayer.Reaction(),15,9,1){AlignH = true}};
+				}
+			BDTG.Init();
+			BDTG.Cho = BCC.GetChoiceClone(currentChoice);
+			BDTG.Show();
+			//Console.ReadKey();
+			if(globerPlayer.Hp <= 0) died = true;
+		}
+		
+		battleTurn = true;
+	}
 }
 //}

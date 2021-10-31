@@ -192,11 +192,53 @@ namespace Characters
 					};
 				}
 			}
+		}
+		
+		List<TextAndPosition> reactionMessage= new List<TextAndPosition>(){
+						new TextAndPosition("나는 오른쪽 주먹을 힘껏 내질렀다! ",10),
+						new TextAndPosition("나는 날라차기를 시도했다!",10),
+						new TextAndPosition("나는 마구잡이로 팔을 마구마구 돌렸다!",10)
+						};
+						
+		public List<TextAndPosition> ReactionMessage{
+			get{
+				return reactionMessage;
+			}
+			set{
+				reactionMessage = value;
+				if(reactionMessage == null){
+					reactionMessage = new List<TextAndPosition>(){
+						new TextAndPosition("맞은..건가..?",10),
+						new TextAndPosition("맞은데가 얼얼하다.",10),
+						new TextAndPosition("한참을 날아가 구르다가 겨우 멈춰섰다.",10),
+						new TextAndPosition("따로 노는 내 몸을 보며 그대로 의식을 잃었다.",10)
+					};
+				}
+			}
 		} 
 		
 		public String AttackCry(){
 			Random random = new Random();
 			return AttackMessage[random.Next(0,AttackMessage.Count)].text;
+		}
+		
+		public string Reaction(){
+			Random rand = new Random();
+			return ReactionMessage[PowerGap()].text;
+		}
+		
+		public int PowerGap(){
+			double finalDamage = attackInfo.FinalDamage;
+		
+			double powerGap = (finalDamage / MaxHp)*100;
+			if(100 < powerGap)
+				return DIED;
+			else if(50 < powerGap)
+				return SUPER_POWER;
+			else if(10 < powerGap)
+				return NOMAL_POWER;
+			else
+				return WEAK_POWER;
 		}
 		
 		public Player():base(){}
@@ -243,6 +285,7 @@ namespace Characters
 		public List<TextAndPosition> BlockMessage{get;set;}
 		public List<TextAndPosition> DodgeMessage{get;set;}
 		public List<TextAndPosition> ReactionMessage{get;set;}
+		public List<TextAndPosition> AttackMessage{get;set;}
 	
 		public Monster(){
 			SelectMessage = new List<TextAndPosition>(){ new TextAndPosition(Name,10)};
@@ -296,6 +339,11 @@ namespace Characters
 			return DodgeMessage[1].text;
 		}
 		
+		public String AttackCry(){
+			Random random = new Random();
+			return AttackMessage[random.Next(0,AttackMessage.Count)].text;
+		}
+		
 		public string Reaction(){
 			Random rand = new Random();
 			return ReactionMessage[PowerGap()].text;
@@ -336,8 +384,8 @@ namespace Characters
 			this.BlockMessage = new List<TextAndPosition>();
 			this.DodgeMessage = new List<TextAndPosition>();
 			this.ReactionMessage = new List<TextAndPosition>();
-			
-			
+			this.AttackMessage = new List<TextAndPosition>();
+			testLog(1,false);
 			if(SelectMessage != null)
 				this.SelectMessage = that.SelectMessage.ConvertAll(new Converter<TextAndPosition,TextAndPosition>(o => (TextAndPosition)o.Clone()));
 			if(SpawnMessage != null)
@@ -350,6 +398,8 @@ namespace Characters
 				this.DodgeMessage = that.DodgeMessage.ConvertAll(new Converter<TextAndPosition,TextAndPosition>(o => (TextAndPosition)o.Clone()));
 			if(ReactionMessage != null)
 				this.ReactionMessage = that.ReactionMessage.ConvertAll(new Converter<TextAndPosition,TextAndPosition>(o => (TextAndPosition)o.Clone()));
+			if(AttackMessage != null)
+				this.AttackMessage = that.AttackMessage.ConvertAll(new Converter<TextAndPosition,TextAndPosition>(o => (TextAndPosition)o.Clone()));
 		}
 		
 		override public Object Clone(){
@@ -469,6 +519,9 @@ namespace Characters
 					new TextAndPosition("슬라임은 팅겨나갔다.",10),
 					new TextAndPosition("슬라임은 잠시 형체를 잃었다!!",10),
 					new TextAndPosition("슬라임은 그대로 터져버렸다..",10)
+				},
+				AttackMessage = new List<TextAndPosition>(){
+					new TextAndPosition("슬라임의 몸통박치기!!",10)
 				}
 				
 			};
@@ -513,6 +566,9 @@ namespace Characters
 					new TextAndPosition("망자가 비틀거린다.",10),
 					new TextAndPosition("고통스러운듯 비명을 지른다!",10),
 					new TextAndPosition("망자는 그대로 조각났다.",10)
+				},
+				AttackMessage = new List<TextAndPosition>(){
+					new TextAndPosition("슬라임의 몸통박치기!!",10)
 				}
 			};
 			MonsterList.Add(monster.Name,monster);
@@ -556,6 +612,9 @@ namespace Characters
 					new TextAndPosition("때려서 화가난듯 하다.",10),
 					new TextAndPosition("헐크가 비틀거린다!",10),
 					new TextAndPosition("벽에 박힌 헐크는 미동도 하지 않는다.",10)
+				},
+				AttackMessage = new List<TextAndPosition>(){
+					new TextAndPosition("슬라임의 몸통박치기!!",10)
 				}
 			};
 			MonsterList.Add(monster.Name,monster);
