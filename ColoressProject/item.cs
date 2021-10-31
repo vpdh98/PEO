@@ -40,6 +40,8 @@ public class Weapon : Equipment{
 	public int AttackPower{get;set;} = 0;
 	public int AttackSpeed{get;set;} = 0;
 	
+	public List<TextAndPosition> AttackMessage{get;set;} = new List<TextAndPosition>(){ new TextAndPosition("나는 무기를 휘둘렀다.",10)};
+	
 	public override void Use(){
 		GameManager.Equip(this);
 	}

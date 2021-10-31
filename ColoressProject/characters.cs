@@ -18,26 +18,26 @@ namespace Characters
 	}
 	
 	public class AttackInfo{
-		int final_damage;
-		public int Final_damage
+		int finalDamage;
+		public int FinalDamage
 		{
 			get
 			{
-				return final_damage;
+				return finalDamage;
 			}
 			set
 			{
-				final_damage = value;
+				finalDamage = value;
 			}
 		}
 		
 		public AttackInfo()
 		{
-			Final_damage = 0;
+			FinalDamage = 0;
 		}
 		
 		public void CalDamage(int defence){
-			Final_damage -= defence;
+			FinalDamage -= defence;
 		}
 	}
 	
@@ -57,11 +57,17 @@ namespace Characters
 		public int MaxMp{get;set;}
 		public int AttackPower{get;set;}
 		public int Defense{get;set;}
+		public int AttackSpeed{get;set;}
+		
+		public AttackInfo attackInfo;
 		
 		public const int HIGH = 0;
 		public const int MIDDLE = 1;
 		public const int LOW = 2;
 		public const int DIED = 3;
+		public const int WEAK_POWER = 0;
+		public const int NOMAL_POWER = 1;
+		public const int SUPER_POWER = 2;
 		
 		
 		public Character()
@@ -71,8 +77,9 @@ namespace Characters
 			Mp = 0;
 			AttackPower = 0;
 			Defense = 0;
+			AttackSpeed = 0;
 		}
-		public Character(string name,int hp,int mp,int attack_power,int defense)
+		public Character(string name,int hp,int mp,int attack_power,int defense,int attack_speed)
 		{
 			Name = name;
 			Hp = hp;
@@ -81,6 +88,7 @@ namespace Characters
 			MaxMp = mp;
 			AttackPower = attack_power;
 			Defense = defense;
+			AttackSpeed = attack_speed;
 		}
 		
 		
@@ -104,6 +112,7 @@ namespace Characters
 			this.MaxMp = that.MaxMp ;
 			this.AttackPower = that.AttackPower ;
 			this.Defense = that.Defense ;
+			this.AttackSpeed = that.AttackSpeed;
 		}
 		
 		virtual public Object Clone(){
@@ -123,12 +132,14 @@ namespace Characters
 				if(weapon == null){
 					weapon = value;
 					weapon.IsEquip = true;
+					AttackMessage = weapon.AttackMessage;
 				}
 				else{
 					if(weapon == value){
 						if(ConfirmWindow("이미 장착된 무기 입니다.해제하시겠습니까?",24,7)){
 							weapon.IsEquip = false;
 							weapon = null;
+							AttackMessage = null;
 						}
 					}
 					else{
@@ -161,19 +172,47 @@ namespace Characters
 			}
 		}
 		
+		List<TextAndPosition> attackMessage= new List<TextAndPosition>(){
+						new TextAndPosition("나는 오른쪽 주먹을 힘껏 내질렀다! ",10),
+						new TextAndPosition("나는 날라차기를 시도했다!",10),
+						new TextAndPosition("나는 마구잡이로 팔을 마구마구 돌렸다!",10)
+						};
+						
+		public List<TextAndPosition> AttackMessage{
+			get{
+				return attackMessage;
+			}
+			set{
+				attackMessage = value;
+				if(attackMessage == null){
+					attackMessage = new List<TextAndPosition>(){
+						new TextAndPosition("나는 오른쪽 주먹을 힘껏 내질렀다! ",10),
+						new TextAndPosition("나는 날라차기를 시도했다!",10),
+						new TextAndPosition("나는 마구잡이로 팔을 마구마구 돌렸다!",10)
+					};
+				}
+			}
+		} 
+		
+		public String AttackCry(){
+			Random random = new Random();
+			return AttackMessage[random.Next(0,AttackMessage.Count)].text;
+		}
+		
 		public Player():base(){}
-		public Player(string name,int hp,int mp,int attack_power,int defense):base(name,hp,mp,attack_power,defense){}
+		public Player(string name,int hp,int mp,int attack_power,int defense,int attack_speed):base(name,hp,mp,attack_power,defense,attack_speed){}
 		
 		override public AttackInfo Attack(){
 			AttackInfo aInfo = new AttackInfo();
-			aInfo.Final_damage = Weapon == null ? AttackPower : (AttackPower + Weapon.AttackPower);
+			aInfo.FinalDamage = Weapon == null ? AttackPower : (AttackPower + Weapon.AttackPower);
 		 	return aInfo;
 		}
 		
-		override public AttackInfo Damage(AttackInfo attack_info){
-			AttackInfo aInfo = attack_info;
+		override public AttackInfo Damage(AttackInfo attackInfo){
+			AttackInfo aInfo = attackInfo;
+			this.attackInfo = attackInfo;
 			aInfo.CalDamage(Weapon == null ? Defense : (Defense + Armor.Defense));
-			Hp -= aInfo.Final_damage;
+			Hp -= aInfo.FinalDamage;
 			return aInfo;
 		}
 		
@@ -195,36 +234,37 @@ namespace Characters
 		public int SpawnChance{get;set;}
 		public bool IsSpawn{get;set;} = false;
 		
-		public List<TextAndPosition> selectMessage;
-		public List<TextAndPosition> SelectMessage{
-			get{
-				return selectMessage;
-			}
-			set{
-				selectMessage = value;
-			}
-		}
 		
+		
+		
+		public List<TextAndPosition> SelectMessage{get;set;}
 		public List<TextAndPosition> SpawnMessage{get;set;}
 		public List<TextAndPosition> StateMessage{get;set;}
+		public List<TextAndPosition> BlockMessage{get;set;}
+		public List<TextAndPosition> DodgeMessage{get;set;}
+		public List<TextAndPosition> ReactionMessage{get;set;}
 	
 		public Monster(){
 			SelectMessage = new List<TextAndPosition>(){ new TextAndPosition(Name,10)};
 			SpawnMessage = new List<TextAndPosition>(){new TextAndPosition(Name+"이다.",10)};
+			BlockMessage = new List<TextAndPosition>(){ new TextAndPosition("막기성공",10),new TextAndPosition("막기실패",10)};
+			DodgeMessage = new List<TextAndPosition>(){new TextAndPosition("회피성공",10),new TextAndPosition("회피실패",10)};
+			ReactionMessage = new List<TextAndPosition>(){new TextAndPosition(Name+" 팅겨나갔다.",10)};
 		}
 		
-		public Monster(string name,int hp,int mp,int attack_power,int defense):base(name,hp,mp,attack_power,defense){}
+		public Monster(string name,int hp,int mp,int attack_power,int defense,int attack_speed):base(name,hp,mp,attack_power,defense,attack_speed){}
 		
 		override public AttackInfo Attack(){
 			AttackInfo aInfo = new AttackInfo();
-			aInfo.Final_damage = AttackPower;
+			aInfo.FinalDamage = AttackPower;
 		 	return aInfo;
 		}
 		
-		override public AttackInfo Damage(AttackInfo attack_info){
-			AttackInfo aInfo = attack_info;
+		override public AttackInfo Damage(AttackInfo attackInfo){
+			AttackInfo aInfo = attackInfo;
+			this.attackInfo = attackInfo;
 			aInfo.CalDamage(Defense);
-			Hp -= aInfo.Final_damage;
+			Hp -= aInfo.FinalDamage;
 			return aInfo;
 		}
 		
@@ -240,6 +280,39 @@ namespace Characters
 		
 		public string CurrentState(){
 			return StateMessage[HpState()].text;
+		}
+		
+		public string BlockSuccess(){
+			return BlockMessage[0].text;
+		}
+		
+		public string BlockFail(){
+			return BlockMessage[1].text;
+		}
+		public string DodgeSuccess(){
+			return DodgeMessage[0].text;
+		}
+		public string DodgeFail(){
+			return DodgeMessage[1].text;
+		}
+		
+		public string Reaction(){
+			Random rand = new Random();
+			return ReactionMessage[PowerGap()].text;
+		}
+		
+		public int PowerGap(){
+			double finalDamage = attackInfo.FinalDamage;
+		
+			double powerGap = (finalDamage / MaxHp)*100;
+			if(100 < powerGap)
+				return DIED;
+			else if(50 < powerGap)
+				return SUPER_POWER;
+			else if(10 < powerGap)
+				return NOMAL_POWER;
+			else
+				return WEAK_POWER;
 		}
 		
 		public int HpState(){
@@ -260,6 +333,10 @@ namespace Characters
 			this.SelectMessage = new List<TextAndPosition>();
 			this.SpawnMessage = new List<TextAndPosition>();
 			this.StateMessage = new List<TextAndPosition>();
+			this.BlockMessage = new List<TextAndPosition>();
+			this.DodgeMessage = new List<TextAndPosition>();
+			this.ReactionMessage = new List<TextAndPosition>();
+			
 			
 			if(SelectMessage != null)
 				this.SelectMessage = that.SelectMessage.ConvertAll(new Converter<TextAndPosition,TextAndPosition>(o => (TextAndPosition)o.Clone()));
@@ -267,6 +344,12 @@ namespace Characters
 				this.SpawnMessage = that.SpawnMessage.ConvertAll(new Converter<TextAndPosition,TextAndPosition>(o => (TextAndPosition)o.Clone()));
 			if(StateMessage != null)
 				this.StateMessage = that.StateMessage.ConvertAll(new Converter<TextAndPosition,TextAndPosition>(o => (TextAndPosition)o.Clone()));
+			if(BlockMessage != null)
+				this.BlockMessage = that.BlockMessage.ConvertAll(new Converter<TextAndPosition,TextAndPosition>(o => (TextAndPosition)o.Clone()));
+			if(DodgeMessage != null)
+				this.DodgeMessage = that.DodgeMessage.ConvertAll(new Converter<TextAndPosition,TextAndPosition>(o => (TextAndPosition)o.Clone()));
+			if(ReactionMessage != null)
+				this.ReactionMessage = that.ReactionMessage.ConvertAll(new Converter<TextAndPosition,TextAndPosition>(o => (TextAndPosition)o.Clone()));
 		}
 		
 		override public Object Clone(){
@@ -293,18 +376,18 @@ namespace Characters
 	public class NPC : Character,IDamageable,ICharacterState
 	{
 		public NPC(){}
-		public NPC(string name,int hp,int mp,int attack_power,int defense):base(name,hp,mp,attack_power,defense){}
+		public NPC(string name,int hp,int mp,int attack_power,int defense,int attack_speed):base(name,hp,mp,attack_power,defense,attack_speed){}
 		
 		override public AttackInfo Attack(){
 			AttackInfo aInfo = new AttackInfo();
-			aInfo.Final_damage = AttackPower;
+			aInfo.FinalDamage = AttackPower;
 		 	return aInfo;
 		}
 		
 		override public AttackInfo Damage(AttackInfo attack_info){
 			AttackInfo aInfo = attack_info;
 			aInfo.CalDamage(Defense);
-			Hp -= aInfo.Final_damage;
+			Hp -= aInfo.FinalDamage;
 			return aInfo;
 		}
 		
@@ -340,7 +423,8 @@ namespace Characters
 				Hp = 10,
 				Mp = 10,
 				AttackPower = 5,
-				Defense = 0
+				Defense = 1,
+				AttackSpeed = 2,
 			};
 			PlayerList.Add(player.Name,player);
 			
@@ -354,6 +438,7 @@ namespace Characters
 				AttackPower = 1,
 				Defense = 0,
 				SpawnChance = 70,
+				AttackSpeed = 1,
 				SelectMessage = new List<TextAndPosition> 
 				{new TextAndPosition("어 슬라임이다.",10),
 				new TextAndPosition("어 저건 뭐지?",10),
@@ -367,6 +452,23 @@ namespace Characters
 					new TextAndPosition("흐믈 흐믈 거리기 시작했다.",10),
 					new TextAndPosition("형체를 유지하기 힘들어 보인다.",10),
 					new TextAndPosition("슬라임이 형체를 잃고 땅속으로 스며들었다.",10)
+				},
+				BlockMessage = new List<TextAndPosition>()
+				{
+					new TextAndPosition("슬라임이 맥없이 팅겨나갔다.",10),
+					new TextAndPosition("슬라임은 생각보다 묵직했다.",10)
+				},
+				DodgeMessage = new List<TextAndPosition>()
+				{
+					new TextAndPosition("점액질 덩어리를 가볍게 피해냈다.",10),
+					new TextAndPosition("슬라임은 내 생각보다 빨랐다.",10)
+				},
+				ReactionMessage = new List<TextAndPosition>()
+				{
+					new TextAndPosition("슬라임의 점액질이 아주 조금 튀었다.",10),
+					new TextAndPosition("슬라임은 팅겨나갔다.",10),
+					new TextAndPosition("슬라임은 잠시 형체를 잃었다!!",10),
+					new TextAndPosition("슬라임은 그대로 터져버렸다..",10)
 				}
 				
 			};
@@ -380,6 +482,7 @@ namespace Characters
 				AttackPower = 3,
 				Defense = 2,
 				SpawnChance = 50,
+				AttackSpeed = 2,
 				SelectMessage = new List<TextAndPosition> 
 				{new TextAndPosition("사람인가?",10),
 				new TextAndPosition("망자다.",10),
@@ -393,8 +496,24 @@ namespace Characters
 					new TextAndPosition("절뚝거리며 달려오는 망자.",10),
 					new TextAndPosition("곧 쓰러질것 같다.",10),
 					new TextAndPosition("망자는 사자가 되었다.",10)
+				},
+				BlockMessage = new List<TextAndPosition>()
+				{
+					new TextAndPosition("망자는 뒤로 넘어졌다.",10),
+					new TextAndPosition("하지만 망자의 공격은 생각보다 매서웠다.",10)
+				},
+				DodgeMessage = new List<TextAndPosition>()
+				{
+					new TextAndPosition("망자의 손톱이 코앞을 스친다.",10),
+					new TextAndPosition("이미 손톱은 내 몸에 박혀있었다.",10)
+				},
+				ReactionMessage = new List<TextAndPosition>()
+				{
+					new TextAndPosition("효과가 없는듯 그대로 달려든다.",10),
+					new TextAndPosition("망자가 비틀거린다.",10),
+					new TextAndPosition("고통스러운듯 비명을 지른다!",10),
+					new TextAndPosition("망자는 그대로 조각났다.",10)
 				}
-				
 			};
 			MonsterList.Add(monster.Name,monster);
 			
@@ -406,6 +525,7 @@ namespace Characters
 				AttackPower = 100,
 				Defense = 100,
 				SpawnChance = 10,
+				AttackSpeed = 100,
 				SelectMessage = new List<TextAndPosition> 
 				{new TextAndPosition("저게 뭐야!!!",10),
 				new TextAndPosition("헐..크..?",10),
@@ -419,8 +539,24 @@ namespace Characters
 					new TextAndPosition("화가나 보인다.",10),
 					new TextAndPosition("움직임이 둔해졌다.",10),
 					new TextAndPosition("헐크를.. 죽였다.",10)
+				},
+				BlockMessage = new List<TextAndPosition>()
+				{
+					new TextAndPosition("달려들던 헐크는 그대로 막혔다.",10),
+					new TextAndPosition("가드한 모습 그대로 날아갔다.",10)
+				},
+				DodgeMessage = new List<TextAndPosition>()
+				{
+					new TextAndPosition("헐크가 내가 있던 자리를 지난다.",10),
+					new TextAndPosition("정신을 차려보니 벽에 박혀 있었다.",10)
+				},
+				ReactionMessage = new List<TextAndPosition>()
+				{
+					new TextAndPosition("간지러운듯 콧웃음을 친다.",10),
+					new TextAndPosition("때려서 화가난듯 하다.",10),
+					new TextAndPosition("헐크가 비틀거린다!",10),
+					new TextAndPosition("벽에 박힌 헐크는 미동도 하지 않는다.",10)
 				}
-				
 			};
 			MonsterList.Add(monster.Name,monster);
 			

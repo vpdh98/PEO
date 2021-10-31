@@ -557,3 +557,15 @@ namespace Game
 //2021.10.30
 //장착 메세지 문제 수정 완료
 //GlobalPosition을 건드려서 전체적인 화면 위치를 옮겼다.
+
+//2021.10.31
+//GameSystem의 Attacking(Attacker,Defender)메소드를 호출하고 
+//Attacker의 Attack()메소드를 호출해 공격자의 공격 정보를 AttackInfo객체에 담아 반환하고
+//Defender의 Damage(AttackInfo)를 호출하여 공격정보를 넘겨주어 각 객체의 계산식으로 데미지를 계산하여 
+//Defender의 필드 값(HP등)에 적용하고
+//Player의 AttackCry()메소드를 호출해 attackPhase초이스의 텍스트 값을 변경하여 화면에 띄운다.
+//그다음 reactionPhase로 넘어가 monster.Reaction()을 호출해 
+//플레이어의 공격력과 몬스터의 HP최대값에 따라 반응을 달라지게 구현하려 하였다.
+//Character에 AttackInfo맴버를 추가해 저장할 수 있도록 하였다.
+//Weapon클래스에 AttackMessage 맴버를 추가해 무기를 장착했을때 해당 무기에 맞는 공격 메세지가 출력되도록 하였다.
+//이제 몬스터가 공격할 타이밍과 공격하는 AI를 추가해야겠다.

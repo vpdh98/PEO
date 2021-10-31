@@ -2,7 +2,9 @@ using System;
 using Characters;
 using System.Collections.Generic;
 using System.Threading;
+using static Convenience;
 using static DamageSystem;
+using static GameWindows;
 
 //namespace Battle{
 
@@ -16,7 +18,11 @@ public class AttackInfo{
 		}
 		set
 		{
-			final_damage = value;
+			if(value <= 0){
+				final_damage = 1;
+			}else{
+				final_damage = value;
+			}
 		}
 	}
 
@@ -29,13 +35,57 @@ public class AttackInfo{
 		Final_damage -= defence;
 	}
 }
+
+public enum ActionType{
+	ATTACK,
+	BLOCK,
+	DODGE
+}
+
 public static class DamageSystem
 {
 	public static Character Attacker;
 	public static Character Defender;
+	public static ActionType actionType;
+	public static bool successCheck = false;
+	public static String reactionMessage;
+	
+	static int DODGE_CHANCE = 50;
+	static int BLOCK_CHANCE = 50;
+	static Random random = new Random();
 
 	public static void Attacking(Character Attacker,Character Defender){
 		Defender.Damage(Attacker.Attack());
+	}
+	
+	public static void Blocking(Character Attacker,Character Defender){
+		double defenderDefense = Defender.Defense;
+		double attackerAttackPower = Attacker.AttackPower;
+		
+		double blockChance = BLOCK_CHANCE * (defenderDefense / attackerAttackPower);
+		testLog(blockChance,false);
+		if(random.Next(1,101) < (int)blockChance){
+			successCheck = true;
+		}
+		else{
+			Defender.Damage(Attacker.Attack());
+			successCheck = false;
+		}
+	}
+	
+	public static void Dodgeing(Character Attacker,Character Defender){
+		double defenderSpeed = Defender.AttackSpeed;
+		double attackerSpeed = Attacker.AttackSpeed;
+		
+		double dodgeChance = DODGE_CHANCE * (defenderSpeed / attackerSpeed);
+		testLog(dodgeChance,false);
+		if(random.Next(1,101) < (int)dodgeChance){
+			successCheck = true;
+		}
+		else{
+			Defender.Damage(Attacker.Attack());
+			successCheck = false;
+		}
 	}
 }
 
@@ -43,7 +93,15 @@ public static class BattleSystem{
 		public static void BattleCal(){
 			while(true){
 				if(Attacker!=null&&Defender!=null){
-					Attacking(Attacker,Defender);
+					if(actionType == ActionType.ATTACK){
+						Attacking(Attacker,Defender);
+					}
+					if(actionType == ActionType.BLOCK){
+						Blocking(Defender,Attacker);
+					}
+					if(actionType == ActionType.DODGE){
+						Dodgeing(Defender,Attacker);
+					}
 					Attacker=null;
 					Defender=null;
 				}
@@ -75,7 +133,7 @@ public static class BattleSystem{
 							new TextAndPosition("회피",40,13,true)},
 				OnlyShowText = new List<TextAndPosition>()
 							{new TextAndPosition(monster.CurrentState(),15,3+5,1){AlignH = true}},
-				IndicateChoice = new Dictionary<int,Object>(){{0,"attackPhase"},{1,"b4"},{2,"b4"}},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"attackPhase"},{1,"block"},{2,"dodge"}},
 				BackgroundText = backgrounds.GetBackground(1)
 			};
 
@@ -83,7 +141,7 @@ public static class BattleSystem{
 				Name = "attackPhase",
 				ChoiceType = ChoiceType.QUICKNEXT,
 				OnlyShowText = new List<TextAndPosition>()
-							{new TextAndPosition(monster.Name+"베기!",5,9,10,ConsoleColor.Red){AlignH = true,PriorityLayer=1}},
+							{new TextAndPosition(monster.Name+"베기!",5,10,10,ConsoleColor.Red){AlignH = true,PriorityLayer=1}},
 				IndicateChoice = new Dictionary<int,Object>(){{0,"reactionPhase"}},
 				BackgroundText = backgrounds.GetBackground(1)
 			};
@@ -92,7 +150,7 @@ public static class BattleSystem{
 				Name = "reactionPhase",
 				ChoiceType = ChoiceType.QUICKNEXT,
 				OnlyShowText = new List<TextAndPosition>()
-							{new TextAndPosition("(몬스터 피해 메세지)",5,9,10){AlignH = true,PriorityLayer=1}},
+							{new TextAndPosition("(몬스터 피해 메세지)",5,10,10){AlignH = true,PriorityLayer=1}},
 				IndicateChoice = new Dictionary<int,Object>(){{0,"movePhase"}},
 				BackgroundText = backgrounds.GetBackground(1)
 			};
@@ -106,6 +164,42 @@ public static class BattleSystem{
 				IndicateChoice = new Dictionary<int,Object>(){{0,"backField"}},
 				BackgroundText = backgrounds.GetBackground(1)
 			};
+			
+			Choice B6 = new Choice(){
+				Name = "failBlock",
+				ChoiceType = ChoiceType.QUICKNEXT,
+				OnlyShowText = new List<TextAndPosition>()
+							{new TextAndPosition("막기 실패",15,3+5,1){AlignH = true}},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"movePhase"}},
+				BackgroundText = backgrounds.GetBackground(1)
+			};
+			
+			Choice B7 = new Choice(){
+				Name = "successBlock",
+				ChoiceType = ChoiceType.QUICKNEXT,
+				OnlyShowText = new List<TextAndPosition>()
+							{new TextAndPosition("막기 성공",15,3+5,1){AlignH = true}},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"movePhase"}},
+				BackgroundText = backgrounds.GetBackground(1)
+			};
+			
+			Choice B8 = new Choice(){
+				Name = "failDodge",
+				ChoiceType = ChoiceType.QUICKNEXT,
+				OnlyShowText = new List<TextAndPosition>()
+							{new TextAndPosition("회피 실패",15,3+5,1){AlignH = true}},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"movePhase"}},
+				BackgroundText = backgrounds.GetBackground(1)
+			};
+			
+			Choice B9 = new Choice(){
+				Name = "successDodge",
+				ChoiceType = ChoiceType.QUICKNEXT,
+				OnlyShowText = new List<TextAndPosition>()
+							{new TextAndPosition("회피 성공",15,3+5,1){AlignH = true}},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"movePhase"}},
+				BackgroundText = backgrounds.GetBackground(1)
+			};
 
 			//Console.WriteLine(monster.GetRandomSpawnMessage().text);
 			DisplayTextGame BDTG = new DisplayTextGame();
@@ -117,6 +211,10 @@ public static class BattleSystem{
 			BCC.AddChoice(B3);
 			BCC.AddChoice(B4);
 			BCC.AddChoice(B5);
+			BCC.AddChoice(B6);
+			BCC.AddChoice(B7);
+			BCC.AddChoice(B8);
+			BCC.AddChoice(B9);
 
 				while(!battleAnd){
 				BDTG.Cho = BCC.GetChoiceClone(currentChoice); //초기 화면
@@ -145,8 +243,44 @@ public static class BattleSystem{
 							}
 
 							if(currentChoice == "attackPhase"){ //Attacker,Defender에 값을 넣으면 서로 데미지 계산 1회 실행
+								actionType = ActionType.ATTACK;
+								Choice cho = BCC.GetChoice(currentChoice);
+										cho.OnlyShowText = new List<TextAndPosition>() //몬스터가 데미지 입을때마다 몬스터 상태메세지 초기화
+											{new TextAndPosition(player.AttackCry(),15,9,1){AlignH = true}};
 								Attacker = player;
 								Defender = monster;
+							}
+							else if(currentChoice == "block"){ //Attacker,Defender에 값을 넣으면 서로 데미지 계산 1회 실행
+								actionType = ActionType.BLOCK;
+								Attacker = player;
+								Defender = monster;
+								if(successCheck){
+									currentChoice = "successBlock";
+									Choice cho = BCC.GetChoice(currentChoice);
+										cho.OnlyShowText = new List<TextAndPosition>() 
+											{new TextAndPosition(monster.BlockSuccess(),15,9,1){AlignH = true}};
+								}else{
+									currentChoice = "failBlock";
+									Choice cho = BCC.GetChoice(currentChoice);
+										cho.OnlyShowText = new List<TextAndPosition>() 
+											{new TextAndPosition(monster.BlockFail(),15,9,1){AlignH = true}};
+								}
+							}
+							else if(currentChoice == "dodge"){ //Attacker,Defender에 값을 넣으면 서로 데미지 계산 1회 실행
+								actionType = ActionType.DODGE;
+								Attacker = player;
+								Defender = monster;
+								if(successCheck){
+									currentChoice = "successDodge";
+									Choice cho = BCC.GetChoice(currentChoice);
+										cho.OnlyShowText = new List<TextAndPosition>() 
+											{new TextAndPosition(monster.DodgeSuccess(),15,9,1){AlignH = true}};
+								}else{
+									currentChoice = "failDodge";
+									Choice cho = BCC.GetChoice(currentChoice);
+										cho.OnlyShowText = new List<TextAndPosition>() 
+											{new TextAndPosition(monster.DodgeFail(),15,9,1){AlignH = true}};
+								}
 							}
 
 							if(BCC.GetChoiceClone(currentChoice).ChoiceType == ChoiceType.QUICKNEXT){//QUICKNEXT구현을 위해 추가된 if문
@@ -156,7 +290,10 @@ public static class BattleSystem{
 
 								currentChoice = (String)BCC.GetChoiceClone(currentChoice).QuickNext();
 									if(currentChoice == "reactionPhase"){ //8.22
-										Choice cho = BCC.GetChoice("movePhase");
+										Choice cho = BCC.GetChoice(currentChoice);
+										cho.OnlyShowText = new List<TextAndPosition>() 
+											{new TextAndPosition(monster.Reaction(),15,9,1){AlignH = true}};
+										cho = BCC.GetChoice("movePhase");
 										cho.OnlyShowText = new List<TextAndPosition>() //몬스터가 데미지 입을때마다 몬스터 상태메세지 초기화
 											{new TextAndPosition(monster.CurrentState(),15,3+5,1){AlignH = true}};
 									}

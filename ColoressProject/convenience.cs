@@ -10,26 +10,10 @@ public static class Convenience{
 		Console.WriteLine(s);
 	}
 	
-	public static void testLog(String s){
-		Console.WriteLine(logNum+":"+s);
-		Console.ReadKey();
-		logNum++;
-	}
-	
 	public static void testLog(Object o,bool delay = true){
 		Console.WriteLine(logNum+":"+o);
 		if(delay)
 			Console.ReadKey();
-		logNum++;
-	}
-	
-	public static void testLog(int n){
-		Console.WriteLine(logNum+":"+n);
-		logNum++;
-	}
-	
-	public static void testLog(bool b){
-		Console.WriteLine(logNum+":"+b);
 		logNum++;
 	}
 	
