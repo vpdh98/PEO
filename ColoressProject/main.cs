@@ -86,7 +86,7 @@ namespace Game
 						if(CList.GetMonster(currentChoice) != null){ //배틀페이즈
 							DTG.Init();
 							Console.Clear();
-							currentChoice = BattlePhase(player,CList.GetMonster(currentChoice),DTG.Cho.Name); //currentChoice에 현제 선택된 몬스터 이름이 들어가 있음 //8.23
+							currentChoice = BattlePhase(player,CList.GetMonster(currentChoice),DTG.Cho.Name).Result; //currentChoice에 현제 선택된 몬스터 이름이 들어가 있음 //8.23
 							DTG.Cho = CC.GetChoiceClone(currentChoice);
 						}
 						
@@ -575,3 +575,18 @@ namespace Game
 //플레이어의 선택지가 막히고 몬스터의 턴이 진행되었다가 다시 돌아오는 방식으로 생각하였다.
 //하지만 비동기방식으로 몬스터의 턴을 만드니 계속 몬스터의 턴만 진행되게 되었다.
 //어떻게 해결하여야 할까?
+
+//2021.11.02
+//어제 갑자기 급똥이 마려워서 정리를 제데로 못하고 갔다.
+//어제는 전투시스템 구현을 위해 Task,await,async등 비동기 코딩에 대해 공부했다.
+//그리고 불침번할때 고민해본 결과 Monster의 턴과 Player의 턴을 각각 비동기 메소드로 동시에 실행하고
+//getTurn 변수를 선언해서 getTurn변수를 먼저 참조하는 메소드가 턴을 진행하고 그 턴이 끝날때까지 다른 메소드는 진행하지 못하도록 하는 것을 생각했다.
+/*BattlePhase메소드를 async메소드로 만들고
+playerTurn메소드와
+monsterTurn메소드를
+비동기로 동작시켜 전투시스템을 구현하려 했는데.. 잘 안된다.
+현재는 playerTurn메소드를 비동기로 실행하고
+playerTurn메소드 안에서 MonsterTurn메소드를 비동기로 실행해서 5초의 시간을 재고 5초안에 선택지를 선택할 경우 5초후에  MonsterTurn메소드를 리턴하고 playerTurn메소드는 루틴을 끝까지 돌게 했는데..
+잘 안된다. 내가 원하는건 선택을 하는 순간 MonsterTurn메소드가 종료되는것.
+Token을 활용해 봐야겠다.
+*/

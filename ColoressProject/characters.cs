@@ -568,7 +568,7 @@ namespace Characters
 					new TextAndPosition("망자는 그대로 조각났다.",10)
 				},
 				AttackMessage = new List<TextAndPosition>(){
-					new TextAndPosition("슬라임의 몸통박치기!!",10)
+					new TextAndPosition("망자의 손톱 할퀴기!",10)
 				}
 			};
 			MonsterList.Add(monster.Name,monster);
