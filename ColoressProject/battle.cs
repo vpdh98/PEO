@@ -48,15 +48,21 @@ public static class DamageSystem
 	public static Character Attacker;
 	public static Character Defender;
 	public static ActionType actionType;
-	public static bool battleTurn = false;
+	
 	public static Monster globerMonster;
 	public static Player globerPlayer;
 	public static bool successCheck = false;
 	public static String reactionMessage;
 	public static bool died = false;
+	
 	public static bool timerStart = false;
+	public static int count = 0;
+	public static int limit = 5;
+	public static bool timeOut = false;
+	
 	public static String backField;
 	public static bool battleAnd = false;
+	
 	
 	
 	static int DODGE_CHANCE = 50;
@@ -122,7 +128,17 @@ public static class BattleSystem{
 		globerPlayer = player;
 		globerMonster = monster;
 		backField = back;
-		var playerTurn = Task.Run(()=>PlayerTurn());
+		Task playerTurn = Task.Run(()=>PlayerTurn());
+		Task monsterTurn = Task.Run(()=>MonsterTurn());
+		
+		if(timeOut)
+		{
+			playerTurn = Task.Run(()=>PlayerTurn());
+		}
+		else
+		{
+			monsterTurn = Task.Run(()=>MonsterTurn());	
+		}
 		
 		testLog("playerTurn끝11");
 		await playerTurn;
@@ -131,11 +147,7 @@ public static class BattleSystem{
 	}
 	
 	public static void PlayerTurn(){
-		
-			
-			
-			
-
+			timeOut = false;
 			Backgrounds backgrounds = new Backgrounds();
 			Choice Start = new Choice(){
 				Name = "firstPhase",
@@ -246,10 +258,8 @@ public static class BattleSystem{
 				BDTG.delay = 0;
 				ConsoleKeyInfo c = Console.ReadKey();
 					while(c.Key != ConsoleKey.Escape){
-					var monsterTurn = Task.Run(()=>MonsterTurn());
 						if(died){
 							backField = "testStream";
-							battleTurn = false;
 							battleAnd = true;
 							return;
 						}
@@ -258,14 +268,6 @@ public static class BattleSystem{
 
 						if(c.Key == ConsoleKey.Enter){
 							//testLog("Enter");
-							if(battleTurn == false){
-								battleTurn = true;
-							}else{
-								testLog("durl");
-
-								continue;
-							}
-							monsterTurn.Wait();
 							currentChoice = (String)BDTG.Cho.GetValueOn(BDTG.currentSelectNum);// 선택한 보기에따라 초이스 선택
 							if(globerMonster.HpState() == 3){ //8.22 몬스터의 HP상태가 빈사 상태일때 배틀 페이즈 종료 const int Died = 3
 								BDTG.Init();
@@ -276,8 +278,6 @@ public static class BattleSystem{
 
 								BDTG.Show();
 								c = Console.ReadKey();
-								battleTurn = false;
-								battleAnd = true;
 								testLog("전투끝");
 								return;
 							}
@@ -340,7 +340,7 @@ public static class BattleSystem{
 									c = Console.ReadKey(); //8.24
 									
 							}
-							BDTG.Init();									battleTurn = false;
+							BDTG.Init();					
 
 							break;
 						}
@@ -353,17 +353,7 @@ public static class BattleSystem{
 	}
 	
 	public static void MonsterTurn(){
-			Thread.Sleep(5000);
-			if(battleTurn == false && !battleAnd){
-				battleTurn = true;
-			}
-			else{
-				if(battleAnd){
-					battleAnd = false;
-					return;
-				}
-				return;
-			}
+		timeOut = false;
 			DisplayTextGame BDTG = new DisplayTextGame();
 			ChoiceControler BCC = new ChoiceControler();
 			Backgrounds backgrounds = new Backgrounds();
@@ -410,8 +400,19 @@ public static class BattleSystem{
 				//Console.ReadKey();
 				if(globerPlayer.Hp <= 0) died = true;
 			}
-			battleTurn = false;
 		
+	}
+	
+	public static void BattleTimer(){
+		while(true){
+			if(timerStart){
+				for(count = 0;count<limit;count++){
+					Thread.Sleep(1000);
+				}
+				timeOut = true;
+			}
+			Thread.Sleep(10);
+		}
 	}
 }
 //}
