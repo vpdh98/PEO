@@ -86,7 +86,7 @@ namespace Game
 						if(CList.GetMonster(currentChoice) != null){ //배틀페이즈
 							DTG.Init();
 							Console.Clear();
-							currentChoice = BattlePhase(player,CList.GetMonster(currentChoice),DTG.Cho.Name).Result; //currentChoice에 현제 선택된 몬스터 이름이 들어가 있음 //8.23
+							currentChoice = BattlePhase(player,CList.GetMonster(currentChoice),DTG.Cho.Name); //currentChoice에 현제 선택된 몬스터 이름이 들어가 있음 //8.23
 							DTG.Cho = CC.GetChoiceClone(currentChoice);
 						}
 						
@@ -590,3 +590,15 @@ playerTurn메소드 안에서 MonsterTurn메소드를 비동기로 실행해서 
 잘 안된다. 내가 원하는건 선택을 하는 순간 MonsterTurn메소드가 종료되는것.
 Token을 활용해 봐야겠다.
 */
+
+//2021.11.03
+//비동기 전투시스템을 구현하려 하였다.
+//BattleTimer메소드를 추가하여 timeStart가 true가 되면 작동하고 특정 초 만큼의 시간이 지나면 timeOut을 true로 바꾸고 true가 되면 조건문을 활용해
+//monsterTurn을 실행하고 timeOut이 true가 되기 전에 선택지를 선택하면 playerTurn이 실행되도록 했다.
+//둘중 하나라도 실행이되면 timeStart가 false가 되고 타이머가 멈추고 초기화 된다.
+//턴이 끝나면 다시 타이머가 작동한다.
+//이렇게 구현하려 했으나.. 여러가지 문제가 있다.
+//먼저 코드를 너무 한메소드에 한정해서 작동하도록 코딩해서 구현한 코드 대부분을 수정해야 할 것 같다.
+//그리고 timeOut이 되자마자 MonsterTurn을 실행하고 싶은데 ReadKey는 키 입력이 있을때까지 기다리기 때문에
+//timeOut이 되어도 키입력이 있어야 MonsterTurn이 실행되는 문제가 있다.
+//해결할 수 있도록 하자.

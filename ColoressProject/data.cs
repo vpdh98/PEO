@@ -189,6 +189,102 @@ public class Scenario{
 				BackgroundText = backgrounds.GetBackground(0)
 			});
 			
+			choices.Add(new Choice(){
+				Name = "firstPhase",
+				SelectText = new List<TextAndPosition>()         
+							{new TextAndPosition("공격한다.",16,13,true),
+							new TextAndPosition("도망간다.",40,13,true)},
+				OnlyShowText = new List<TextAndPosition>()
+							{new TextAndPosition("globerMonster.GetRandomSpawnMessage().text",15,3+5,1){AlignH = true}},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"movePhase"},{1,"end"}},
+				BackgroundText = backgrounds.GetBackground(1)
+			});
+			choices.Add(new Choice(){
+				Name = "movePhase",
+				SelectText = new List<TextAndPosition>()         
+							{new TextAndPosition("공격",16,13,true),
+							 new TextAndPosition("방어",28,13,true),
+							new TextAndPosition("회피",40,13,true)},
+				OnlyShowText = new List<TextAndPosition>()
+							{new TextAndPosition("globerMonster.CurrentState()",15,3+5,1){AlignH = true}},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"attackPhase"},{1,"block"},{2,"dodge"}},
+				BackgroundText = backgrounds.GetBackground(1)
+			});
+			choices.Add(new Choice(){
+				Name = "attackPhase",
+				ChoiceType = ChoiceType.QUICKNEXT,
+				OnlyShowText = new List<TextAndPosition>()
+							{new TextAndPosition("globerMonster.Name"+"베기!",5,10,10,ConsoleColor.Red){AlignH = true,PriorityLayer=1}},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"reactionPhase"}},
+				BackgroundText = backgrounds.GetBackground(1)
+			});
+			choices.Add(new Choice(){
+				Name = "reactionPhase",
+				ChoiceType = ChoiceType.QUICKNEXT,
+				OnlyShowText = new List<TextAndPosition>()
+							{new TextAndPosition("(몬스터 피해 메세지)",5,10,10){AlignH = true,PriorityLayer=1}},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"movePhase"}},
+				BackgroundText = backgrounds.GetBackground(1)
+			});
+			choices.Add(new Choice(){
+				Name = "andPhase",
+				SelectText = new List<TextAndPosition>()         
+							{new TextAndPosition("확인",16,13,true)},
+				OnlyShowText = new List<TextAndPosition>()
+							{new TextAndPosition("globerMonster.CurrentState()",15,3+5,1){AlignH = true}},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"backField"}},
+				BackgroundText = backgrounds.GetBackground(1)
+			});
+			choices.Add(new Choice(){
+				Name = "failBlock",
+				ChoiceType = ChoiceType.QUICKNEXT,
+				OnlyShowText = new List<TextAndPosition>()
+							{new TextAndPosition("막기 실패",15,3+5,1){AlignH = true}},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"movePhase"}},
+				BackgroundText = backgrounds.GetBackground(1)
+			});
+			choices.Add(new Choice(){
+				Name = "successBlock",
+				ChoiceType = ChoiceType.QUICKNEXT,
+				OnlyShowText = new List<TextAndPosition>()
+							{new TextAndPosition("막기 성공",15,3+5,1){AlignH = true}},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"movePhase"}},
+				BackgroundText = backgrounds.GetBackground(1)
+			});
+			choices.Add(new Choice(){
+				Name = "failDodge",
+				ChoiceType = ChoiceType.QUICKNEXT,
+				OnlyShowText = new List<TextAndPosition>()
+							{new TextAndPosition("회피 실패",15,3+5,1){AlignH = true}},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"movePhase"}},
+				BackgroundText = backgrounds.GetBackground(1)
+			});
+			choices.Add(new Choice(){
+				Name = "successDodge",
+				ChoiceType = ChoiceType.QUICKNEXT,
+				OnlyShowText = new List<TextAndPosition>()
+							{new TextAndPosition("회피 성공",15,3+5,1){AlignH = true}},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"movePhase"}},
+				BackgroundText = backgrounds.GetBackground(1)
+			});
+			choices.Add(new Choice(){
+					Name = "monsterAttack",
+					ChoiceType = ChoiceType.QUICKNEXT,
+					OnlyShowText = new List<TextAndPosition>()
+								{new TextAndPosition("globerMonster.AttackCry()",15,3+5,1){AlignH = true}},
+					IndicateChoice = new Dictionary<int,Object>(){{0,"monsterReactionPhase"}},
+					BackgroundText = backgrounds.GetBackground(1)
+			});
+			choices.Add(new Choice(){
+					Name = "monsterReactionPhase",
+					ChoiceType = ChoiceType.QUICKNEXT,
+					OnlyShowText = new List<TextAndPosition>()
+								{new TextAndPosition("globerMonster.Reaction()",5,10,10){AlignH = true,PriorityLayer=1}},
+					IndicateChoice = new Dictionary<int,Object>(){{0,"movePhase"}},
+					BackgroundText = backgrounds.GetBackground(1)
+			});
+			
+			
 			
 			
 			Count = choices.Count;

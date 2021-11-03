@@ -63,11 +63,18 @@ public static class DamageSystem
 	public static String backField;
 	public static bool battleAnd = false;
 	
-	
+	public static Backgrounds backgrounds = new Backgrounds();
+	public static ConsoleKeyInfo c;
 	
 	static int DODGE_CHANCE = 50;
 	static int BLOCK_CHANCE = 50;
 	static Random random = new Random();
+	
+	
+	public static DisplayTextGame BDTG = new DisplayTextGame();
+	public static ChoiceControler BCC = new ChoiceControler(new Scenario());
+	public static String currentChoice = "firstPhase"; //첫 화면
+
 
 	public static void Attacking(Character Attacker,Character Defender){
 		Defender.Damage(Attacker.Attack());
@@ -124,262 +131,153 @@ public static class BattleSystem{
 			}
 		}
 
-	public static async Task<String> BattlePhase(Player player,Monster monster,String back){
+	public static String BattlePhase(Player player,Monster monster,String back){
+		
 		globerPlayer = player;
 		globerMonster = monster;
 		backField = back;
-		Task playerTurn = Task.Run(()=>PlayerTurn());
-		Task monsterTurn = Task.Run(()=>MonsterTurn());
 		
-		if(timeOut)
-		{
-			playerTurn = Task.Run(()=>PlayerTurn());
-		}
-		else
-		{
-			monsterTurn = Task.Run(()=>MonsterTurn());	
-		}
+		Task.Run(()=>BattleTimer());
 		
-		testLog("playerTurn끝11");
-		await playerTurn;
-		testLog("playerTurn끝");
-		return backField;
-	}
-	
-	public static void PlayerTurn(){
-			timeOut = false;
-			Backgrounds backgrounds = new Backgrounds();
-			Choice Start = new Choice(){
-				Name = "firstPhase",
-				SelectText = new List<TextAndPosition>()         
-							{new TextAndPosition("공격한다.",16,13,true),
-							new TextAndPosition("도망간다.",40,13,true)},
-				OnlyShowText = new List<TextAndPosition>()
-							{new TextAndPosition(globerMonster.GetRandomSpawnMessage().text,15,3+5,1){AlignH = true}},
-				IndicateChoice = new Dictionary<int,Object>(){{0,"movePhase"},{1,"end"}},
-				BackgroundText = backgrounds.GetBackground(1)
-			};
-
-			Choice B2 = new Choice(){
-				Name = "movePhase",
-				SelectText = new List<TextAndPosition>()         
-							{new TextAndPosition("공격",16,13,true),
-							 new TextAndPosition("방어",28,13,true),
-							new TextAndPosition("회피",40,13,true)},
-				OnlyShowText = new List<TextAndPosition>()
-							{new TextAndPosition(globerMonster.CurrentState(),15,3+5,1){AlignH = true}},
-				IndicateChoice = new Dictionary<int,Object>(){{0,"attackPhase"},{1,"block"},{2,"dodge"}},
-				BackgroundText = backgrounds.GetBackground(1)
-			};
-
-			Choice B3 = new Choice(){
-				Name = "attackPhase",
-				ChoiceType = ChoiceType.QUICKNEXT,
-				OnlyShowText = new List<TextAndPosition>()
-							{new TextAndPosition(globerMonster.Name+"베기!",5,10,10,ConsoleColor.Red){AlignH = true,PriorityLayer=1}},
-				IndicateChoice = new Dictionary<int,Object>(){{0,"reactionPhase"}},
-				BackgroundText = backgrounds.GetBackground(1)
-			};
-
-			Choice B4 = new Choice(){
-				Name = "reactionPhase",
-				ChoiceType = ChoiceType.QUICKNEXT,
-				OnlyShowText = new List<TextAndPosition>()
-							{new TextAndPosition("(몬스터 피해 메세지)",5,10,10){AlignH = true,PriorityLayer=1}},
-				IndicateChoice = new Dictionary<int,Object>(){{0,"movePhase"}},
-				BackgroundText = backgrounds.GetBackground(1)
-			};
-
-			Choice B5 = new Choice(){
-				Name = "andPhase",
-				SelectText = new List<TextAndPosition>()         
-							{new TextAndPosition("확인",16,13,true)},
-				OnlyShowText = new List<TextAndPosition>()
-							{new TextAndPosition(globerMonster.CurrentState(),15,3+5,1){AlignH = true}},
-				IndicateChoice = new Dictionary<int,Object>(){{0,"backField"}},
-				BackgroundText = backgrounds.GetBackground(1)
-			};
-			
-			Choice B6 = new Choice(){
-				Name = "failBlock",
-				ChoiceType = ChoiceType.QUICKNEXT,
-				OnlyShowText = new List<TextAndPosition>()
-							{new TextAndPosition("막기 실패",15,3+5,1){AlignH = true}},
-				IndicateChoice = new Dictionary<int,Object>(){{0,"movePhase"}},
-				BackgroundText = backgrounds.GetBackground(1)
-			};
-			
-			Choice B7 = new Choice(){
-				Name = "successBlock",
-				ChoiceType = ChoiceType.QUICKNEXT,
-				OnlyShowText = new List<TextAndPosition>()
-							{new TextAndPosition("막기 성공",15,3+5,1){AlignH = true}},
-				IndicateChoice = new Dictionary<int,Object>(){{0,"movePhase"}},
-				BackgroundText = backgrounds.GetBackground(1)
-			};
-			
-			Choice B8 = new Choice(){
-				Name = "failDodge",
-				ChoiceType = ChoiceType.QUICKNEXT,
-				OnlyShowText = new List<TextAndPosition>()
-							{new TextAndPosition("회피 실패",15,3+5,1){AlignH = true}},
-				IndicateChoice = new Dictionary<int,Object>(){{0,"movePhase"}},
-				BackgroundText = backgrounds.GetBackground(1)
-			};
-			
-			Choice B9 = new Choice(){
-				Name = "successDodge",
-				ChoiceType = ChoiceType.QUICKNEXT,
-				OnlyShowText = new List<TextAndPosition>()
-							{new TextAndPosition("회피 성공",15,3+5,1){AlignH = true}},
-				IndicateChoice = new Dictionary<int,Object>(){{0,"movePhase"}},
-				BackgroundText = backgrounds.GetBackground(1)
-			};
-			
-			
-
-			//Console.WriteLine(monster.GetRandomSpawnMessage().text);
-			DisplayTextGame BDTG = new DisplayTextGame();
-			ChoiceControler BCC = new ChoiceControler();
-			String currentChoice = "firstPhase"; //첫 화면
-
-			BCC.AddChoice(Start);
-			BCC.AddChoice(B2);
-			BCC.AddChoice(B3);
-			BCC.AddChoice(B4);
-			BCC.AddChoice(B5);
-			BCC.AddChoice(B6);
-			BCC.AddChoice(B7);
-			BCC.AddChoice(B8);
-			BCC.AddChoice(B9);
-				while(!battleAnd){
-				BDTG.Cho = BCC.GetChoiceClone(currentChoice); //초기 화면
+		Task playerTurn;
+		Task monsterTurn;
+		
+		while(!battleAnd)
+		{
+				Choice cho = BCC.GetChoice("movePhase");
+				cho.OnlyShowText = new List<TextAndPosition>() //몬스터가 데미지 입을때마다 몬스터 상태메세지 초기화
+					{new TextAndPosition(globerMonster.CurrentState(),15,3+5,1){AlignH = true}};
+				BDTG.Cho = BCC.GetChoiceClone("firstPhase"); //초기 화면
 				BDTG.Show();
 				BDTG.delay = 0;
-				ConsoleKeyInfo c = Console.ReadKey();
-					while(c.Key != ConsoleKey.Escape){
-						if(died){
-							backField = "testStream";
-							battleAnd = true;
-							return;
-						}
-						if(BCC.GetChoiceClone(currentChoice).ChoiceType != ChoiceType.QUICKNEXT)//QUICKNEXT를 실행했을때 다음으로 넘어가는중SelectingText에서 ArgumentOutOfRangeException발생하는 문제가 잇음 5.13
-							BDTG.SelectingText(c);
-
-						if(c.Key == ConsoleKey.Enter){
-							//testLog("Enter");
-							currentChoice = (String)BDTG.Cho.GetValueOn(BDTG.currentSelectNum);// 선택한 보기에따라 초이스 선택
-							if(globerMonster.HpState() == 3){ //8.22 몬스터의 HP상태가 빈사 상태일때 배틀 페이즈 종료 const int Died = 3
-								BDTG.Init();
-								Choice cho = BCC.GetChoiceClone("andPhase"); //BDTG의 Cho를 초기화 하면서 OnlyShowText에 있던 텍스트는 integratedList에 들어감으로 choice에 넣기전에 수정해 줘야함
-								cho.OnlyShowText = new List<TextAndPosition>() //몬스터 상태메세지 초기화
-										{new TextAndPosition(globerMonster.CurrentState(),15,3+5,1){AlignH = true}};
-								BDTG.Cho = cho;
-
-								BDTG.Show();
-								c = Console.ReadKey();
-								testLog("전투끝");
-								return;
-							}
-							if(currentChoice == "attackPhase"){ //Attacker,Defender에 값을 넣으면 서로 데미지 계산 1회 실행
-								actionType = ActionType.ATTACK;
-								Choice cho = BCC.GetChoice(currentChoice);
-										cho.OnlyShowText = new List<TextAndPosition>() //몬스터가 데미지 입을때마다 몬스터 상태메세지 초기화
-											{new TextAndPosition(globerPlayer.AttackCry(),15,9,1){AlignH = true}};
-								Attacker = globerPlayer;
-								Defender = globerMonster;
-							}
-							else if(currentChoice == "block"){ //Attacker,Defender에 값을 넣으면 서로 데미지 계산 1회 실행
-								actionType = ActionType.BLOCK;
-								Attacker = globerPlayer;
-								Defender = globerMonster;
-								if(successCheck){
-									currentChoice = "successBlock";
-									Choice cho = BCC.GetChoice(currentChoice);
-										cho.OnlyShowText = new List<TextAndPosition>() 
-											{new TextAndPosition(globerMonster.BlockSuccess(),15,9,1){AlignH = true}};
-								}else{
-									currentChoice = "failBlock";
-									Choice cho = BCC.GetChoice(currentChoice);
-										cho.OnlyShowText = new List<TextAndPosition>() 
-											{new TextAndPosition(globerMonster.BlockFail(),15,9,1){AlignH = true}};
-								}
-							}
-							else if(currentChoice == "dodge"){ //Attacker,Defender에 값을 넣으면 서로 데미지 계산 1회 실행
-								actionType = ActionType.DODGE;
-								Attacker = globerPlayer;
-								Defender = globerMonster;
-								if(successCheck){
-									currentChoice = "successDodge";
-									Choice cho = BCC.GetChoice(currentChoice);
-										cho.OnlyShowText = new List<TextAndPosition>() 
-											{new TextAndPosition(globerMonster.DodgeSuccess(),15,9,1){AlignH = true}};
-								}else{
-									currentChoice = "failDodge";
-									Choice cho = BCC.GetChoice(currentChoice);
-										cho.OnlyShowText = new List<TextAndPosition>() 
-											{new TextAndPosition(globerMonster.DodgeFail(),15,9,1){AlignH = true}};
-								}
-							}
-
-							if(BCC.GetChoiceClone(currentChoice).ChoiceType == ChoiceType.QUICKNEXT){//QUICKNEXT구현을 위해 추가된 if문
-								BDTG.Init();
-								BDTG.Cho = BCC.GetChoiceClone(currentChoice);
-								BDTG.Show();
-
-								currentChoice = (String)BCC.GetChoiceClone(currentChoice).QuickNext();
-									if(currentChoice == "reactionPhase"){ //8.22
-										Choice cho = BCC.GetChoice(currentChoice);
-										cho.OnlyShowText = new List<TextAndPosition>() 
-											{new TextAndPosition(globerMonster.Reaction(),15,9,1){AlignH = true}};
-										cho = BCC.GetChoice("movePhase");
-										cho.OnlyShowText = new List<TextAndPosition>() //몬스터가 데미지 입을때마다 몬스터 상태메세지 초기화
-											{new TextAndPosition(globerMonster.CurrentState(),15,3+5,1){AlignH = true}};
-									}
-									
-									c = Console.ReadKey(); //8.24
-									
-							}
-							BDTG.Init();					
-
-							break;
-						}
-						//방향키나 숫자를 누르면 여기로 넘어옴
-						BDTG.Show();
-						c = Console.ReadKey();
-					}
-
+				timerStart = true;
+				c = Console.ReadKey();
+				
+				testLog("1Key");
+				BDTG.SelectingText(c);
+			if(c.Key == ConsoleKey.Enter)
+			{
+				currentChoice = (String)BDTG.Cho.GetValueOn(BDTG.currentSelectNum);
+				testLog("in");
+				if(!timeOut)
+				{
+					playerTurn = Task.Run(()=>PlayerTurn());
+				}
+				else
+				{
+					//monsterTurn = Task.Run(()=>MonsterTurn());	
+				}
 			}
+		}
+		return backField;
 	}
+	public static void PlayerTurn(){
+		timerStart = false;
+			if(died)
+			{
+				backField = "testStream";
+				battleAnd = true;
+				return;
+			}
+			if(BCC.GetChoiceClone(currentChoice).ChoiceType != ChoiceType.QUICKNEXT)//QUICKNEXT를 실행했을때 다음으로 넘어가는중SelectingText에서 ArgumentOutOfRangeException발생하는 문제가 잇음 5.13
+				BDTG.SelectingText(c);
+
+				//testLog("Enter");
+				currentChoice = (String)BDTG.Cho.GetValueOn(BDTG.currentSelectNum);// 선택한 보기에따라 초이스 선택
+				if(globerMonster.HpState() == 3){ //8.22 몬스터의 HP상태가 빈사 상태일때 배틀 페이즈 종료 const int Died = 3
+					BDTG.Init();
+					Choice cho = BCC.GetChoiceClone("andPhase"); //BDTG의 Cho를 초기화 하면서 OnlyShowText에 있던 텍스트는 integratedList에 들어감으로 choice에 넣기전에 수정해 줘야함
+					cho.OnlyShowText = new List<TextAndPosition>() //몬스터 상태메세지 초기화
+							{new TextAndPosition(globerMonster.CurrentState(),15,3+5,1){AlignH = true}};
+					BDTG.Cho = cho;
+
+					BDTG.Show();
+					c = Console.ReadKey();
+					battleAnd = true;
+					testLog("전투끝");
+					return;
+				}
+				if(currentChoice == "attackPhase"){ //Attacker,Defender에 값을 넣으면 서로 데미지 계산 1회 실행
+					actionType = ActionType.ATTACK;
+					Choice cho = BCC.GetChoice(currentChoice);
+							cho.OnlyShowText = new List<TextAndPosition>() //몬스터가 데미지 입을때마다 몬스터 상태메세지 초기화
+								{new TextAndPosition(globerPlayer.AttackCry(),15,9,1){AlignH = true}};
+					Attacker = globerPlayer;
+					Defender = globerMonster;
+					testLog("here");
+					BDTG.Init();
+					BDTG.Cho = BCC.GetChoiceClone(currentChoice);
+					BDTG.Show();
+					Console.ReadKey();
+					testLog(currentChoice);
+					currentChoice = (String)BCC.GetChoiceClone(currentChoice).QuickNext();
+					
+						if(currentChoice == "reactionPhase"){ //8.22
+							cho = BCC.GetChoice(currentChoice);
+							cho.OnlyShowText = new List<TextAndPosition>() 
+								{new TextAndPosition(globerMonster.Reaction(),15,9,1){AlignH = true}};
+							cho = BCC.GetChoice("movePhase");
+							cho.OnlyShowText = new List<TextAndPosition>() //몬스터가 데미지 입을때마다 몬스터 상태메세지 초기화
+								{new TextAndPosition(globerMonster.CurrentState(),15,3+5,1){AlignH = true}};
+						}
+					BDTG.Init();
+					BDTG.Cho = BCC.GetChoiceClone(currentChoice);
+					BDTG.Show();
+					c = Console.ReadKey(); //8.24
+				}
+				else if(currentChoice == "block"){ //Attacker,Defender에 값을 넣으면 서로 데미지 계산 1회 실행
+					actionType = ActionType.BLOCK;
+					Attacker = globerPlayer;
+					Defender = globerMonster;
+					if(successCheck){
+						currentChoice = "successBlock";
+						Choice cho = BCC.GetChoice(currentChoice);
+							cho.OnlyShowText = new List<TextAndPosition>() 
+								{new TextAndPosition(globerMonster.BlockSuccess(),15,9,1){AlignH = true}};
+					}else{
+						currentChoice = "failBlock";
+						Choice cho = BCC.GetChoice(currentChoice);
+							cho.OnlyShowText = new List<TextAndPosition>() 
+								{new TextAndPosition(globerMonster.BlockFail(),15,9,1){AlignH = true}};
+					}
+				}
+				else if(currentChoice == "dodge"){ //Attacker,Defender에 값을 넣으면 서로 데미지 계산 1회 실행
+					actionType = ActionType.DODGE;
+					Attacker = globerPlayer;
+					Defender = globerMonster;
+					if(successCheck){
+						currentChoice = "successDodge";
+						Choice cho = BCC.GetChoice(currentChoice);
+							cho.OnlyShowText = new List<TextAndPosition>() 
+								{new TextAndPosition(globerMonster.DodgeSuccess(),15,9,1){AlignH = true}};
+					}else{
+						currentChoice = "failDodge";
+						Choice cho = BCC.GetChoice(currentChoice);
+							cho.OnlyShowText = new List<TextAndPosition>() 
+								{new TextAndPosition(globerMonster.DodgeFail(),15,9,1){AlignH = true}};
+					}
+				}
+
+				if(BCC.GetChoiceClone(currentChoice).ChoiceType == ChoiceType.QUICKNEXT){//QUICKNEXT구현을 위해 추가된 if문
+					
+
+				}
+				BDTG.Init();					
+
+			
+		
+	}
+	
+	
+	
 	
 	public static void MonsterTurn(){
 		timeOut = false;
-			DisplayTextGame BDTG = new DisplayTextGame();
-			ChoiceControler BCC = new ChoiceControler();
-			Backgrounds backgrounds = new Backgrounds();
 			String currentChoice = "monsterAttack"; //첫 화면
 
 
 
-			Choice B1 = new Choice(){
-					Name = "monsterAttack",
-					ChoiceType = ChoiceType.QUICKNEXT,
-					OnlyShowText = new List<TextAndPosition>()
-								{new TextAndPosition(globerMonster.AttackCry(),15,3+5,1){AlignH = true}},
-					IndicateChoice = new Dictionary<int,Object>(){{0,"reactionPhase"}},
-					BackgroundText = backgrounds.GetBackground(1)
-			};
-			BCC.AddChoice(B1);
-
-			Choice B2 = new Choice(){
-					Name = "reactionPhase",
-					ChoiceType = ChoiceType.QUICKNEXT,
-					OnlyShowText = new List<TextAndPosition>()
-								{new TextAndPosition(globerMonster.Reaction(),5,10,10){AlignH = true,PriorityLayer=1}},
-					IndicateChoice = new Dictionary<int,Object>(){{0,"movePhase"}},
-					BackgroundText = backgrounds.GetBackground(1)
-			};
-			BCC.AddChoice(B2);
+			
 
 			if(BCC.GetChoiceClone(currentChoice).ChoiceType == ChoiceType.QUICKNEXT){//QUICKNEXT구현을 위해 추가된 if문
 				BDTG.Init();
@@ -389,7 +287,7 @@ public static class BattleSystem{
 				Attacking(globerMonster,globerPlayer);
 				currentChoice = (String)BCC.GetChoiceClone(currentChoice).QuickNext();
 				Console.ReadKey();
-					if(currentChoice == "reactionPhase"){ //8.22
+					if(currentChoice == "monsterReactionPhase"){ //8.22
 						Choice cho = BCC.GetChoice(currentChoice);
 						cho.OnlyShowText = new List<TextAndPosition>() 
 							{new TextAndPosition(globerPlayer.Reaction(),15,9,1){AlignH = true}};
