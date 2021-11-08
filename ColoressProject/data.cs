@@ -193,7 +193,7 @@ public class Scenario{
 				Name = "firstPhase",
 				SelectText = new List<TextAndPosition>()         
 							{new TextAndPosition("공격한다.",16,13,true),
-							new TextAndPosition("도망간다.",40,13,true)},
+							new TextAndPosition("도망친다.",40,13,true)},
 				OnlyShowText = new List<TextAndPosition>()
 							{new TextAndPosition("globerMonster.GetRandomSpawnMessage().text",15,3+5,1){AlignH = true}},
 				IndicateChoice = new Dictionary<int,Object>(){{0,"movePhase"},{1,"end"}},

@@ -66,41 +66,41 @@ namespace Game
 			Task.Factory.StartNew(BattleCal);	
 			
 			while(true){
-			DTG.Cho = GameManager.SpawnMonster(CC.GetChoiceClone(currentChoice)); //화면 할당
-			DTG.Show();
+			DTG.Display(GameManager.SpawnMonster(CC.GetChoiceClone(currentChoice)));
 			DTG.delay = 0;
 				
-			
-			
 			keyInfo = Console.ReadKey();
-				while(keyInfo.Key != ConsoleKey.Escape){
+				while(keyInfo.Key != ConsoleKey.Escape)
+				{
 					DTG.SelectingText(keyInfo);
 					
-					if(keyInfo.Key == ConsoleKey.I){
+					if(keyInfo.Key == ConsoleKey.I)
+					{
 							inven.OpenInventory();
 					}
 					
-					if(keyInfo.Key == ConsoleKey.Enter){
+					if(keyInfo.Key == ConsoleKey.Enter)
+					{
 						currentChoice = (String)DTG.Cho.GetValueOn(DTG.currentSelectNum);
 						
-						if(CList.GetMonster(currentChoice) != null){ //배틀페이즈
+						if(CList.GetMonster(currentChoice) != null)
+						{ //배틀페이즈
 							DTG.Init();
-							Console.Clear();
 							currentChoice = BattlePhase(player,CList.GetMonster(currentChoice),DTG.Cho.Name); //currentChoice에 현제 선택된 몬스터 이름이 들어가 있음 //8.23
 							DTG.Cho = CC.GetChoiceClone(currentChoice);
 						}
 						
 						DTG.Cho.LeaveChoice();
 						
-						if(CC.GetChoiceClone(currentChoice).ChoiceType == ChoiceType.QUICKNEXT){//QUICKNEXT구현을 위해 추가된 if문
+						if(CC.GetChoiceClone(currentChoice).ChoiceType == ChoiceType.QUICKNEXT)
+						{//QUICKNEXT구현을 위해 추가된 if문
 							runQuickNext();
 						}
-						
-						DTG.Init();
 						break;
 					}
-					else{
-						DTG.Show();
+					else
+					{
+						DTG.Display();
 						keyInfo = Console.ReadKey();
 					}
 				}
@@ -133,9 +133,7 @@ namespace Game
 		*/
 		
 		public static void runQuickNext(){
-			DTG.Init();
-			DTG.Cho = CC.GetChoiceClone(currentChoice);
-			DTG.Show();
+			DTG.Display(CC.GetChoiceClone(currentChoice));
 			currentChoice = (String)CC.GetChoiceClone(currentChoice).QuickNext();
 			Thread.Sleep(2000);
 			//keyInfo = Console.ReadKey();
@@ -602,3 +600,13 @@ Token을 활용해 봐야겠다.
 //그리고 timeOut이 되자마자 MonsterTurn을 실행하고 싶은데 ReadKey는 키 입력이 있을때까지 기다리기 때문에
 //timeOut이 되어도 키입력이 있어야 MonsterTurn이 실행되는 문제가 있다.
 //해결할 수 있도록 하자.
+
+//2021.11.08
+//며칠간 머리도 식힐겸 그림연습을 했다.
+//그러다 오늘 아이디어가 떠올랐다.
+//몬스터를 완전 비동기로 구현하기는 아직 어려우니 
+//비동기로 타이머를 재서 timeOut하면 몬스터의 턴을 가져오고 
+//몬스터의 턴이 있을경우 플래이어가 행동 선택지를 선택했을때
+//몬스터의 턴이 먼저 실행되도록 짜는 것이다.
+//DisplayTextGame의 Init(),Cho초기화,Show()를 한데 묶어 Display(Choice choice)메소드 만듦
+//BattleSystem을 구현했지만 SelectMessage를 선택하는 과정에서 동작하지 않음. 수정요함

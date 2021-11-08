@@ -176,6 +176,16 @@ public class DisplayTextGame{
 				BackgroundOverlap();
 			}
 		}
+	
+		public void Display(Choice choice){
+			Init();
+			Cho = choice;
+			Show();
+		}
+	
+		public void Display(){
+			Show();
+		}
 		
 		public void InputLists(){
 			selectList = cho.SelectText;

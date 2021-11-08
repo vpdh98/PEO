@@ -195,9 +195,9 @@ namespace Characters
 		}
 		
 		List<TextAndPosition> reactionMessage= new List<TextAndPosition>(){
-						new TextAndPosition("나는 오른쪽 주먹을 힘껏 내질렀다! ",10),
-						new TextAndPosition("나는 날라차기를 시도했다!",10),
-						new TextAndPosition("나는 마구잡이로 팔을 마구마구 돌렸다!",10)
+						new TextAndPosition("  ",10),
+						new TextAndPosition(" ",10),
+						new TextAndPosition(" ",10)
 						};
 						
 		public List<TextAndPosition> ReactionMessage{
