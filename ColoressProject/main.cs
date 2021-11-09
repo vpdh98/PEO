@@ -610,3 +610,13 @@ Token을 활용해 봐야겠다.
 //몬스터의 턴이 먼저 실행되도록 짜는 것이다.
 //DisplayTextGame의 Init(),Cho초기화,Show()를 한데 묶어 Display(Choice choice)메소드 만듦
 //BattleSystem을 구현했지만 SelectMessage를 선택하는 과정에서 동작하지 않음. 수정요함
+
+//2021.11.09
+//선택하는 과정이 동작하지 않는 이유를 발견
+//이유는 Choice를 DisplayTextGame로 Show하기 전에 이전 Choice의 잔재를 지우기 위해 Init()을 호출하는데
+//선택하는 과정에서도 Init()이 호출되어 계속 초기값만 가리키는 것.
+//SelectingText에 관련된 필드만 따로 초기화 해주는 InitSelect()메소드 정의
+//그래도 몇가지 문제 발생
+//1.한번 전투를 하고 나서 다시 BattlePhase로 들어가면 타이머 작동 안함
+//2.                 "               로 들어가면 선택지가 선택이 안되어 있음(원래는 1번을 화살표가 가리키고 있어야함)
+//3.몬스터 턴이 끝나고 나서 movePhase로 넘어가야 하는데 바로 playerTurn의 어택 페이즈로 넘어감

@@ -111,7 +111,7 @@ public class DisplayTextGame{
 		public List<TextAndPosition> backgroundList;	//	  " 	 뒷배경 리스트
 		public ChoiceType choiceType;					//선택지 타입
 		
-		String currentArrowingText;						//현재 선택된 선택지
+		public String currentArrowingText;						//현재 선택된 선택지
 		
 		public int currentSelectNum = 0;					//현재 선택된 선택지 번호
 		public int delay = 0;							//문자출력딜레이
@@ -131,15 +131,17 @@ public class DisplayTextGame{
 	
 		bool isClear = true;							//화면을 클리어하고 다음 화면을 출력하는지에 대한 변수
 		
-		public void Init(){
+		public void Init(bool SelectInit = true){
 			selectList = new List<TextAndPosition>();
 			onlyShowList = new List<TextAndPosition>();
 			integratedList = new List<TextAndPosition>();
 			streamList = new List<TextAndPosition>();
 			backgroundList = new List<TextAndPosition>();
-			currentArrowingText = null;
 			
-			currentSelectNum = 0;
+			if(SelectInit){
+				currentSelectNum = 0;
+				currentArrowingText = null;
+			}
 			delay = 0;							//문자출력딜레이
 			delayBackup = 0;
 			
@@ -149,6 +151,11 @@ public class DisplayTextGame{
 			countPoint = 0;
 			stopStart = false;	
 			stopText = new TextAndPosition();
+		}
+	
+		public void InitSelect(){
+			currentSelectNum = 0;
+			currentArrowingText = null;
 		}
 		
 		public DisplayTextGame(){
@@ -318,7 +325,7 @@ public class DisplayTextGame{
 										voidARROW = temp+1+".";
 									}
 								}
-								Console.Write(TextArrower(TAndP.text,TAndP.isSelect));
+								Console.Write(TextProcessing(TAndP.text,TAndP.isSelect));
 							}
 							Console.ForegroundColor = tempC;
 							Thread.Sleep(delay);
@@ -434,7 +441,7 @@ public class DisplayTextGame{
 				Console.WriteLine("call SSList");
 				for(int i = 0;i<selectList.Count;i++){
 						Console.SetCursorPosition(selectList[i][0],selectList[i][1]);
-						Console.WriteLine(TextArrower(selectList[i].text));
+						Console.WriteLine(TextProcessing(selectList[i].text));
 				}
 			}
 		}
@@ -448,19 +455,20 @@ public class DisplayTextGame{
 			}
 		}*/
 			
-		public String TextArrower(String s,bool isSelect){ //항상 currentArrowingText에 할당된 Text에 화살표를 붙인다
+		public String TextProcessing(String s,bool isSelect){ //항상 currentArrowingText에 할당된 Text에 화살표를 붙인다
 			if(isSelect && choiceType != ChoiceType.QUICKNEXT){
 				if(s.Equals(currentArrowingText))			//매개변수 s가 현재 선택된 Text면 화살표를 붙이고 아니면 화살표 없이 반환
-					return ARROW+currentArrowingText;
+					return ARROW+s;
 				else
 					return voidARROW+s;
 			}
 			return s;										//선택 가능한 text가 아니면 그냥 바로 반환
 		}
 		
-		public void SelectingText(ConsoleKeyInfo key){ //방향키를 누르면 currentArrowingText에 할당되는 Text를 순차적으로 바꾼다.
-			
+		public bool SelectingText(ConsoleKeyInfo key){ //방향키를 누르면 currentArrowingText에 할당되는 Text를 순차적으로 바꾼다.
+			bool success = false;
 			int keyInt = 0;
+			if(Cho.ChoiceType == ChoiceType.QUICKNEXT) return false;
 			try{
 				keyInt = int.Parse(key.KeyChar.ToString());
 			}catch(Exception e){}
@@ -469,16 +477,37 @@ public class DisplayTextGame{
 				currentSelectNum = 0;
 			if((key.Key == ConsoleKey.UpArrow || key.Key == ConsoleKey.LeftArrow) && currentSelectNum != 0){
 				currentSelectNum--;
+				success = true;
 			}
 			else if((key.Key == ConsoleKey.DownArrow || key.Key == ConsoleKey.RightArrow) && currentSelectNum != selectList.Count-1){
 				currentSelectNum++;
+				success = true;
 			}
 			else if(keyInt <= selectList.Count && keyInt > 0){
 				currentSelectNum = keyInt - 1;
+				success = true;
 			}
 			if(selectList != null)
 				currentArrowingText = selectList[currentSelectNum].text;
+			return success;
 		}
 		
-		
+		public String ChoicePick(DisplayTextGame DTG,ChoiceControler CC,String currentChoice){
+			ConsoleKeyInfo c;
+			if(CC.GetChoiceClone(currentChoice).ChoiceType == ChoiceType.QUICKNEXT)
+				return currentChoice;
+			while(true){
+				DTG.Init(false);
+				DTG.Cho = CC.GetChoiceClone(currentChoice);
+				DTG.Show();
+				c = Console.ReadKey();
+				DTG.SelectingText(c);
+				if(c.Key == ConsoleKey.Enter)
+				{
+					DTG.InitSelect();
+					return (String)DTG.Cho.GetValueOn(DTG.currentSelectNum);
+				}
+			}
+			return currentChoice;
+		}
 }

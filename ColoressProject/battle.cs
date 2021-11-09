@@ -55,6 +55,7 @@ public static class DamageSystem
 	public static String reactionMessage;
 	public static bool died = false;
 	
+	public static bool timerStart = false;
 	public static bool timerEnd = false;
 	public static int count = 0;
 	public static int limit = 5;
@@ -138,45 +139,49 @@ public static class BattleSystem{
 		globerPlayer = player;
 		globerMonster = monster;
 		backField = back;
+		currentChoice = "firstPhase";
+		battleAnd = false;
+		timerStart = false;
 		Choice cho = BCC.GetChoice("movePhase");
 			cho.OnlyShowText = new List<TextAndPosition>() //몬스터가 데미지 입을때마다 몬스터 상태메세지 초기화
 				{new TextAndPosition(globerMonster.CurrentState(),15,3+5,1){AlignH = true}};
 			cho = BCC.GetChoice("firstPhase");
 				cho.OnlyShowText = new List<TextAndPosition>() 
 					{new TextAndPosition(globerMonster.GetRandomSpawnMessage().text,15,3+5,1){AlignH = true}};
+		currentChoice = BDTG.ChoicePick(BDTG,BCC,currentChoice);
+		BDTG.delay = 0;
 		
 		while(!battleAnd)
 		{
-			BDTG.Display(BCC.GetChoiceClone(currentChoice));
-			BDTG.delay = 0;
-			c = Console.ReadKey();
-			timer = Task.Run(()=>BattleTimer());
-			if(BCC.GetChoiceClone(currentChoice).ChoiceType != ChoiceType.QUICKNEXT)
-				BDTG.SelectingText(c);
-			if(c.Key == ConsoleKey.Enter)
-			{
-				currentChoice = (String)BDTG.Cho.GetValueOn(BDTG.currentSelectNum);
-				if(!timeOut)
-				{
-					timerEnd = true;
-					timer.Wait();
-					PlayerTurn();
-				}
-				else
-				{
-					MonsterTurn();	
-				}
-				
-				if(globerMonster.HpState() == 3){ //8.22 몬스터의 HP상태가 빈사 상태일때 배틀 페이즈 종료 const int Died = 3
-					
-					cho = BCC.GetChoiceClone("andPhase"); //BDTG의 Cho를 초기화 하면서 OnlyShowText에 있던 텍스트는 integratedList에 들어감으로 choice에 넣기전에 수정해 줘야함
-					cho.OnlyShowText = new List<TextAndPosition>() //몬스터 상태메세지 초기화
-							{new TextAndPosition(globerMonster.CurrentState(),15,3+5,1){AlignH = true}};
-					BDTG.Display(cho);
-					c = Console.ReadKey();
-					return backField;
-				}
+			
+			if(!timerStart){
+				timer = Task.Run(()=>BattleTimer());
+				timerStart = true;
 			}
+			currentChoice = BDTG.ChoicePick(BDTG,BCC,currentChoice);
+			if(!timeOut)
+			{
+				testLog("Player Turn");
+				timerEnd = true;
+				timer.Wait();
+				PlayerTurn();
+			}
+			else
+			{
+				testLog("Monster Turn");
+				MonsterTurn();	
+			}
+
+			if(globerMonster.HpState() == 3){ //8.22 몬스터의 HP상태가 빈사 상태일때 배틀 페이즈 종료 const int Died = 3
+
+				cho = BCC.GetChoiceClone("andPhase"); //BDTG의 Cho를 초기화 하면서 OnlyShowText에 있던 텍스트는 integratedList에 들어감으로 choice에 넣기전에 수정해 줘야함
+				cho.OnlyShowText = new List<TextAndPosition>() //몬스터 상태메세지 초기화
+						{new TextAndPosition(globerMonster.CurrentState(),15,3+5,1){AlignH = true}};
+				BDTG.Display(cho);
+				c = Console.ReadKey();
+				return backField;
+			}
+			
 		}
 		return backField;
 	}
@@ -192,11 +197,6 @@ public static class BattleSystem{
 			if(currentChoice == "movePhase"){
 				turnAnd = true;
 			}
-			if(BCC.GetChoiceClone(currentChoice).ChoiceType != ChoiceType.QUICKNEXT)//QUICKNEXT를 실행했을때 다음으로 넘어가는중SelectingText에서 ArgumentOutOfRangeException발생하는 문제가 잇음 5.13
-				BDTG.SelectingText(c);
-			
-				currentChoice = (String)BDTG.Cho.GetValueOn(BDTG.currentSelectNum);// 선택한 보기에따라 초이스 선택
-				
 				if(currentChoice == "attackPhase"){ //Attacker,Defender에 값을 넣으면 서로 데미지 계산 1회 실행
 					actionType = ActionType.ATTACK;
 					Choice cho = BCC.GetChoice(currentChoice);
@@ -255,9 +255,7 @@ public static class BattleSystem{
 			cho.OnlyShowText = new List<TextAndPosition>() //몬스터가 데미지 입을때마다 몬스터 상태메세지 초기화
 				{new TextAndPosition(globerMonster.CurrentState(),15,3+5,1){AlignH = true}};
 		}
-		BDTG.Init();
-		BDTG.Cho = BCC.GetChoiceClone(currentChoice);
-		BDTG.Show();
+		BDTG.Display(BCC.GetChoiceClone(currentChoice));
 		c = Console.ReadKey(); //8.24
 		currentChoice = (String)BCC.GetChoiceClone(currentChoice).QuickNext();
 		turnAnd = true;
@@ -267,29 +265,36 @@ public static class BattleSystem{
 	
 	public static void MonsterTurn(){
 		timeOut = false;
+		Choice cho = BCC.GetChoice("monsterAttack");
+		cho.OnlyShowText = new List<TextAndPosition>() //몬스터가 데미지 입을때마다 몬스터 상태메세지 초기화
+			{new TextAndPosition(globerMonster.AttackCry(),15,3+5,1){AlignH = true}};
 		String currentChoice = "monsterAttack"; //첫 화면
 			BDTG.Display(BCC.GetChoiceClone(currentChoice));
 			Attacking(globerMonster,globerPlayer);
 			currentChoice = (String)BCC.GetChoiceClone(currentChoice).QuickNext();
 			Console.ReadKey();
-				if(currentChoice == "monsterReactionPhase"){ //8.22
-					Choice cho = BCC.GetChoice(currentChoice);
-					cho.OnlyShowText = new List<TextAndPosition>() 
-						{new TextAndPosition(globerPlayer.Reaction(),15,9,1){AlignH = true}};
-				}
+				
+			cho = BCC.GetChoice(currentChoice);
+			cho.OnlyShowText = new List<TextAndPosition>() 
+				{new TextAndPosition(globerPlayer.Reaction(),15,9,1){AlignH = true}};
+				
 			BDTG.Display(BCC.GetChoiceClone(currentChoice));;
-			//Console.ReadKey();
+			currentChoice = "movePhase";
+			Console.ReadKey();
 			if(globerPlayer.Hp <= 0) died = true;
 		
 		
 	}
 	
 	public static void BattleTimer(){
+		testLog("Timer 1",false);
 				for(count = 0;count<limit;count++){
-					if(timerEnd) return;
+					if(timerEnd){timerStart = false;testLog("Timer 2",false); return;} 
 					Thread.Sleep(1000);
 				}
+		testLog("Timer 3",false);
 				timeOut = true;
+		timerStart = false;
 	}
 }
 //}

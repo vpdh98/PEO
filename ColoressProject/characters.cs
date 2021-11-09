@@ -475,6 +475,7 @@ namespace Characters
 				AttackPower = 5,
 				Defense = 1,
 				AttackSpeed = 2,
+				ReactionMessage = null
 			};
 			PlayerList.Add(player.Name,player);
 			
