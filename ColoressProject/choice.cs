@@ -224,5 +224,19 @@ public class ChoiceControler{
 	public Choice GetChoiceClone(String choiceName){
 		return (Choice)choiceDictionary[choiceName].Clone();
 	}
+	
+	public Choice ChangeChoiceText(String choiceName,ChoiceControler choiceControler = null,TextAndPosition onlyShowText = null,TextAndPosition selectText = null){
+		Choice cho = this.GetChoice(choiceName);
+		if(choiceControler == null){
+			choiceControler = this;
+		}
+		if(onlyShowText != null){
+			cho.OnlyShowText = new List<TextAndPosition>() {onlyShowText};
+		}
+		if(selectText != null){
+			cho.SelectText = new List<TextAndPosition>() {selectText};
+		}
+		return cho;
+	}
 		
 }

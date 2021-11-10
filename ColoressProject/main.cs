@@ -22,7 +22,8 @@ using static Convenience;
 
 			
 
-public static class Define{
+public static class Define
+{
 		public const int ERROR = 99999;
 		public const String BATTLEPHASE = "BattlePhase";
 		public const String INVENTORY = "Inventory";
@@ -32,7 +33,8 @@ public static class Define{
 
 namespace Game
 {
-	public class main{
+	public class main
+	{
 		public delegate void AttackMethod(Character Attacker,Character Defender);
 		public static AttackMethod attack;
 		static ConsoleKeyInfo keyInfo;
@@ -65,74 +67,38 @@ namespace Game
 			
 			Task.Factory.StartNew(BattleCal);	
 			
-			while(true){
 			DTG.Display(GameManager.SpawnMonster(CC.GetChoiceClone(currentChoice)));
-			DTG.delay = 0;
-				
 			keyInfo = Console.ReadKey();
-				while(keyInfo.Key != ConsoleKey.Escape)
-				{
-					DTG.SelectingText(keyInfo);
-					
-					if(keyInfo.Key == ConsoleKey.I)
-					{
-							inven.OpenInventory();
-					}
-					
-					if(keyInfo.Key == ConsoleKey.Enter)
-					{
-						currentChoice = (String)DTG.Cho.GetValueOn(DTG.currentSelectNum);
-						
-						if(CList.GetMonster(currentChoice) != null)
-						{ //배틀페이즈
-							DTG.Init();
-							currentChoice = BattlePhase(player,CList.GetMonster(currentChoice),DTG.Cho.Name); //currentChoice에 현제 선택된 몬스터 이름이 들어가 있음 //8.23
-							DTG.Cho = CC.GetChoiceClone(currentChoice);
-						}
-						
-						DTG.Cho.LeaveChoice();
-						
-						if(CC.GetChoiceClone(currentChoice).ChoiceType == ChoiceType.QUICKNEXT)
-						{//QUICKNEXT구현을 위해 추가된 if문
-							runQuickNext();
-						}
-						break;
-					}
-					else
-					{
-						DTG.Display();
-						keyInfo = Console.ReadKey();
-					}
-				}
+			
+			while(keyInfo.Key != ConsoleKey.Escape)
+			{
+				DTG.SelectingText(keyInfo);
+				if(keyInfo.Key == ConsoleKey.I) { inven.OpenInventory(); }
 				
-			}
-			
-		}
-		
-		/*
-		public static void Main(){
-			Scenario ss = new Scenario();
-			ChoiceControler CCC = new ChoiceControler(ss);
-			Choice choice = ss.choices[0];
-			testLog("클론");
-			Choice choice2 = (Choice)choice.Clone();
-			testLog("choice1:"+choice.MonsterList.Count);
-			testLog("choice2: "+choice2.MonsterList.Count);
-			CharacterList cList = new CharacterList();
-			Monster m1 = cList.GetMonster("슬라임");
-			Monster m2 = cList.GetMonster("슬라임");
-			Monster m3 = (Monster)m1.Clone();
-			Monster m4 = m1;
-			
-			DTG.Cho = SpawnMonster(choice2); //화면 할당
-			DTG.Show();
+				if(keyInfo.Key == ConsoleKey.Enter) //Enter
+				{
+					currentChoice = (String)DTG.Cho.GetValueOn(DTG.currentSelectNum);
 
-			
+					if(CList.GetMonster(currentChoice) != null){ currentChoice = BattlePhase(player,CList.GetMonster(currentChoice),DTG.Cho.Name); } //currentChoice에 현제 선택된 몬스터 이름이 들어가 있음 //8.23
+					//DTG.Cho.LeaveChoice();
+					
+					if(CC.GetChoiceClone(currentChoice).ChoiceType == ChoiceType.QUICKNEXT) { runQuickNext(); } //QUICKNEXT구현을 위해 추가된 if문
+					
+					DTG.Display(GameManager.SpawnMonster(CC.GetChoiceClone(currentChoice)));
+					keyInfo = Console.ReadKey();
+				}
+				else
+				{
+					DTG.Display(); //Display의 Init()과 choice초기화가 없는 버전
+					keyInfo = Console.ReadKey();
+				}
+			}
+				
 			
 		}
-		*/
 		
-		public static void runQuickNext(){
+		public static void runQuickNext()
+		{
 			DTG.Display(CC.GetChoiceClone(currentChoice));
 			currentChoice = (String)CC.GetChoiceClone(currentChoice).QuickNext();
 			Thread.Sleep(2000);
@@ -142,10 +108,13 @@ namespace Game
 	}	
 	
 	
-	public static class GameManager{
+	public static class GameManager
+	{
 		
-		public static Choice SpawnMonster(Choice choice){ //몬스터 선택지가 중앙에 있는 기존 선택지 마지막 열 다음으로 들어가도록 해주는 메소드
-			if(choice.MonsterList == null){
+		public static Choice SpawnMonster(Choice choice)
+		{ //몬스터 선택지가 중앙에 있는 기존 선택지 마지막 열 다음으로 들어가도록 해주는 메소드
+			if(choice.MonsterList == null)
+			{
 				return choice;
 			}
 			Random random = new Random();
@@ -161,10 +130,13 @@ namespace Game
 			int lastY = selectListLastPositionY(selectList);
 			int mPositionX = firstX;
 			int mPositionY = lastY+1;
-			for(int i= 0;i<monsterListCount;i++){
-				if(!monsterList[i].IsSpawn){
+			for(int i= 0;i<monsterListCount;i++)
+			{
+				if(!monsterList[i].IsSpawn)
+				{
 					spawnChance = monsterList[i].SpawnChance;
-					if(random.Next(1,101) < spawnChance){
+					if(random.Next(1,101) < spawnChance)
+					{
 						//monsterList[i].MonsterInfo();
 						Console.WriteLine(monsterList[i].Name);//@@@@@@@@@@@@@@@@@@@@@@
 						selectList.Add(new TextAndPosition(monsterList[i].GetRandomSelectMessage().text,mPositionX,mPositionY++,true));
@@ -177,7 +149,8 @@ namespace Game
 			return choice;
 		}
 		
-		static int selectListLastPositionX(List<TextAndPosition> sellist){
+		static int selectListLastPositionX(List<TextAndPosition> sellist)
+		{
 			int lastNum = 0;
 			foreach(TextAndPosition tap in sellist){
 				if(lastNum < tap.x && tap.x<50){//좌우로 이동하는 선택지의 포지선 값을 제외
@@ -186,45 +159,59 @@ namespace Game
 			}
 			return lastNum;
 		}
-		static int selectListLastPositionY(List<TextAndPosition> sellist){
+		static int selectListLastPositionY(List<TextAndPosition> sellist)
+		{
 			int lastNum = 0;
-			foreach(TextAndPosition tap in sellist){
-				if(lastNum < tap.y && tap.y < 19){ //좌우로 이동하는 선택지의 포지선 값을 제외
+			foreach(TextAndPosition tap in sellist)
+			{
+				if(lastNum < tap.y && tap.y < 19)
+				{ //좌우로 이동하는 선택지의 포지선 값을 제외
 					lastNum = tap.y;
 				}
 			}
 			return lastNum;
 		}
-		static int selectListFirststPositionX(List<TextAndPosition> sellist){
+		static int selectListFirststPositionX(List<TextAndPosition> sellist)
+		{
 			int firstNum = 9999;
-			foreach(TextAndPosition tap in sellist){
-				if(firstNum > tap.x && tap.x > 1){
+			foreach(TextAndPosition tap in sellist)
+			{
+				if(firstNum > tap.x && tap.x > 1)
+				{
 					firstNum = tap.x;
 				}
 			}
 			return firstNum;
 		}
-		static int selectListFirstPositionY(List<TextAndPosition> sellist){
+		static int selectListFirstPositionY(List<TextAndPosition> sellist)
+		{
 			int firstNum = 9999;
-			foreach(TextAndPosition tap in sellist){
-				if(firstNum > tap.y && tap.y > 1){
+			foreach(TextAndPosition tap in sellist)
+			{
+				if(firstNum > tap.y && tap.y > 1)
+				{
 					firstNum = tap.y;
 				}
 			}
 			return firstNum;
 		}
 		
-		public static void Equip(Item item){
-			if(item.GetType().Name == "Weapon"){
+		public static void Equip(Item item)
+		{
+			if(item.GetType().Name == "Weapon")
+			{
 				main.player.Weapon = (Weapon)item;
 			}
-			if(item.GetType().Name == "Armor"){
+			if(item.GetType().Name == "Armor")
+			{
 				main.player.Armor = (Armor)item;
 			}
 		}
 		
-		public static void Eat(Item item){
-			if(item.GetType().Name == "Potion"){
+		public static void Eat(Item item)
+		{
+			if(item.GetType().Name == "Potion")
+			{
 				main.player.Hp += ((Potion)item).Hp;
 			}
 		}
@@ -620,3 +607,15 @@ Token을 활용해 봐야겠다.
 //1.한번 전투를 하고 나서 다시 BattlePhase로 들어가면 타이머 작동 안함
 //2.                 "               로 들어가면 선택지가 선택이 안되어 있음(원래는 1번을 화살표가 가리키고 있어야함)
 //3.몬스터 턴이 끝나고 나서 movePhase로 넘어가야 하는데 바로 playerTurn의 어택 페이즈로 넘어감
+
+//2021.11.10
+//화면에 Display하는 과정을 단순화 하는것이 좋을것 같음
+//오늘은 코드정리가 필요
+//루프 패턴을 변경했다.
+//어떤 키를 눌러도 마지막에 아래 두줄의 코드가 들어가게 했다.
+//BDTG.Display(BCC.GetChoiceClone(currentChoice));
+//					keyInfo = Console.ReadKey()
+//만족스럽게 배틀시스템이 작동한다!
+//수정해야할 부분 조금이 있다.
+//1.타이머가 다 지나고 나서 몬스터턴일때 timer.Wait()하는 텀이 길다.
+//2.한번 몬스터에게 공격받고나서 다시 타이머가 작동하지 않는다.

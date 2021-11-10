@@ -72,7 +72,8 @@ public class Inventory{
 				ExplanWindow(inventory[0],70,1);
 				ConsoleKeyInfo c = Console.ReadKey();
 
-				while(c.Key != ConsoleKey.Escape && c.Key != ConsoleKey.I && inventory.Count != 0){
+				while(c.Key != ConsoleKey.Escape && c.Key != ConsoleKey.I && inventory.Count != 0)
+				{
 
 					IDTG.SelectingText(c);
 					Item i = invenListObject[(String)IDTG.Cho.GetValueOn(IDTG.currentSelectNum)];

@@ -297,9 +297,13 @@ public class DisplayTextGame{
 		
 		public void PrintAlgorithm(){
 			ConsoleColor tempC;
-			if(currentArrowingText == null && selectList != null && choiceType != ChoiceType.QUICKNEXT) //choice 첫 호출때 화살표가 보이게 하기 위함
+			if(currentArrowingText == null && selectList != null && choiceType != ChoiceType.QUICKNEXT)
+			{ //choice 첫 호출때 화살표가 보이게 하기 위함
 			if(!isEmptyList<TextAndPosition>(selectList))
+			{
 				currentArrowingText = selectList[0].text;
+			}
+			}
 				if(integratedList != null){
 						for(int i = 0;i<integratedList.Count;i++){
 							TextAndPosition TAndP = integratedList[i];
