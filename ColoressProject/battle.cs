@@ -64,7 +64,7 @@ public static class DamageSystem
 	public static bool timerStart = false;
 	public static bool timerEnd = false;
 	public static double count = 0;
-	public static int limit = 5;
+	public static int limit = 3;
 	public static bool timeOut = false;
 	public static Task timer;
 	
@@ -163,26 +163,25 @@ public static class BattleSystem{
 		timerStart = false;
 		BCC.ChangeChoiceText(choiceName:"movePhase",onlyShowText:new TextAndPosition(globerMonster.CurrentState(),15,3+5,1){AlignH = true});
 		BCC.ChangeChoiceText(choiceName:"firstPhase",onlyShowText:new TextAndPosition(globerMonster.GetRandomSpawnMessage().text,15,3+5,1){AlignH = true});
+		//Task.Run(()=>DisplayTimer());
 		
 		BDTG.Display(BCC.GetChoiceClone(currentChoice));
 		keyInfo = Console.ReadKey();
 
 		while(!battleAnd)
 		{
+			
 			BDTG.SelectingText(keyInfo);
-			if(!timerStart){
-				timer = Task.Run(()=>BattleTimer());
-				timerStart = true;
-			}
-
 			if(keyInfo.Key == ConsoleKey.Enter) //Enter
 			{
+				
 				currentChoice = (String)BDTG.Cho.GetValueOn(BDTG.currentSelectNum);
 
 				if(currentChoice == "end") return backField;
 				
 				if(currentChoice == "movePhase"){ 
 					BDTG.Display(BCC.GetChoiceClone(currentChoice));
+					TimerStart();
 					keyInfo = Console.ReadKey();
 				}
 				else if(!timeOut)
@@ -195,7 +194,7 @@ public static class BattleSystem{
 				else
 				{
 					//testLog("Monster Turn");
-					timer.Wait();
+					//timer.Wait();
 					MonsterTurn();	
 				}
 				
@@ -214,6 +213,7 @@ public static class BattleSystem{
 		return backField;
 	}
 	public static void PlayerTurn(){
+		timerEnd = false;
 		turnAnd = false;
 		while(!turnAnd){
 			if(currentChoice == "movePhase"){
@@ -243,6 +243,7 @@ public static class BattleSystem{
 					BDTG.Display(BCC.GetChoiceClone(currentChoice));
 					keyInfo = Console.ReadKey();
 					turnAnd = true;
+					TimerStart();
 				}
 				else if(currentChoice == "dodge"){ //Attacker,Defender에 값을 넣으면 서로 데미지 계산 1회 실행
 					actionType = ActionType.DODGE;
@@ -258,8 +259,9 @@ public static class BattleSystem{
 					BDTG.Display(BCC.GetChoiceClone(currentChoice));
 					keyInfo = Console.ReadKey();
 					turnAnd = true;
+					TimerStart();
 				}	
-			timerEnd = false;
+			
 		}
 	}
 	
@@ -283,6 +285,7 @@ public static class BattleSystem{
 		else{
 			currentChoice = "movePhase";
 			BDTG.Display(BCC.GetChoiceClone(currentChoice));
+			TimerStart();
 			keyInfo = Console.ReadKey();
 			turnAnd = true;
 		}
@@ -312,27 +315,42 @@ public static class BattleSystem{
 			}
 		
 			BDTG.Display(BCC.GetChoiceClone(currentChoice));
+			TimerStart();
 			keyInfo = Console.ReadKey();
-			
-		
-		
 	}
 	
 	public static void BattleTimer()
 	{
-		//testLog("Timer 1",false);
+//		testLog("Timer 1");
 		for(count = 0;count<limit;count+=0.01){
 			if(timerEnd)
 			{
 				timerStart = false;
-				//testLog("Timer 2",false); 
+				timerEnd = false;
+	//			testLog("Timer 2"); 
 				return;
 			} 
+				
 			Thread.Sleep(10);
 		}
-		//testLog("Timer 3",false);
+	//	testLog("Timer 3");
 		timeOut = true;
 		timerStart = false;
+	}
+	
+	public static void DisplayTimer(){
+		while(true){
+			Console.SetCursorPosition(0,0);
+			Console.Write(count);
+			Thread.Sleep(100);
+		}
+	}
+	
+	public static void TimerStart(){
+		if(!timerStart){
+				timer = Task.Run(()=>BattleTimer());
+				timerStart = true;
+			}
 	}
 }
 //}

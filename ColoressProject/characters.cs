@@ -231,6 +231,7 @@ namespace Characters
 			double finalDamage = attackInfo.FinalDamage;
 		
 			double powerGap = (finalDamage / MaxHp)*100;
+			testLog(MaxHp);
 			if(100 < powerGap)
 				return DIED;
 			else if(50 < powerGap)
@@ -351,7 +352,7 @@ namespace Characters
 		
 		public int PowerGap(){
 			double finalDamage = attackInfo.FinalDamage;
-		
+			
 			double powerGap = (finalDamage / MaxHp)*100;
 			if(100 < powerGap)
 				return DIED;
@@ -385,7 +386,6 @@ namespace Characters
 			this.DodgeMessage = new List<TextAndPosition>();
 			this.ReactionMessage = new List<TextAndPosition>();
 			this.AttackMessage = new List<TextAndPosition>();
-			testLog(1,false);
 			if(SelectMessage != null)
 				this.SelectMessage = that.SelectMessage.ConvertAll(new Converter<TextAndPosition,TextAndPosition>(o => (TextAndPosition)o.Clone()));
 			if(SpawnMessage != null)
@@ -472,6 +472,7 @@ namespace Characters
 				Name = "용사",
 				Hp = 10,
 				Mp = 10,
+				MaxHp = 10,
 				AttackPower = 5,
 				Defense = 1,
 				AttackSpeed = 2,
