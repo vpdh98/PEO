@@ -11,34 +11,38 @@ using static GameWindows;
 
 public class AttackInfo
 {
-	int final_damage;
-	public int Final_damage
+	int finalDamage;
+	public int FinalDamage
 	{
 		get
 		{
-			return final_damage;
+			return finalDamage;
 		}
 		set
 		{
 			if(value <= 0)
 			{
-				final_damage = 1;
+				finalDamage = 1;
 			}
 			else
 			{
-				final_damage = value;
+				finalDamage = value;
 			}
 		}
 	}
+	
+	public int HpBeforeAttack{get;set;}
+	
 
 	public AttackInfo()
 	{
-		Final_damage = 0;
+		FinalDamage = 0;
+		HpBeforeAttack = 0;
 	}
 
 	public void CalDamage(int defence)
 	{
-		Final_damage -= defence;
+		FinalDamage -= defence;
 	}
 }
 
@@ -128,6 +132,16 @@ public static class DamageSystem
 }
 
 public static class BattleSystem{
+	/*
+		전투시 데미지 계산되는 알고리즘 설명
+		
+		BattleCal은 비동기로 항상 실행되는 함수로
+		
+		먼저 정적 변수인 actionType에 공격의 타입을 넣고(ATTACK,DODGE,BLOCK등)
+		정적 변수인 Attacker,Defender에 공격자와 피격대상의 객체를 넣으면
+		해당 타입의 공격 판정이나 데미지 계산 등을 실행하고 정적변수를 비움
+		
+	*/
 		public static void BattleCal()
 		{
 			while(true)
@@ -157,6 +171,9 @@ public static class BattleSystem{
 	{
 		globerPlayer = player;
 		globerMonster = monster;
+		
+		globerPlayer.ReactionMessage = globerMonster.PlayerReactionMessage;
+		
 		backField = back;
 		currentChoice = "firstPhase";
 		battleAnd = false;
@@ -225,6 +242,7 @@ public static class BattleSystem{
 					
 					Attacker = globerPlayer;
 					Defender = globerMonster;
+					
 					BDTG.Display(BCC.GetChoiceClone(currentChoice));
 					Console.ReadKey();
 					BattleReaction();
@@ -273,6 +291,10 @@ public static class BattleSystem{
 			BCC.ChangeChoiceText(choiceName:currentChoice,onlyShowText:new TextAndPosition(globerMonster.Reaction(),15,9,1){AlignH = true});
 			BCC.ChangeChoiceText(choiceName:"movePhase",onlyShowText:new TextAndPosition(globerMonster.CurrentState(),15,3+5,1){AlignH = true});
 		}
+		//12.07 공격 파워에 따른 메세지를 최대체력 비례에서 현재체력 비례로 변경함에 따라 몬스터에게 데미지가 들어가는 타이밍을 몬스터Reaction메세지를 받은 후로 바꾸려다가... 말음
+		//대신 이전 현재체력을 나타내는 것 변수 추가
+		
+		
 		BDTG.Display(BCC.GetChoiceClone(currentChoice));
 		keyInfo = Console.ReadKey();
 		if(globerMonster.HpState() == 3){ //8.22 몬스터의 HP상태가 빈사 상태일때 배틀 페이즈 종료 const int Died = 3
@@ -295,8 +317,13 @@ public static class BattleSystem{
 	
 	public static void MonsterTurn(){
 		timeOut = false;
+		BCC.ChangeChoiceText(choiceName:"monsterPreAttack",onlyShowText:new TextAndPosition(globerMonster.PreAttackSymptom(),15,3+5,1){AlignH = true});
 		BCC.ChangeChoiceText(choiceName:"monsterAttack",onlyShowText:new TextAndPosition(globerMonster.AttackCry(),15,3+5,1){AlignH = true});
-		String currentChoice = "monsterAttack"; //첫 화면
+		String currentChoice = "monsterPreAttack"; //첫 화면
+			BDTG.Display(BCC.GetChoiceClone(currentChoice));
+			currentChoice = (String)BCC.GetChoiceClone(currentChoice).QuickNext();
+			Console.ReadKey();
+		
 			BDTG.Display(BCC.GetChoiceClone(currentChoice));
 			Attacking(globerMonster,globerPlayer);
 			currentChoice = (String)BCC.GetChoiceClone(currentChoice).QuickNext();
@@ -304,7 +331,7 @@ public static class BattleSystem{
 				
 			BCC.ChangeChoiceText(choiceName:currentChoice,onlyShowText:new TextAndPosition(globerPlayer.Reaction(),15,9,1){AlignH = true});
 				
-			BDTG.Display(BCC.GetChoiceClone(currentChoice));;
+			BDTG.Display(BCC.GetChoiceClone(currentChoice));
 			currentChoice = "movePhase";
 			Console.ReadKey();
 			testLog(globerPlayer.Hp);

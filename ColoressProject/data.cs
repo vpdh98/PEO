@@ -268,6 +268,15 @@ public class Scenario{
 				BackgroundText = backgrounds.GetBackground(1)
 			});
 			choices.Add(new Choice(){
+					Name = "monsterPreAttack",
+					ChoiceType = ChoiceType.QUICKNEXT,
+					OnlyShowText = new List<TextAndPosition>()
+								{new TextAndPosition("globerMonster.PreAttackCry()",15,3+5,1){AlignH = true}},
+					IndicateChoice = new Dictionary<int,Object>(){{0,"monsterAttack"}},
+					BackgroundText = backgrounds.GetBackground(1)
+			});
+			
+			choices.Add(new Choice(){
 					Name = "monsterAttack",
 					ChoiceType = ChoiceType.QUICKNEXT,
 					OnlyShowText = new List<TextAndPosition>()
@@ -279,7 +288,7 @@ public class Scenario{
 					Name = "monsterReactionPhase",
 					ChoiceType = ChoiceType.QUICKNEXT,
 					OnlyShowText = new List<TextAndPosition>()
-								{new TextAndPosition("globerMonster.Reaction()",5,10,10){AlignH = true,PriorityLayer=1}},
+								{new TextAndPosition("globerPlayer.Reaction()",5,10,10){AlignH = true,PriorityLayer=1}},
 					IndicateChoice = new Dictionary<int,Object>(){{0,"movePhase"}},
 					BackgroundText = backgrounds.GetBackground(1)
 			});

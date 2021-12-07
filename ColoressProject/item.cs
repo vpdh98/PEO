@@ -64,7 +64,12 @@ public class Potion : Item{
 		GameManager.Eat(this);
 	}
 }
-
+//아이템 데이터를 모아놓은 클래스
+/*
+	아이템 추가시 초기화 해 주어야 할 필드
+	1.무기
+	Name,ItemExplan,AttackPower,AttackSpeed
+*/
 public class ItemList{
 	Dictionary<String,Item> itemList = new Dictionary<String,Item>();
 	Item item;

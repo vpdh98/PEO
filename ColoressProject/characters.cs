@@ -17,29 +17,7 @@ namespace Characters
 		string CurrentState();
 	}
 	
-	public class AttackInfo{
-		int finalDamage;
-		public int FinalDamage
-		{
-			get
-			{
-				return finalDamage;
-			}
-			set
-			{
-				finalDamage = value;
-			}
-		}
-		
-		public AttackInfo()
-		{
-			FinalDamage = 0;
-		}
-		
-		public void CalDamage(int defence){
-			FinalDamage -= defence;
-		}
-	}
+	
 	
 	
 	
@@ -229,9 +207,9 @@ namespace Characters
 		
 		public int PowerGap(){
 			double finalDamage = attackInfo.FinalDamage;
+			double hp = attackInfo.HpBeforeAttack;
 		
-			double powerGap = (finalDamage / MaxHp)*100;
-			testLog(MaxHp);
+			double powerGap = (finalDamage / hp)*100;
 			if(100 < powerGap)
 				return DIED;
 			else if(50 < powerGap)
@@ -253,9 +231,10 @@ namespace Characters
 		
 		override public AttackInfo Damage(AttackInfo attackInfo){
 			AttackInfo aInfo = attackInfo;
-			this.attackInfo = attackInfo;
-			aInfo.CalDamage(Weapon == null ? Defense : (Defense + Armor.Defense));
+			aInfo.CalDamage(Armor == null ? Defense : (Defense + Armor.Defense));
+			aInfo.HpBeforeAttack = Hp; //데미지 계산전의 hp정보를 담는다
 			Hp -= aInfo.FinalDamage;
+			this.attackInfo = aInfo;
 			return aInfo;
 		}
 		
@@ -272,6 +251,11 @@ namespace Characters
 		}
 	}
 	
+	//*Monster클래스 수정시 주의사항*
+	//몬스터와 상호작용으로 발생하는 메세지들은 ~~Message로 명명한다
+	//Message류의 필드를 추가할때는 
+	//1.getter,setter 만들기 2.복사생성자 안에서 초기화해준후 copy구문 추가시키기
+	//를 반드시 해준다.
 	public class Monster : Character,IDamageable,ICharacterState
 	{
 		public int SpawnChance{get;set;}
@@ -286,6 +270,8 @@ namespace Characters
 		public List<TextAndPosition> BlockMessage{get;set;}
 		public List<TextAndPosition> DodgeMessage{get;set;}
 		public List<TextAndPosition> ReactionMessage{get;set;}
+		public List<TextAndPosition> PlayerReactionMessage{get;set;}
+		public List<TextAndPosition> PreAttackMessage{get;set;}
 		public List<TextAndPosition> AttackMessage{get;set;}
 	
 		public Monster(){
@@ -293,7 +279,10 @@ namespace Characters
 			SpawnMessage = new List<TextAndPosition>(){new TextAndPosition(Name+"이다.",10)};
 			BlockMessage = new List<TextAndPosition>(){ new TextAndPosition("막기성공",10),new TextAndPosition("막기실패",10)};
 			DodgeMessage = new List<TextAndPosition>(){new TextAndPosition("회피성공",10),new TextAndPosition("회피실패",10)};
+			PlayerReactionMessage = new List<TextAndPosition>(){new TextAndPosition("1",10),new TextAndPosition("2",10)};
 			ReactionMessage = new List<TextAndPosition>(){new TextAndPosition(Name+" 팅겨나갔다.",10)};
+			PreAttackMessage = new List<TextAndPosition>(){new TextAndPosition(Name+"은 빨랐다.",10)};
+			AttackMessage = new List<TextAndPosition>(){new TextAndPosition(Name+"공격!",10)};
 		}
 		
 		public Monster(string name,int hp,int mp,int attack_power,int defense,int attack_speed):base(name,hp,mp,attack_power,defense,attack_speed){}
@@ -306,9 +295,10 @@ namespace Characters
 		
 		override public AttackInfo Damage(AttackInfo attackInfo){
 			AttackInfo aInfo = attackInfo;
-			this.attackInfo = attackInfo;
 			aInfo.CalDamage(Defense);
+			aInfo.HpBeforeAttack = Hp; //데미지 계산전의 hp정보를 담는다
 			Hp -= aInfo.FinalDamage;
+			this.attackInfo = aInfo;
 			return aInfo;
 		}
 		
@@ -340,6 +330,11 @@ namespace Characters
 			return DodgeMessage[1].text;
 		}
 		
+		public String PreAttackSymptom(){
+			Random random = new Random();
+			return PreAttackMessage[random.Next(0,PreAttackMessage.Count)].text;
+		}
+		
 		public String AttackCry(){
 			Random random = new Random();
 			return AttackMessage[random.Next(0,AttackMessage.Count)].text;
@@ -352,9 +347,13 @@ namespace Characters
 		
 		public int PowerGap(){
 			double finalDamage = attackInfo.FinalDamage;
+			double hp = attackInfo.HpBeforeAttack;
 			
-			double powerGap = (finalDamage / MaxHp)*100;
-			if(100 < powerGap)
+			double powerGap = (finalDamage / hp)*100;
+			testLog(finalDamage);
+			testLog(hp);
+			testLog(powerGap);
+			if(100 <= powerGap)
 				return DIED;
 			else if(50 < powerGap)
 				return SUPER_POWER;
@@ -385,7 +384,10 @@ namespace Characters
 			this.BlockMessage = new List<TextAndPosition>();
 			this.DodgeMessage = new List<TextAndPosition>();
 			this.ReactionMessage = new List<TextAndPosition>();
+			this.PlayerReactionMessage = new List<TextAndPosition>();
+			this.PreAttackMessage = new List<TextAndPosition>();
 			this.AttackMessage = new List<TextAndPosition>();
+			
 			if(SelectMessage != null)
 				this.SelectMessage = that.SelectMessage.ConvertAll(new Converter<TextAndPosition,TextAndPosition>(o => (TextAndPosition)o.Clone()));
 			if(SpawnMessage != null)
@@ -398,6 +400,10 @@ namespace Characters
 				this.DodgeMessage = that.DodgeMessage.ConvertAll(new Converter<TextAndPosition,TextAndPosition>(o => (TextAndPosition)o.Clone()));
 			if(ReactionMessage != null)
 				this.ReactionMessage = that.ReactionMessage.ConvertAll(new Converter<TextAndPosition,TextAndPosition>(o => (TextAndPosition)o.Clone()));
+			if(PlayerReactionMessage != null)
+				this.PlayerReactionMessage = that.PlayerReactionMessage.ConvertAll(new Converter<TextAndPosition,TextAndPosition>(o => (TextAndPosition)o.Clone()));
+			if(PreAttackMessage != null)
+				this.PreAttackMessage = that.PreAttackMessage.ConvertAll(new Converter<TextAndPosition,TextAndPosition>(o => (TextAndPosition)o.Clone()));
 			if(AttackMessage != null)
 				this.AttackMessage = that.AttackMessage.ConvertAll(new Converter<TextAndPosition,TextAndPosition>(o => (TextAndPosition)o.Clone()));
 		}
@@ -482,6 +488,13 @@ namespace Characters
 			
 			
 			///////////////////Monster/////////////////////////////
+			/*
+				몬스터 객체 추가시 필수로 초기화 해 주어야 할 것
+				1.능력치
+				Name,MaxHp,Hp,Mp,AttackPower,Defense,SpawnChance,AttackSpeed
+				2.메세지
+				SelectMessage,SpawnMessage,BlockMessage,DodgeMessage,ReactionMessage,PreAttackMessage,AttackMessage,
+			*/
 			monster = new Monster(){
 				Name = "슬라임",
 				MaxHp = 10,
@@ -491,13 +504,16 @@ namespace Characters
 				Defense = 0,
 				SpawnChance = 70,
 				AttackSpeed = 1,
+				
 				SelectMessage = new List<TextAndPosition> 
 				{new TextAndPosition("어 슬라임이다.",10),
 				new TextAndPosition("어 저건 뭐지?",10),
 				new TextAndPosition("슬라임.",10)},
+				
 				SpawnMessage = new List<TextAndPosition>()
 				{new TextAndPosition("반투명한 초록빛깔, 바닥에 눌러붙은 듯한 탱글탱글한 점액질",10),						   
 				 new TextAndPosition("그렇다, 슬라임이다.",10)},
+				
 				StateMessage = new List<TextAndPosition>()
 				{
 					new TextAndPosition("탱글 탱글 함을 과시하고 있다.",10),
@@ -522,6 +538,19 @@ namespace Characters
 					new TextAndPosition("슬라임은 잠시 형체를 잃었다!!",10),
 					new TextAndPosition("슬라임은 그대로 터져버렸다..",10)
 				},
+				//플레이어가 몬스터에게 맞았을때의 깍인 HP의 비율에 따라 출력하는 플레이어의 반응 메세지
+				//정도에 따라 4단계로 구분된다. 인덱스 순서로 약한 강도에서 강한 강도이다.
+				PlayerReactionMessage = new List<TextAndPosition>(){
+					new TextAndPosition("말랑말랑 기분이 좋다.",10),
+					new TextAndPosition("전속력으로 던진 물풍선에 맞은것 같다.",10),
+					new TextAndPosition("마치 바위에 부딪친듯 하다. 정신이 아득하다.",10),
+					new TextAndPosition("슬라임은 내몸을 관통했다. 슬라임에게 지다니 믿을 수 없다.. 나는 그대로 쓰러졌다.",10)
+				},
+				
+				PreAttackMessage = new List<TextAndPosition>(){
+					new TextAndPosition("내가 머뭇거리는 사이 슬라임이 튀어올랐다.",10)
+				},
+				
 				AttackMessage = new List<TextAndPosition>(){
 					new TextAndPosition("슬라임의 몸통박치기!!",10)
 				}
@@ -569,6 +598,11 @@ namespace Characters
 					new TextAndPosition("고통스러운듯 비명을 지른다!",10),
 					new TextAndPosition("망자는 그대로 조각났다.",10)
 				},
+				
+				PreAttackMessage = new List<TextAndPosition>(){
+					new TextAndPosition("나보다 망자가 더 빠르게 움직였다.",10)
+				},
+				
 				AttackMessage = new List<TextAndPosition>(){
 					new TextAndPosition("망자의 손톱 할퀴기!",10)
 				}
@@ -615,8 +649,13 @@ namespace Characters
 					new TextAndPosition("헐크가 비틀거린다!",10),
 					new TextAndPosition("벽에 박힌 헐크는 미동도 하지 않는다.",10)
 				},
+				
+				PreAttackMessage = new List<TextAndPosition>(){
+					new TextAndPosition("헐크에게 눈을 돌린 순간 눈앞에서 헐크는 사라졌다.",10)
+				},
+				
 				AttackMessage = new List<TextAndPosition>(){
-					new TextAndPosition("슬라임의 몸통박치기!!",10)
+					new TextAndPosition("헐크의 주먹 내려치기!",10)
 				}
 			};
 			MonsterList.Add(monster.Name,monster);
