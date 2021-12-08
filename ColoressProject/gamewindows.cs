@@ -40,13 +40,13 @@ public static class GameWindows{
 	}
 	
 	public static void AlertWindow(String text,int xPos,int yPos){
-		DisplayTextGame CDTG = new DisplayTextGame(false){GlobalPositionX=40,GlobalPositionY=5};
+		DisplayTextGame CDTG = new DisplayTextGame(false){GlobalPositionX=xPos,GlobalPositionY=yPos};
 		
 		Choice ConfirmCho = new Choice(){
 				Name = "ConfirmWindow",
 				SelectText = new List<TextAndPosition>(),
 				OnlyShowText = new List<TextAndPosition>()
-							{new TextAndPosition(text,xPos,yPos){PriorityLayer = 1,AlignH = true}},
+							{new TextAndPosition(text,xPos,yPos+4){PriorityLayer = 1,AlignH = true}},
 				BackgroundText = backgrounds.GetBackground(3)
 		};
 		

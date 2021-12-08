@@ -10,6 +10,7 @@ using System.Linq;
 using System.IO;
 using static BattleSystem;
 using static Convenience;
+using static ItemData;
 //using Item;
 //using Battle;
 
@@ -31,6 +32,10 @@ public static class Define
 		public const int SCREEN_HEIGHT = 20;
 }
 
+public static class ItemData{
+	public static ItemList itemList = new ItemList();
+}
+
 namespace Game
 {
 	public class main
@@ -42,27 +47,27 @@ namespace Game
 		static DisplayTextGame DTG = new DisplayTextGame();
 		static ChoiceControler CC = new ChoiceControler(new Scenario());
 		static CharacterList CList = new CharacterList();
-		static ItemList IList = new ItemList();
 		public static Player player = CList.GetPlayer("용사");
-		static Inventory inven = new Inventory();
+		
 		public static void Main()
 		{
-			inven.AddItem(new Item());
-			inven.AddItem(IList.GetItem("전설의검"));
-			inven.AddItem(new Item(){Name = "HP물약"});
-			inven.AddItem(new Item(){Name = "MP물약"});
-			inven.AddItem(new Item(){Name = "무색 프리즘"});
-			inven.AddItem(new Item(){Name = "???"});
-			inven.AddItem(new Weapon(){Name = "낡은 검",ItemExplan="이것은 네후쉽이 파는 검 중\n하나로 낡아 오히려 도움이\n되지 않을것 같은 검이다.",AttackPower = -3,AttackSpeed = 1});
-			inven.AddItem(new Item(){Name = "고장난 시계"});
-			inven.AddItem(new Item(){Name = "꿀"});
-			inven.AddItem(new Item(){Name = "향로"});
-			inven.AddItem(new Item(){Name = "피리"});
-			inven.AddItem(new Item(){Name = "파리"});
-			inven.AddItem(new Armor(){Name = "낡은 방패",ItemExplan="이것은 네후쉽이 파는 방패 중\n하나로 공격을 막을 수 있을지\n장담할 수 없다.",Defense = 1});
-			inven.AddItem(new Item(){Name = "네후쉽의 수프"});
-			inven.AddItem(new Item(){Name = "Red 프리즘"});
-			inven.AddItem(new Item(){Name = "??????"});
+			player.inven.AddItem(new Item());
+			player.inven.AddItem(itemList.GetItem("전설의검"));
+			player.inven.AddItem(new Item(){Name = "HP물약"});
+			player.inven.AddItem(new Item(){Name = "MP물약"});
+			player.inven.AddItem(new Item(){Name = "무색 프리즘"});
+			player.inven.AddItem(new Item(){Name = "???"});
+			player.inven.AddItem(new Weapon(){Name = "낡은 검",ItemExplan="이것은 네후쉽이 파는 검 중\n하나로 낡아 오히려 도움이\n되지 않을것 같은 검이다.",AttackPower = -3,AttackSpeed = 1});
+			player.inven.AddItem(new Item(){Name = "고장난 시계"});
+			player.inven.AddItem(new Item(){Name = "꿀"});
+			player.inven.AddItem(new Item(){Name = "향로"});
+			player.inven.AddItem(new Item(){Name = "피리"});
+			player.inven.AddItem(new Item(){Name = "파리"});
+			player.inven.AddItem(new Armor(){Name = "낡은 방패",ItemExplan="이것은 네후쉽이 파는 방패 중\n하나로 공격을 막을 수 있을지\n장담할 수 없다.",Defense = 1});
+			player.inven.AddItem(new Armor(){Name = "황금 갑옷",ItemExplan="보기만해도 눈이 부시는 황금 \n갑옷 이다. 과연 방어력은 어\n떨지..",Defense = 10});
+			player.inven.AddItem(new Item(){Name = "네후쉽의 수프"});
+			player.inven.AddItem(new Item(){Name = "Red 프리즘"});
+			player.inven.AddItem(new Item(){Name = "??????"});
 			
 			
 			Task.Factory.StartNew(BattleCal);	
@@ -73,7 +78,7 @@ namespace Game
 			while(keyInfo.Key != ConsoleKey.Escape)
 			{
 				DTG.SelectingText(keyInfo);
-				if(keyInfo.Key == ConsoleKey.I) { inven.OpenInventory(); }
+				if(keyInfo.Key == ConsoleKey.I) { player.inven.OpenInventory(); }
 				
 				if(keyInfo.Key == ConsoleKey.Enter) //Enter
 				{
@@ -641,3 +646,9 @@ Token을 활용해 봐야겠다.
 //이런식으로 개발을 하면 할수록 게임엔진의 소중함을 깨달아가는 중이다. 간단하게라도 만들까..
 //PlayerReactionMessage를 몬스터 객체에 추가해 몬스터 별로 플레이어의 반응을 다르게 했다.
 //배틀페이즈에 들어가면 플레이어의 Reaction을 초기화시킨다.
+
+//2021.12.08
+//오늘은 몬스터 처치시 템 드랍, 플레이어의 인벤토리에 추가되는 기능을 추가해보았다.
+//Monster클래스에 ItemDrop메소드를 추가하여
+//BattlePhase에서 플레이어가 몬스터를 처치시 호출하여 플레이어의 인벤토리에 추가되게 하였다.
+//아이템 드랍 확률은 Item객체 안에 저장하였다.

@@ -51,7 +51,12 @@ public class Inventory{
 	
 	public bool AddItem(Item item){
 		if(item != null && inventory.Count<maximumCount){
-			inventory.Add(item);
+			Item tItem = inventory.Find(i => i.Name == item.Name);
+			if(tItem == null)
+				inventory.Add(item);
+			else if(tItem.Stackable){
+				tItem.Amount += 1;
+			}
 			return true;
 		}
 		else
@@ -60,6 +65,10 @@ public class Inventory{
 	
 	public Item GetItem(int num){
 		return inventory[num];
+	}
+	
+	public Item GetItem(String name){
+		return inventory.Find(x => x.Name == name);
 	}
 	
 	public void OpenInventory(){

@@ -4,6 +4,7 @@ using Game;
 using System.IO;
 using static Convenience;
 using static GameWindows;
+using static ItemData;
 
 
 namespace Characters
@@ -101,6 +102,8 @@ namespace Characters
 	
 	public class Player : Character,IDamageable,ICharacterState
 	{
+		public Inventory inven = new Inventory();
+	
 		Weapon weapon;
 		public Weapon Weapon{
 			get{
@@ -135,12 +138,14 @@ namespace Characters
 				if(armor == null){
 					armor = value;
 					armor.IsEquip = true;
+					Defense += armor.Defense;
 				}
 				else{
 					if(armor == value){
 						if(ConfirmWindow("이미 장착된 방어구 입니다.해제하시겠습니까?",24,7)){
 							armor.IsEquip = false;
 							armor = null;
+							Defense -= armor.Defense;
 						}
 						else{
 							AlertWindow("이미 방어구가 존재합니다.",24,9);
@@ -210,11 +215,17 @@ namespace Characters
 			double hp = attackInfo.HpBeforeAttack;
 		
 			double powerGap = (finalDamage / hp)*100;
-			if(100 < powerGap)
+			
+			
+			testLog("finalDamage: "+finalDamage);
+			testLog("hp: "+hp);
+			testLog("powerGap: "+powerGap);
+			
+			if(100 <= powerGap || powerGap < 0)
 				return DIED;
-			else if(50 < powerGap)
+			else if(50 <= powerGap)
 				return SUPER_POWER;
-			else if(10 < powerGap)
+			else if(20 <= powerGap)
 				return NOMAL_POWER;
 			else
 				return WEAK_POWER;
@@ -273,6 +284,9 @@ namespace Characters
 		public List<TextAndPosition> PlayerReactionMessage{get;set;}
 		public List<TextAndPosition> PreAttackMessage{get;set;}
 		public List<TextAndPosition> AttackMessage{get;set;}
+		
+		
+		public List<Item> DropItems{get;set;}
 	
 		public Monster(){
 			SelectMessage = new List<TextAndPosition>(){ new TextAndPosition(Name,10)};
@@ -283,6 +297,7 @@ namespace Characters
 			ReactionMessage = new List<TextAndPosition>(){new TextAndPosition(Name+" 팅겨나갔다.",10)};
 			PreAttackMessage = new List<TextAndPosition>(){new TextAndPosition(Name+"은 빨랐다.",10)};
 			AttackMessage = new List<TextAndPosition>(){new TextAndPosition(Name+"공격!",10)};
+			DropItems = new List<Item>();
 		}
 		
 		public Monster(string name,int hp,int mp,int attack_power,int defense,int attack_speed):base(name,hp,mp,attack_power,defense,attack_speed){}
@@ -350,14 +365,11 @@ namespace Characters
 			double hp = attackInfo.HpBeforeAttack;
 			
 			double powerGap = (finalDamage / hp)*100;
-			testLog(finalDamage);
-			testLog(hp);
-			testLog(powerGap);
 			if(100 <= powerGap)
 				return DIED;
-			else if(50 < powerGap)
+			else if(50 <= powerGap)
 				return SUPER_POWER;
-			else if(10 < powerGap)
+			else if(20 <= powerGap)
 				return NOMAL_POWER;
 			else
 				return WEAK_POWER;
@@ -375,6 +387,17 @@ namespace Characters
 				return DIED;
 		}
 		
+		public List<Item> ItemDrop(){
+			Random rand = new Random();
+			List<Item> tList = new List<Item>();
+			foreach(Item i in DropItems){
+				if(rand.Next(1,101) < i.DropChance){
+					tList.Add(i);
+				}
+			}
+			return tList;
+		}
+		
 		protected Monster(Monster that):base(that){
 			this.SpawnChance = that.SpawnChance;
 			this.IsSpawn = that.IsSpawn;
@@ -387,6 +410,8 @@ namespace Characters
 			this.PlayerReactionMessage = new List<TextAndPosition>();
 			this.PreAttackMessage = new List<TextAndPosition>();
 			this.AttackMessage = new List<TextAndPosition>();
+			
+			this.DropItems = that.DropItems;
 			
 			if(SelectMessage != null)
 				this.SelectMessage = that.SelectMessage.ConvertAll(new Converter<TextAndPosition,TextAndPosition>(o => (TextAndPosition)o.Clone()));
@@ -542,7 +567,7 @@ namespace Characters
 				//정도에 따라 4단계로 구분된다. 인덱스 순서로 약한 강도에서 강한 강도이다.
 				PlayerReactionMessage = new List<TextAndPosition>(){
 					new TextAndPosition("말랑말랑 기분이 좋다.",10),
-					new TextAndPosition("전속력으로 던진 물풍선에 맞은것 같다.",10),
+					new TextAndPosition("돌덩이에 맞은것 같다. 맞은데가 얼얼하다. ",10),
 					new TextAndPosition("마치 바위에 부딪친듯 하다. 정신이 아득하다.",10),
 					new TextAndPosition("슬라임은 내몸을 관통했다. 슬라임에게 지다니 믿을 수 없다.. 나는 그대로 쓰러졌다.",10)
 				},
@@ -553,8 +578,11 @@ namespace Characters
 				
 				AttackMessage = new List<TextAndPosition>(){
 					new TextAndPosition("슬라임의 몸통박치기!!",10)
-				}
+				},
 				
+				DropItems = new List<Item>(){
+					itemList.GetItem("슬라임 젤",70)
+				}
 			};
 			MonsterList.Add(monster.Name,monster);
 			
@@ -590,6 +618,12 @@ namespace Characters
 				{
 					new TextAndPosition("망자의 손톱이 코앞을 스친다.",10),
 					new TextAndPosition("이미 손톱은 내 몸에 박혀있었다.",10)
+				},
+				PlayerReactionMessage = new List<TextAndPosition>(){
+					new TextAndPosition("망자의 손톱이 힘없이 부딪쳤다. 간지럽지도 않다.",10),
+					new TextAndPosition("망자의 손톱이 내 살을 파고들었다. 쓰라리다.",10),
+					new TextAndPosition("망자의 손톱이 내살을 두부처럼 파고들었다. 너무 큰 고통에 비명조차 나오지 않는다.",10),
+					new TextAndPosition("손톱이 내몸을 훑고 지나간ㄷ....",10)
 				},
 				ReactionMessage = new List<TextAndPosition>()
 				{

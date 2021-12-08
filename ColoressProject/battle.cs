@@ -100,7 +100,7 @@ public static class DamageSystem
 		double attackerAttackPower = Attacker.AttackPower;
 		
 		double blockChance = BLOCK_CHANCE * (defenderDefense / attackerAttackPower);
-		testLog(blockChance,false);
+		testLog(blockChance);
 		if(random.Next(1,101) < (int)blockChance)
 		{
 			successCheck = true;
@@ -301,6 +301,11 @@ public static class BattleSystem{
 			BCC.ChangeChoiceText(choiceName:"andPhase",onlyShowText:new TextAndPosition(globerMonster.CurrentState(),15,3+5,1){AlignH = true});
 			BDTG.Display(BCC.GetChoiceClone("andPhase"));
 			keyInfo = Console.ReadKey();
+			List<Item> drops = globerMonster.ItemDrop();
+			foreach(Item i in drops){
+				globerPlayer.inven.AddItem(i);
+				AlertWindow(i.Name+" 획득!",60,4);
+			}
 			battleAnd = true;
 			turnAnd = true;
 		}
@@ -334,7 +339,6 @@ public static class BattleSystem{
 			BDTG.Display(BCC.GetChoiceClone(currentChoice));
 			currentChoice = "movePhase";
 			Console.ReadKey();
-			testLog(globerPlayer.Hp);
 			if(globerPlayer.Hp <= 0){ 
 				testLog("in die");
 				died = true;

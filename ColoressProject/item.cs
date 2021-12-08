@@ -8,11 +8,21 @@ public class Item{
 	public String Name{get;set;}
 	
 	bool useable = false;
-	bool stackable = false;
+	public bool Stackable{get;set;} = false;
 	
-	int amount; //stackable이 true일때 사용
+	int amount = 0; //stackable이 true일때 사용
+	public int Amount{
+		get{
+			return amount;
+		}
+		set{
+			amount = value;
+		}
+	}
 	
 	public String ItemExplan{get;set;} = "아이템 설명";
+	
+	public double DropChance{get;set;} = 0;
 	
 	public Item(){
 		Name = "unknown";
@@ -67,8 +77,12 @@ public class Potion : Item{
 //아이템 데이터를 모아놓은 클래스
 /*
 	아이템 추가시 초기화 해 주어야 할 필드
+	0.공통
+	Name,ItemExplan
 	1.무기
-	Name,ItemExplan,AttackPower,AttackSpeed
+	AttackPower,AttackSpeed
+	2.방어구
+	Defense
 */
 public class ItemList{
 	Dictionary<String,Item> itemList = new Dictionary<String,Item>();
@@ -82,9 +96,18 @@ public class ItemList{
 			AttackSpeed = 99
 		};
 		itemList.Add(item.Name,item);
+		
+		item = new Item(){
+			Name = "슬라임 젤",
+			ItemExplan="슬라임의 일부이다.",
+			Stackable = true
+		};
+		itemList.Add(item.Name,item);
 	}
 	
-	public Item GetItem(String Name){
-		return itemList[Name];
+	public Item GetItem(String Name,double DropChance = 0){
+		Item i = itemList[Name];
+		i.DropChance = DropChance;
+		return i;
 	}
 }
