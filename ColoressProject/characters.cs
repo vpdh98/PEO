@@ -124,7 +124,7 @@ namespace Characters
 						}
 					}
 					else{
-							AlertWindow("이미 무기가 존재합니다.",24,9);
+							AlertWindow("이미 무기가 존재합니다.",textXPos:24,textYPos:5);
 					}
 				}
 			}
@@ -148,7 +148,7 @@ namespace Characters
 							Defense -= armor.Defense;
 						}
 						else{
-							AlertWindow("이미 방어구가 존재합니다.",24,9);
+							AlertWindow("이미 방어구가 존재합니다.",textXPos:24,textYPos:5);
 						}
 					}
 				}
@@ -581,7 +581,9 @@ namespace Characters
 				},
 				
 				DropItems = new List<Item>(){
-					itemList.GetItem("슬라임 젤",70)
+					itemList.GetItem("슬라임 젤",100),
+					itemList.GetItem("슬라임 젤",50),
+					itemList.GetItem("전설의검",100)
 				}
 			};
 			MonsterList.Add(monster.Name,monster);

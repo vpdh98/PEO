@@ -30,11 +30,14 @@ public static class Define
 		public const String INVENTORY = "Inventory";
 		public const int SCREEN_WIDTH = 64;
 		public const int SCREEN_HEIGHT = 20;
+		public const int SCREEN_POS_X = 60;
+		public const int SCREEN_POS_Y = 3;
 }
 
 public static class ItemData{
 	public static ItemList itemList = new ItemList();
 }
+
 
 namespace Game
 {
@@ -652,3 +655,16 @@ Token을 활용해 봐야겠다.
 //Monster클래스에 ItemDrop메소드를 추가하여
 //BattlePhase에서 플레이어가 몬스터를 처치시 호출하여 플레이어의 인벤토리에 추가되게 하였다.
 //아이템 드랍 확률은 Item객체 안에 저장하였다.
+
+//2021.12.09
+//오늘은 방향키로 선택 텍스트를 선택하는 기능에
+//좌우 방향으로 움직일수 있도록 ArrowMoveRight()와 ArrowMoveLeft()를 추가하였다.
+//원리는 오른쪽 화살표를 눌렀을때에는 선택지 리스트중에 현재 선택된 텍스트 이후에 있는 텍스트의 y값이 현재 텍스트의 y값과 같을경우
+//그 텍스트를 가리키게 하였고, y값이 같은 텍스트가 없을경우에는 현제 텍스트보다 x값이 큰 텍스트중 아무거나 선택하게 하였다.
+//그마저도 없을경우엔 그냥 다음 인덱스에 있는 텍스트를 선택하게 하였다.
+//Item이 Stackable일 경우 item의 Amount를 증가시키게 했음. Stackable이 아니면 중복 획득이 불가하게 했음
+//Item객체를 복사할 수 있도록 복사생성자를 추가해야함
+
+//전투시스템에서 선택지를 빠르게 선택해야 공격을 받지 않게 되어있는데, 항상 공격이 1번에 있다보니 그냥 엔터만 누르면 공격을 모두 성공하게 되어있다.
+//선택지를 매번 랜덤하게 섞도록 해야겠다.
+//Display를 담당하는 클래스 안에서 바뀌도록 해야겠다.

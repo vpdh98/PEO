@@ -10,7 +10,7 @@ public class Item{
 	bool useable = false;
 	public bool Stackable{get;set;} = false;
 	
-	int amount = 0; //stackable이 true일때 사용
+	int amount = 1; //stackable이 true일때 사용
 	public int Amount{
 		get{
 			return amount;
@@ -93,7 +93,12 @@ public class ItemList{
 			Name = "전설의검",
 			ItemExplan="이것은 전설의 괴물\n헐크를 죽일 수 있다는\n전설의 검이다",
 			AttackPower = 9999,
-			AttackSpeed = 99
+			AttackSpeed = 99,
+			AttackMessage = new List<TextAndPosition>(){
+				 new TextAndPosition("전설의 검은 마치 유성우와 같은 궤적을 남겼다.",10),
+				 new TextAndPosition("산을 가를듯한 기세로 검을 휘둘렀다.",10),
+				 new TextAndPosition("일----------------------섬",10)
+			}
 		};
 		itemList.Add(item.Name,item);
 		

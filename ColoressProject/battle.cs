@@ -285,6 +285,7 @@ public static class BattleSystem{
 	
 	
 	public static void BattleReaction(){
+		Random random = new Random();
 		currentChoice = (String)BCC.GetChoiceClone(currentChoice).QuickNext();
 		Choice cho;
 		if(currentChoice == "reactionPhase"){ //8.22
@@ -304,13 +305,14 @@ public static class BattleSystem{
 			List<Item> drops = globerMonster.ItemDrop();
 			foreach(Item i in drops){
 				globerPlayer.inven.AddItem(i);
-				AlertWindow(i.Name+" 획득!",60,4);
+				AlertWindow(i.Name+" 획득!",textXPos:25,textYPos:5,background:5);
 			}
 			battleAnd = true;
 			turnAnd = true;
 		}
 		else{
 			currentChoice = "movePhase";
+			
 			BDTG.Display(BCC.GetChoiceClone(currentChoice));
 			TimerStart();
 			keyInfo = Console.ReadKey();

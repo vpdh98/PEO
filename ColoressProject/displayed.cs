@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Game;
 using static Convenience;
+using static Define;
 
 
 
@@ -119,10 +120,10 @@ public class DisplayTextGame{
 		const String ARROW ="=>";						//선택 문자열 앞에 생성할 문자
 		String voidARROW="  ";							//Arrow크기만큼 앞을 비운다
 		
-		public int GlobalPositionX{get;set;} = 60;				//화면 전체의 위치 x값
-		public int GlobalPositionY{get;set;} = 3;					//y값
+		public int GlobalPositionX{get;set;} = SCREEN_POS_X;				//화면 전체의 위치 x값
+		public int GlobalPositionY{get;set;} = SCREEN_POS_Y;					//y값
 		
-		TextAndPosition previousStream; 				//이전 스트림 텍스트
+		TextAndPosition previousStream; 				//이전 스트림 텍스
 		int streamCount= 0;								//이전 문자를 지우기 위한 이전 문자열의 길이 값
 		
 		int countPoint = 0;								//한글자씩 출력하는 기능을 위한 count
@@ -254,7 +255,7 @@ public class DisplayTextGame{
 			while(frontPadding < backPadding){
 				backPadding = Define.SCREEN_WIDTH - (frontPadding++ + length);
 			}
-			TAndP.x = frontPadding - 5;
+			TAndP.x = frontPadding - 4;
 		}
 		
 		public void Show()
@@ -479,12 +480,20 @@ public class DisplayTextGame{
 			
 			if(currentSelectNum == null)	//한번만 초기화되게
 				currentSelectNum = 0;
-			if((key.Key == ConsoleKey.UpArrow || key.Key == ConsoleKey.LeftArrow) && currentSelectNum != 0){
+			if(key.Key == ConsoleKey.UpArrow && currentSelectNum != 0){
 				currentSelectNum--;
 				success = true;
 			}
-			else if((key.Key == ConsoleKey.DownArrow || key.Key == ConsoleKey.RightArrow) && currentSelectNum != selectList.Count-1){
+			else if(key.Key == ConsoleKey.LeftArrow && currentSelectNum != 0){
+				currentSelectNum=ArrowMoveLeft();
+				success = true;
+			}
+			else if(key.Key == ConsoleKey.DownArrow && currentSelectNum != selectList.Count-1){
 				currentSelectNum++;
+				success = true;
+			}
+			else if(key.Key == ConsoleKey.RightArrow && currentSelectNum != selectList.Count-1){
+				currentSelectNum = ArrowMoveRight();
 				success = true;
 			}
 			else if(keyInt <= selectList.Count && keyInt > 0){
@@ -494,6 +503,40 @@ public class DisplayTextGame{
 			if(selectList != null)
 				currentArrowingText = selectList[currentSelectNum].text;
 			return success;
+		}
+	
+		public int ArrowMoveRight(){
+			for(int i = currentSelectNum+1;i<selectList.Count;i++){
+				if(selectList[currentSelectNum].y == selectList[i].y){
+					return i;
+				}
+			}
+			for(int i = currentSelectNum+1;i<selectList.Count;i++){
+				if(selectList[currentSelectNum].x < selectList[i].x){
+					return i;
+				}
+			}
+			if(currentSelectNum != selectList.Count-1)
+				return currentSelectNum +1;
+			else
+				return currentSelectNum;
+		}
+	
+		public int ArrowMoveLeft(){
+			for(int i = currentSelectNum-1;i>0;i--){
+				if(selectList[currentSelectNum].y == selectList[i].y){
+					return i;
+				}
+			}
+			for(int i = currentSelectNum-1;i>0;i--){
+				if(selectList[currentSelectNum].x > selectList[i].x){
+					return i;
+				}
+			}
+			if(currentSelectNum != 0)
+				return currentSelectNum -1;
+			else
+				return currentSelectNum;
 		}
 		
 		public String ChoicePick(DisplayTextGame DTG,ChoiceControler CC,String currentChoice){

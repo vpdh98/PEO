@@ -78,7 +78,7 @@ public class Inventory{
 		while(!OutInven){
 				IDTG.Cho = invenCho; //초기 화면
 				IDTG.Show();
-				ExplanWindow(inventory[0],70,1);
+				ExplanWindow(inventory[0],89,3,20,3);
 				ConsoleKeyInfo c = Console.ReadKey();
 
 				while(c.Key != ConsoleKey.Escape && c.Key != ConsoleKey.I && inventory.Count != 0)
@@ -108,7 +108,7 @@ public class Inventory{
 						//Item i = invenListObject[(String)IDTG.Cho.GetValueOn(IDTG.currentSelectNum)];
 						if(i is Equipment){
 							if(((Equipment)i).IsEquip)
-								AlertWindow("장착된 장비는 버리실 수 없습니다.",24,9);
+								AlertWindow("장착된 장비는 버리실 수 없습니다.",textXPos:24,textYPos:5);
 							else if(ConfirmWindow("버리시겠습니까?",24,7)){
 								inventory.Remove(i);
 								Init();
@@ -124,7 +124,7 @@ public class Inventory{
 					}*/
 					//방향키나 숫자를 누르면 여기로 넘어옴
 					IDTG.Show();	
-					ExplanWindow(i,70,1);
+					ExplanWindow(i,89,3,20,3);
 					c = Console.ReadKey();
 				}
 				OutInven = true;			

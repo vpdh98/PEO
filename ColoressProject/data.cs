@@ -389,8 +389,8 @@ public class Backgrounds{
 			new TextAndPosition("┗━┻━━━━━━━━━━━━━━━━━━━━━━━━━━━┻━┛",16,16)
 		}));
 		
-		int x = 50;
-		int y = -2;
+		int x = 0;
+		int y = 0;
 		background.Add(new List<TextAndPosition>(new TextAndPosition[]{
 			new TextAndPosition("┏━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━┓",16+x,2+y),
 			new TextAndPosition("┣",16+x,3+y),new TextAndPosition("━",17+x,3+y),new TextAndPosition("┛",18+x,3+y),new TextAndPosition("━",width-17+x,3+y),new TextAndPosition("┗",width-18+x,3+y),new TextAndPosition("┫",width-16+x,3+y),		new TextAndPosition("┃",16+x,4+y),									new TextAndPosition("┃",width-16+x,4),
@@ -405,6 +405,17 @@ public class Backgrounds{
 			new TextAndPosition("┃",16+x,13+y),									new TextAndPosition("┃",width-16+x,13+y),
 			new TextAndPosition("┣",16+x,14+y),new TextAndPosition("━",17+x,14+y),new TextAndPosition("┓",18+x,14+y),new TextAndPosition("━",width-17+x,14+y),new TextAndPosition("┏",width-18+x,14+y),new TextAndPosition("┫",width-16+x,14+y),
 			new TextAndPosition("┗━┻━━━━━━━━━━━━━━━━━━━━━━━━━━━┻━┛",16+x,15+y)
+		}));
+		
+		
+		background.Add(new List<TextAndPosition>(new TextAndPosition[]{
+			new TextAndPosition("┏━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━┓",16+x,7+y),
+			new TextAndPosition("┣",16+x,8+y),new TextAndPosition("━",17+x,8+y),new TextAndPosition("┛",18+x,8+y),new TextAndPosition("━",width-17+x,8+y),new TextAndPosition("┗",width-18+x,8+y),new TextAndPosition("┫",width-16+x,8+y),
+			new TextAndPosition("                           ",19+x,8+y),
+			new TextAndPosition("┃",16+x,9+y),	new TextAndPosition("                             ",17+x,9+y),								new TextAndPosition("┃",width-16+x,9+y),
+			new TextAndPosition("                           ",18+x,10+y),
+			new TextAndPosition("┣",16+x,10+y),new TextAndPosition("━",17+x,10+y),new TextAndPosition("┓",18+x,10+y),new TextAndPosition("━",width-17+x,10+y),new TextAndPosition("┏",width-18+x,10+y),new TextAndPosition("┫",width-16+x,10+y),
+			new TextAndPosition("┗━┻━━━━━━━━━━━━━━━━━━━━━━━━━━━┻━┛",16+x,11+y)
 		}));
 
 		Coloring();
