@@ -583,6 +583,8 @@ namespace Characters
 				DropItems = new List<Item>(){
 					itemList.GetItem("슬라임 젤",100),
 					itemList.GetItem("슬라임 젤",50),
+					itemList.GetItem("슬라임 젤",100),
+					itemList.GetItem("슬라임 젤",50),
 					itemList.GetItem("전설의검",100)
 				}
 			};
@@ -685,7 +687,12 @@ namespace Characters
 					new TextAndPosition("헐크가 비틀거린다!",10),
 					new TextAndPosition("벽에 박힌 헐크는 미동도 하지 않는다.",10)
 				},
-				
+				PlayerReactionMessage = new List<TextAndPosition>(){
+					new TextAndPosition("헐크의 거대한 주먹이 솜방망이 처럼 느껴진다.",10),
+					new TextAndPosition("맞은 곳이 얼얼하다.",10),
+					new TextAndPosition("피를 토하며 한참을 날아가 굴렀다.",10),
+					new TextAndPosition("내몸은 사방으로 흩어졌다.",10)
+				},
 				PreAttackMessage = new List<TextAndPosition>(){
 					new TextAndPosition("헐크에게 눈을 돌린 순간 눈앞에서 헐크는 사라졌다.",10)
 				},

@@ -68,7 +68,7 @@ public static class DamageSystem
 	public static bool timerStart = false;
 	public static bool timerEnd = false;
 	public static double count = 0;
-	public static int limit = 3;
+	public static double limit = 3;
 	public static bool timeOut = false;
 	public static Task timer;
 	
@@ -116,10 +116,17 @@ public static class DamageSystem
 	{
 		double defenderSpeed = Defender.AttackSpeed;
 		double attackerSpeed = Attacker.AttackSpeed;
+		if(attackerSpeed == 0 && defenderSpeed > 0){
+			successCheck = true;
+			return;
+		}
+		if(defenderSpeed == 0 && attackerSpeed > 0){
+			successCheck = false;
+			return;
+		}
 		
 		double dodgeChance = DODGE_CHANCE * (defenderSpeed / attackerSpeed);
-		testLog(dodgeChance,false);
-		if(random.Next(1,101) < (int)dodgeChance)
+		if(random.Next(100) < (int)dodgeChance)
 		{
 			successCheck = true;
 		}
@@ -171,6 +178,8 @@ public static class BattleSystem{
 	{
 		globerPlayer = player;
 		globerMonster = monster;
+		
+		limit = 3*(1.0*globerPlayer.AttackSpeed / globerMonster.AttackSpeed);
 		
 		globerPlayer.ReactionMessage = globerMonster.PlayerReactionMessage;
 		
@@ -242,7 +251,7 @@ public static class BattleSystem{
 					
 					Attacker = globerPlayer;
 					Defender = globerMonster;
-					
+					Thread.Sleep(10);
 					BDTG.Display(BCC.GetChoiceClone(currentChoice));
 					Console.ReadKey();
 					BattleReaction();
@@ -251,6 +260,7 @@ public static class BattleSystem{
 					actionType = ActionType.BLOCK;
 					Attacker = globerPlayer;
 					Defender = globerMonster;
+					Thread.Sleep(10);
 					if(successCheck){
 						currentChoice = "successBlock";
 						BCC.ChangeChoiceText(choiceName:currentChoice,onlyShowText:new TextAndPosition(globerMonster.BlockSuccess(),15,9,1){AlignH = true});
@@ -267,6 +277,7 @@ public static class BattleSystem{
 					actionType = ActionType.DODGE;
 					Attacker = globerPlayer;
 					Defender = globerMonster;
+					Thread.Sleep(10);
 					if(successCheck){
 						currentChoice = "successDodge";
 						BCC.ChangeChoiceText(choiceName:currentChoice,onlyShowText:new TextAndPosition(globerMonster.DodgeSuccess(),15,9,1){AlignH = true});
@@ -303,10 +314,14 @@ public static class BattleSystem{
 			BDTG.Display(BCC.GetChoiceClone("andPhase"));
 			keyInfo = Console.ReadKey();
 			List<Item> drops = globerMonster.ItemDrop();
+			
 			foreach(Item i in drops){
 				globerPlayer.inven.AddItem(i);
-				AlertWindow(i.Name+" 획득!",textXPos:25,textYPos:5,background:5);
+				int rx = random.Next(20,100);
+				int ry = random.Next(2,13);
+				AlertWindow(i.Name+" 획득!",windowXPos:rx,windowYPos:ry, textXPos:0,textYPos:9,background:5,delay:10);
 			}
+			Console.ReadKey();
 			battleAnd = true;
 			turnAnd = true;
 		}

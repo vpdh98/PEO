@@ -11,6 +11,7 @@ public static class Convenience{
 	}
 	
 	public static void testLog(Object o,bool delay = true){
+		Console.SetCursorPosition(0,0);
 		Console.WriteLine(logNum+":"+o);
 		if(delay)
 			Console.ReadKey();

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using static Define;
 
 public static class GameWindows{
@@ -40,20 +41,24 @@ public static class GameWindows{
 		return confirm;
 	}
 	
-	public static void AlertWindow(String text,int windowXPos = SCREEN_POS_X,int windowYPos = SCREEN_POS_Y,int textXPos = SCREEN_POS_X+4,int textYPos = SCREEN_POS_Y,int background = 3){
+	public static void AlertWindow(String text,int windowXPos = SCREEN_POS_X,int windowYPos = SCREEN_POS_Y,int textXPos = SCREEN_POS_X+4,int textYPos = SCREEN_POS_Y,int background = 3,int delay = 0){
 		DisplayTextGame CDTG = new DisplayTextGame(false){GlobalPositionX=windowXPos,GlobalPositionY=windowYPos};
-		
 		Choice AlertCho = new Choice(){
 				Name = "AlertWindow",
 				SelectText = new List<TextAndPosition>(),
 				OnlyShowText = new List<TextAndPosition>()
-							{new TextAndPosition(20,text,textXPos,textYPos+4,20){PriorityLayer = 1,AlignH = true}},
+							{new TextAndPosition(20,text,textXPos,textYPos,20){PriorityLayer = 1,AlignH = true}},
 				BackgroundText = backgrounds.GetBackground(background)
 		};
 		
 		CDTG.Cho = AlertCho; //화면 할당
 		CDTG.Show();
-		ConsoleKeyInfo keyInfo = Console.ReadKey();
+		if(delay > 0){
+			Thread.Sleep(delay);
+		}
+		else{
+			ConsoleKeyInfo keyInfo = Console.ReadKey();
+		}
 	}
 	
 	public static void ExplanWindow(Item item,int windowXPos = SCREEN_POS_X,int windowYPos = SCREEN_POS_Y,int textXPos = SCREEN_POS_X+4,int textYPos = SCREEN_POS_Y,int background = 3){

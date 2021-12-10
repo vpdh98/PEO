@@ -108,7 +108,7 @@ public class Inventory{
 						//Item i = invenListObject[(String)IDTG.Cho.GetValueOn(IDTG.currentSelectNum)];
 						if(i is Equipment){
 							if(((Equipment)i).IsEquip)
-								AlertWindow("장착된 장비는 버리실 수 없습니다.",textXPos:24,textYPos:5);
+								AlertWindow("장착된 장비는 버리실 수 없습니다.",textXPos:24,textYPos:9);
 							else if(ConfirmWindow("버리시겠습니까?",24,7)){
 								inventory.Remove(i);
 								Init();

@@ -302,7 +302,15 @@ public class DisplayTextGame{
 			{ //choice 첫 호출때 화살표가 보이게 하기 위함
 			if(!isEmptyList<TextAndPosition>(selectList))
 			{
-				currentArrowingText = selectList[0].text;
+				if(Cho.Name == "movePhase"){
+					Random random = new Random();
+					currentSelectNum = random.Next(0,3);
+					currentArrowingText = selectList[currentSelectNum].text;
+					
+				}else{
+					currentArrowingText = selectList[0].text;	
+				}
+				
 			}
 			}
 				if(integratedList != null){
@@ -480,23 +488,23 @@ public class DisplayTextGame{
 			
 			if(currentSelectNum == null)	//한번만 초기화되게
 				currentSelectNum = 0;
-			if(key.Key == ConsoleKey.UpArrow && currentSelectNum != 0){
-				currentSelectNum--;
+			if(key.Key == ConsoleKey.UpArrow){
+				currentSelectNum = ArrowMoveUp();
 				success = true;
 			}
-			else if(key.Key == ConsoleKey.LeftArrow && currentSelectNum != 0){
-				currentSelectNum=ArrowMoveLeft();
+			else if(key.Key == ConsoleKey.LeftArrow){
+				currentSelectNum = ArrowMoveLeft();
 				success = true;
 			}
-			else if(key.Key == ConsoleKey.DownArrow && currentSelectNum != selectList.Count-1){
-				currentSelectNum++;
+			else if(key.Key == ConsoleKey.DownArrow){
+				currentSelectNum = ArrowMoveDown();
 				success = true;
 			}
-			else if(key.Key == ConsoleKey.RightArrow && currentSelectNum != selectList.Count-1){
+			else if(key.Key == ConsoleKey.RightArrow){
 				currentSelectNum = ArrowMoveRight();
 				success = true;
 			}
-			else if(keyInt <= selectList.Count && keyInt > 0){
+			else if(keyInt <= selectList.Count && keyInt > 0 && Cho.Name != "movePhase"){ //번호로 선택지를 고르는 기능. movePhase일때는 작동하지 않는다.
 				currentSelectNum = keyInt - 1;
 				success = true;
 			}
@@ -506,13 +514,16 @@ public class DisplayTextGame{
 		}
 	
 		public int ArrowMoveRight(){
-			for(int i = currentSelectNum+1;i<selectList.Count;i++){
+			for(int i = 0;i<selectList.Count;i++){
 				if(selectList[currentSelectNum].y == selectList[i].y){
+					if(i == currentSelectNum) continue;
+					if(selectList[currentSelectNum].x > selectList[i].x) continue;
 					return i;
 				}
 			}
-			for(int i = currentSelectNum+1;i<selectList.Count;i++){
+			for(int i = 0;i<selectList.Count;i++){
 				if(selectList[currentSelectNum].x < selectList[i].x){
+					if(i == currentSelectNum) continue;
 					return i;
 				}
 			}
@@ -523,18 +534,55 @@ public class DisplayTextGame{
 		}
 	
 		public int ArrowMoveLeft(){
-			for(int i = currentSelectNum-1;i>0;i--){
+			for(int i = selectList.Count-1;i>=0;i--){
 				if(selectList[currentSelectNum].y == selectList[i].y){
+					if(i == currentSelectNum) continue;
+					if(selectList[currentSelectNum].x < selectList[i].x) continue;
 					return i;
 				}
 			}
-			for(int i = currentSelectNum-1;i>0;i--){
+			for(int i = selectList.Count-1;i>=0;i--){
 				if(selectList[currentSelectNum].x > selectList[i].x){
+					if(i == currentSelectNum) continue;
 					return i;
 				}
 			}
 			if(currentSelectNum != 0)
 				return currentSelectNum -1;
+			else
+				return currentSelectNum;
+		}
+	
+		public int ArrowMoveUp(){
+			for(int i = selectList.Count-1;i>=0;i--){
+				if(selectList[currentSelectNum].x == selectList[i].x){
+					if(i == currentSelectNum) continue;
+					if(selectList[currentSelectNum].y < selectList[i].y) continue;
+					return i;
+				}
+			}
+			for(int i = selectList.Count-1;i>=0;i--){
+				if(selectList[currentSelectNum].y > selectList[i].y){
+					if(i == currentSelectNum) continue;
+					return i;
+				}
+			}
+			if(currentSelectNum != 0)
+				return currentSelectNum -1;
+			else
+				return currentSelectNum;
+		}
+	
+		public int ArrowMoveDown(){
+			for(int i = 0;i<selectList.Count;i++){
+				if(selectList[currentSelectNum].x == selectList[i].x){
+					if(i == currentSelectNum) continue;
+					if(selectList[currentSelectNum].y > selectList[i].y) continue;
+					return i;
+				}
+			}
+			if(currentSelectNum != selectList.Count-1)
+				return currentSelectNum +1;
 			else
 				return currentSelectNum;
 		}
