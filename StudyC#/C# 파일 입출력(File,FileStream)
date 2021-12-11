@@ -1,0 +1,22 @@
+C#에서는 System.IO에 있는 정적 클래스 File과 FileStream을 통해 파일 입출력을 할 수 있다. (인스턴트 클래스인 FileInfo도 있다.)
+
+FileStream fs = File.Create("test.txt"); //파일 생성
+fs.Close();
+
+StreamWriter sw = new StreamWriter("text.txt");
+sw.Write("Hello");
+sw.WriteLine("World");
+
+sw.Close();
+
+
+StreamReader sr = new StreamReader("test.txt");
+
+while(sr.Peek() >= 0){
+  Console.WriteLine(sr.ReadLine()); //파일에서 한줄 읽어옴
+}
+
+sr.Close();
+
+
+
