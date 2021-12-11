@@ -89,7 +89,6 @@ public static class GameWindows{
 		}
 		Choice ConfirmCho = new Choice(){
 					Name = "ExplanWindow",
-					ChoiceType = ChoiceType.EXPLAN,
 					OnlyShowText = tap,
 					BackgroundText = backgrounds.GetBackground(4)
 			};

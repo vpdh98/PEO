@@ -38,6 +38,12 @@ public static class ItemData{
 	public static ItemList itemList = new ItemList();
 }
 
+public static class PlayData{
+	public static String savePoint = "c1";
+}
+
+
+
 
 namespace Game
 {
@@ -681,3 +687,19 @@ Token을 활용해 봐야겠다.
 //현재 배틀 시스템은 플레이어가 순발력있고 실수만 안하면 한대도 맞지 않을 수 있다.
 //일정 횟수이상 연속으로 공격에 성공하면 몬스터에게 확정적으로 공격기회를 주는것은 어떤가? 더 재미있을까?
 //movePhase에서 선택지 위치도 랜덤으로 바꿔버리면 난이도를 더 올릴 수 있다.
+
+//2021.12.11
+//오늘은 플레이어가 죽었을때 어떻게 처리할지에 대해 고민해보았다.
+//여러가지 방식이 있는데, 나는 특정 세이브 포인트에서 시작하는 방식으로 하기로 했다.
+//Choice에 isSavePoint라는 해당 Choice가 세이브 포인트인지 확인하는 변수를 만들고
+//DisplayTextGame에서 Choice를 할당받을때 IsSavePoint가 true라면 savePoint에 해당 Choice의 이름을 저장하고
+//죽었을시에 마지막에 저장되었던 savePoint로 가도록 구현했다.
+//savePoint는 정적 클래스 PlayData를 만들어 그 안에 넣어놨다.
+
+//파일 입출력을 통해 배경을 디테일하게 넣어보자
+//DisplayTextGame에서 출력할때 원래는 integratedList에 배경까지 모두 넣어놓고 배경의 우선순위만 앞에 두고 출력했었는데
+//DisplayBackground 메소드를 따로 만들어 배경만 먼저 따로 출력하도록 하였다.
+//모든 배경을 미리 저장되어있는 text파일에서 불러와 출력하게 하였다.
+//글자 중앙정렬의 기준을 개행문자로 나눠진 문자열의 배열중 첫번째 요소의 길이로 했다.
+//이제 더 멋진 배경을 넣을 수 있을것이다.
+//배경에 글씨가 묻히지 않도록 특정 범위에 공백문자를 배경위에 깔아주는 기능을 추가해야겠다.

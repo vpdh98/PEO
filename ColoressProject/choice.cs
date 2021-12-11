@@ -4,6 +4,7 @@ using Characters;
 using System.Threading;
 using static Convenience;
 using System.Linq;
+using System.IO;
 
 public enum ChoiceType{
 			NORMAL,		//선택지
@@ -12,8 +13,8 @@ public enum ChoiceType{
 			GET,		//획득
 			SET,		//장착
 			QUICK,		//즉시 실행
-			QUICKNEXT,	//즉시 다음 선택지
-			EXPLAN
+			QUICKNEXT	//즉시 다음 선택지
+			//EXPLAN
 }
 
 public class Choice : ICloneable //선택지 부여 하는 클래스
@@ -25,6 +26,8 @@ public class Choice : ICloneable //선택지 부여 하는 클래스
 	public String Name {get;set;}
 	public delegate void Quick();
 	public Quick QuickDelegate{get;set;} 
+	
+	public bool IsSavePoint{get;set;} = false;
 
 	private List<TextAndPosition> selectText;
 	private List<TextAndPosition> onlyShowText;
@@ -170,6 +173,7 @@ public class Choice : ICloneable //선택지 부여 하는 클래스
 		this.backgroundTextNum = that.backgroundTextNum;
 		this.Name = that.Name;
 		this.ChoiceType = that.ChoiceType;
+		this.IsSavePoint = that.IsSavePoint;
 
 		if(!isEmptyList(that.MonsterList)){
 			//try{

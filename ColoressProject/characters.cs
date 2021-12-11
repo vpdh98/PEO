@@ -117,7 +117,7 @@ namespace Characters
 				}
 				else{
 					if(weapon == value){
-						if(ConfirmWindow("이미 장착된 무기 입니다.해제하시겠습니까?",24,7)){
+						if(ConfirmWindow("이미 장착된 무기 입니다.\n해제하시겠습니까?",24,7)){
 							weapon.IsEquip = false;
 							weapon = null;
 							AttackMessage = null;
@@ -142,10 +142,10 @@ namespace Characters
 				}
 				else{
 					if(armor == value){
-						if(ConfirmWindow("이미 장착된 방어구 입니다.해제하시겠습니까?",24,7)){
+						if(ConfirmWindow("이미 장착된 방어구 입니다.\n해제하시겠습니까?",24,7)){
 							armor.IsEquip = false;
-							armor = null;
 							Defense -= armor.Defense;
+							armor = null;
 						}
 						else{
 							AlertWindow("이미 방어구가 존재합니다.",textXPos:24,textYPos:5);

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using static Convenience;
 using static DamageSystem;
 using static GameWindows;
+using static PlayData;
 
 //namespace Battle{
 
@@ -226,7 +227,7 @@ public static class BattleSystem{
 				
 				if(died)
 				{
-					return "testStream";
+					return savePoint;
 				}
 			}
 			else

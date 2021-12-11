@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Game;
 using static Convenience;
 using static Define;
+using static PlayData;
 
 
 
@@ -180,8 +181,15 @@ public class DisplayTextGame{
 				cho = value;
 				choiceType = cho.ChoiceType;
 				InputLists();
+				//BackgroundOverlap();
 				ListCombiner();
-				BackgroundOverlap();
+				SavePointing();
+			}
+		}
+	
+		public void SavePointing(){
+			if(cho.IsSavePoint){
+				savePoint = cho.Name;
 			}
 		}
 	
@@ -218,10 +226,10 @@ public class DisplayTextGame{
 		
 		public void BackgroundOverlap(){ //나중에 제데로 중첩되게 구현 해보기로
 			for(int i = 0;i<backgroundList.Count;i++){
-				int temp = SearchSamePosition(integratedList,backgroundList[i]); //현재 리스트와 BackgroundText의 포지션이 겹치지 않으면 
-				if(temp == Define.ERROR){
+				//int temp = SearchSamePosition(integratedList,backgroundList[i]); //현재 리스트와 BackgroundText의 포지션이 겹치지 않으면 
+				//if(temp == Define.ERROR){
 					integratedList.Add(backgroundList[i]); //BackgroundText추가
-				}
+				//} //배경을 먼저 출력하고 그위에 선택지들을 출력하면 알아서 배경이 덮어씌어지므로 중첩은 필요없는 기능이다. 그래서 주석처리 21.12.11
 			}
 			integratedList = integratedList.OrderBy(x => x.PriorityLayer).ToList();
 		}
@@ -249,7 +257,13 @@ public class DisplayTextGame{
 		}
 		
 		public void AlignX(TextAndPosition TAndP){ // [frontPadding[----text----]backPadding] 중앙정렬
-			int length = TAndP.text.Length;
+			int length = 0;
+			if(TAndP.text.Contains("\n")){
+				String[] ts = TAndP.text.Split('\n');
+				length = ts[0].Length;
+			}else{
+				length = TAndP.text.Length;
+			}
 			int frontPadding = 0;
 			int backPadding = Define.SCREEN_WIDTH;
 			while(frontPadding < backPadding){
@@ -273,8 +287,8 @@ public class DisplayTextGame{
 				Quick();
 			if(choiceType == ChoiceType.QUICKNEXT)
 				QuickChoice();
-			if(choiceType == ChoiceType.EXPLAN)
-				PrintWriteLine();
+			//if(choiceType == ChoiceType.EXPLAN) //원래 개행문자를 처리할 수 있도록 아이템 설명창을 위해 만들어진 기능이였으나 그냥 기본 PrintAlgorithm에 추가하였다.
+				//PrintWriteLine();
 		}
 	
 		public void Normal(){
@@ -300,54 +314,63 @@ public class DisplayTextGame{
 			ConsoleColor tempC;
 			if(currentArrowingText == null && selectList != null && choiceType != ChoiceType.QUICKNEXT)
 			{ //choice 첫 호출때 화살표가 보이게 하기 위함
-			if(!isEmptyList<TextAndPosition>(selectList))
-			{
-				if(Cho.Name == "movePhase"){
-					Random random = new Random();
-					currentSelectNum = random.Next(0,3);
-					currentArrowingText = selectList[currentSelectNum].text;
-					
-				}else{
-					currentArrowingText = selectList[0].text;	
+				if(!isEmptyList<TextAndPosition>(selectList))
+				{
+					if(Cho.Name == "movePhase"){ //movePhase에서만 선택지 초기값 랜덤으로 
+						Random random = new Random();
+						currentSelectNum = random.Next(0,3);
+						currentArrowingText = selectList[currentSelectNum].text;
+
+					}else{
+						currentArrowingText = selectList[0].text;	
+					}
+
 				}
-				
 			}
-			}
-				if(integratedList != null){
-						for(int i = 0;i<integratedList.Count;i++){
-							TextAndPosition TAndP = integratedList[i];
-							if(TAndP.color!=null){
-								tempC = Console.ForegroundColor;
-								Console.ForegroundColor = TAndP.color;
-							}
-							if(TAndP.isStream){
-								StreamPrint(TAndP);
-							}
-							else if(TAndP.textDelay > 0){ //텍스트의 딜레이 속성이 0보다 크면 한글자씩출력하게 함
-								FrontDelay(TAndP);
-								delay = TAndP.textDelay;
-								PrintPieceOfText(TAndP);
-								delay = 0;
-							}
-							else{ //stopPoint == 0조건 추가하면 순차적으로 출력된다음 다음 내용 출력. 없에면 한꺼번에 출력
-								FrontDelay(TAndP);//해당 텍스트를 딜레이시키고 딜레이 0으로 만듦
-								Console.SetCursorPosition(TAndP[0]+GlobalPositionX,TAndP[1]+GlobalPositionY);
-								if(!isEmptyList<TextAndPosition>(selectList)){
-									if(TAndP.isSelect && choiceType != ChoiceType.QUICKNEXT){
-										int temp = selectList.FindIndex(x => x.text == TAndP.text);
-										voidARROW = temp+1+".";
-									}
-								}
-								Console.Write(TextProcessing(TAndP.text,TAndP.isSelect));
-							}
-							Console.ForegroundColor = tempC;
-							Thread.Sleep(delay);
+			DisplayBackground();
+			if(integratedList != null){
+					for(int i = 0;i<integratedList.Count;i++){
+						TextAndPosition TAndP = integratedList[i];
+						if(TAndP.color!=null){
+							tempC = Console.ForegroundColor;
+							Console.ForegroundColor = TAndP.color;
 						}
-					delay = 0;
-				}
+						if(TAndP.isStream){
+							StreamPrint(TAndP);
+						}
+						else if(TAndP.textDelay > 0){ //텍스트의 딜레이 속성이 0보다 크면 한글자씩출력하게 함
+							FrontDelay(TAndP);
+							delay = TAndP.textDelay;
+							PrintPieceOfText(TAndP);
+							delay = 0;
+						}
+						else if(TAndP.text.Contains("\n")){
+							String[] tString = TAndP.text.Split('\n');
+							for(int y = 0;y<tString.Length;y++){
+								Console.SetCursorPosition(TAndP[0]+GlobalPositionX,TAndP[1]+GlobalPositionY+y);
+								Console.Write(TextProcessing(tString[y],TAndP.isSelect));
+							}
+						}
+						else{ //stopPoint == 0조건 추가하면 순차적으로 출력된다음 다음 내용 출력. 없에면 한꺼번에 출력
+							FrontDelay(TAndP);//해당 텍스트를 딜레이시키고 딜레이 0으로 만듦
+
+							Console.SetCursorPosition(TAndP[0]+GlobalPositionX,TAndP[1]+GlobalPositionY);
+							if(!isEmptyList<TextAndPosition>(selectList)){
+								if(TAndP.isSelect && choiceType != ChoiceType.QUICKNEXT){
+									int temp = selectList.FindIndex(x => x.text == TAndP.text);
+									voidARROW = temp+1+".";
+								}
+							}
+							Console.Write(TextProcessing(TAndP.text,TAndP.isSelect));
+						}
+						Console.ForegroundColor = tempC;
+						Thread.Sleep(delay);
+					}
+				delay = 0;
+			}
 		}
 	
-		public void PrintWriteLine(){
+		/*public void PrintWriteLine(){
 			ConsoleColor tempC;
 				if(integratedList != null){
 						for(int i = 0;i<integratedList.Count;i++){
@@ -371,7 +394,6 @@ public class DisplayTextGame{
 										Console.SetCursorPosition(TAndP[0]+GlobalPositionX+x,TAndP[1]+GlobalPositionY+y);
 										ts+=c;
 										Console.Write(ts);
-										
 									}
 								}
 								
@@ -379,7 +401,7 @@ public class DisplayTextGame{
 						}
 					delay = 0;
 				}
-		}
+		}*/
 		
 		public void StreamPrint(TextAndPosition TAndP){
 			FrontDelay(TAndP);
@@ -604,5 +626,31 @@ public class DisplayTextGame{
 				}
 			}
 			return currentChoice;
+		}
+	
+		public void DisplayBackground(){
+			ConsoleColor tempC;
+			if(backgroundList != null){
+						for(int i = 0;i<backgroundList.Count;i++){
+							TextAndPosition TAndP = backgroundList[i];
+							if(TAndP.color!=null){
+								tempC = Console.ForegroundColor;
+								Console.ForegroundColor = TAndP.color;
+							}
+							if(TAndP.text.Contains("\n")){
+								String[] tString = TAndP.text.Split('\n');
+								for(int y = 0;y<tString.Length;y++){
+									Console.SetCursorPosition(TAndP[0]+GlobalPositionX,TAndP[1]+GlobalPositionY+y);
+									Console.Write(tString[y]);
+								}
+							}
+							else{ //stopPoint == 0조건 추가하면 순차적으로 출력된다음 다음 내용 출력. 없에면 한꺼번에 출력
+								FrontDelay(TAndP);//해당 텍스트를 딜레이시키고 딜레이 0으로 만듦
+								Console.SetCursorPosition(TAndP[0]+GlobalPositionX,TAndP[1]+GlobalPositionY);
+								Console.Write(TAndP.text);
+							}
+							Console.ForegroundColor = tempC;
+						}
+				}
 		}
 }
