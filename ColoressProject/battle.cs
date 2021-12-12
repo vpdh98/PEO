@@ -227,6 +227,8 @@ public static class BattleSystem{
 				
 				if(died)
 				{
+					died = false;
+					globerPlayer.Hp = globerPlayer.MaxHp; //살아날때 체력 회복
 					return savePoint;
 				}
 			}
@@ -271,6 +273,21 @@ public static class BattleSystem{
 					}
 					BDTG.Display(BCC.GetChoiceClone(currentChoice));
 					keyInfo = Console.ReadKey();
+					
+					if(currentChoice == "failBlock"){
+						currentChoice = (String)BCC.GetChoiceClone(currentChoice).QuickNext(); //monsterReactionPhase
+						BCC.ChangeChoiceText(choiceName:currentChoice,onlyShowText:new TextAndPosition(globerPlayer.Reaction(),15,9,1){AlignH = true}); 
+						BDTG.Display(BCC.GetChoiceClone(currentChoice));
+						keyInfo = Console.ReadKey();
+						
+						currentChoice = (String)BCC.GetChoiceClone(currentChoice).QuickNext(); //movePhase
+					}
+					
+					if(globerPlayer.Hp <= 0){ 
+						testLog("in die");
+						died = true;
+						return;
+					}
 					turnAnd = true;
 					TimerStart();
 				}
@@ -288,6 +305,21 @@ public static class BattleSystem{
 					}
 					BDTG.Display(BCC.GetChoiceClone(currentChoice));
 					keyInfo = Console.ReadKey();
+					
+					if(currentChoice == "failDodge"){
+						currentChoice = (String)BCC.GetChoiceClone(currentChoice).QuickNext();//monsterReactionPhase
+						BCC.ChangeChoiceText(choiceName:currentChoice,onlyShowText:new TextAndPosition(globerPlayer.Reaction(),15,9,1){AlignH = true});
+						BDTG.Display(BCC.GetChoiceClone(currentChoice));
+						keyInfo = Console.ReadKey();
+						
+						currentChoice = (String)BCC.GetChoiceClone(currentChoice).QuickNext();//movePhase
+					}
+					
+					if(globerPlayer.Hp <= 0){ 
+						testLog("in die");
+						died = true;
+						return;
+					}
 					turnAnd = true;
 					TimerStart();
 				}	

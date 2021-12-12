@@ -536,19 +536,29 @@ public class DisplayTextGame{
 		}
 	
 		public int ArrowMoveRight(){
-			for(int i = 0;i<selectList.Count;i++){
+			for(int i = 0;i<selectList.Count;i++){ //같은 y포지션에서 x포지션이 더 큰 선택지가 있으면 이동
 				if(selectList[currentSelectNum].y == selectList[i].y){
 					if(i == currentSelectNum) continue;
 					if(selectList[currentSelectNum].x > selectList[i].x) continue;
 					return i;
 				}
 			}
-			for(int i = 0;i<selectList.Count;i++){
+			for(int i = 0;i<selectList.Count;i++){//그냥 더 큰 x포지션에 선택지가 있으면 이동
 				if(selectList[currentSelectNum].x < selectList[i].x){
 					if(i == currentSelectNum) continue;
 					return i;
 				}
 			}
+			for(int i = 0;i<selectList.Count;i++){//위에 경우가 없을경우 같은 y포지션에서 더 작은 x포지션에 있는 선택지로 이동
+				if(selectList[currentSelectNum].y == selectList[i].y){
+					if(selectList[currentSelectNum].x > selectList[i].x){
+						if(i == currentSelectNum) continue;
+						return i;
+					}
+				}
+			}
+			
+			
 			if(currentSelectNum != selectList.Count-1)
 				return currentSelectNum +1;
 			else
@@ -556,19 +566,28 @@ public class DisplayTextGame{
 		}
 	
 		public int ArrowMoveLeft(){
-			for(int i = selectList.Count-1;i>=0;i--){
+			for(int i = selectList.Count-1;i>=0;i--){//같은 y포지션에서 x포지션이 더 작은 선택지가 있으면 이동
 				if(selectList[currentSelectNum].y == selectList[i].y){
 					if(i == currentSelectNum) continue;
 					if(selectList[currentSelectNum].x < selectList[i].x) continue;
 					return i;
 				}
 			}
-			for(int i = selectList.Count-1;i>=0;i--){
+			for(int i = selectList.Count-1;i>=0;i--){//그냥 더 작은 x포지션에 선택지가 있으면 이동
 				if(selectList[currentSelectNum].x > selectList[i].x){
 					if(i == currentSelectNum) continue;
 					return i;
 				}
 			}
+			for(int i = selectList.Count-1;i>=0;i--){//위에 경우가 없을경우 같은 y포지션에서 더 큰 x포지션에 있는 선택지로 이동
+				if(selectList[currentSelectNum].y == selectList[i].y){
+					if(selectList[currentSelectNum].x < selectList[i].x){
+						if(i == currentSelectNum) continue;
+						return i;
+					}
+				}
+			}
+			
 			if(currentSelectNum != 0)
 				return currentSelectNum -1;
 			else
@@ -592,7 +611,7 @@ public class DisplayTextGame{
 			if(currentSelectNum != 0)
 				return currentSelectNum -1;
 			else
-				return currentSelectNum;
+				return selectList.Count-1;
 		}
 	
 		public int ArrowMoveDown(){
@@ -606,7 +625,7 @@ public class DisplayTextGame{
 			if(currentSelectNum != selectList.Count-1)
 				return currentSelectNum +1;
 			else
-				return currentSelectNum;
+				return 0;
 		}
 		
 		public String ChoicePick(DisplayTextGame DTG,ChoiceControler CC,String currentChoice){

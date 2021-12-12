@@ -4,6 +4,7 @@ using Characters;
 using static Define;
 using static PlayData;
 using System.IO;
+using static DataManager;
 
 public class Scenario{
 		int clikX;
@@ -243,7 +244,7 @@ public class Scenario{
 				ChoiceType = ChoiceType.QUICKNEXT,
 				OnlyShowText = new List<TextAndPosition>()
 							{new TextAndPosition("막기 실패",15,3+5,1){AlignH = true}},
-				IndicateChoice = new Dictionary<int,Object>(){{0,"movePhase"}},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"monsterReactionPhase"}},
 				BackgroundText = backgrounds.GetBackground(1)
 			});
 			choices.Add(new Choice(){
@@ -259,7 +260,7 @@ public class Scenario{
 				ChoiceType = ChoiceType.QUICKNEXT,
 				OnlyShowText = new List<TextAndPosition>()
 							{new TextAndPosition("회피 실패",15,3+5,1){AlignH = true}},
-				IndicateChoice = new Dictionary<int,Object>(){{0,"movePhase"}},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"monsterReactionPhase"}},
 				BackgroundText = backgrounds.GetBackground(1)
 			});
 			choices.Add(new Choice(){
@@ -313,15 +314,7 @@ public class Backgrounds{
 	public int width = Define.SCREEN_WIDTH;
 	public int height = Define.SCREEN_HEIGHT;
 	
-	public String LoadBackground(String backgroundName){
-		String temp = "";
-		StreamReader sr = new StreamReader("Save/"+backgroundName+".txt");
-		while(sr.Peek() >= 0){
-			temp += (Char)sr.Read();
-		}
-		sr.Close();
-		return temp;
-	}
+	
 	
 	public Backgrounds(){
 		background = new List<List<TextAndPosition>>();
@@ -331,7 +324,7 @@ public class Backgrounds{
 		background.Add(new List<TextAndPosition>(new TextAndPosition[]{new TextAndPosition(LoadBackground("inven"),12,0)}));
 		background.Add(new List<TextAndPosition>(new TextAndPosition[]{new TextAndPosition(LoadBackground("confirm"),17,2)}));
 		background.Add(new List<TextAndPosition>(new TextAndPosition[]{new TextAndPosition(LoadBackground("itemExplan"),16,2)}));
-		background.Add(new List<TextAndPosition>(new TextAndPosition[]{new TextAndPosition(LoadBackground("getItem"),0,0)}));
+		background.Add(new List<TextAndPosition>(new TextAndPosition[]{new TextAndPosition(LoadBackground("getItem"),15,7)}));
 
 		Coloring();
 	}
