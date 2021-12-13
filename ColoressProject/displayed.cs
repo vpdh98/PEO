@@ -329,6 +329,12 @@ public class DisplayTextGame{
 			}
 			DisplayBackground();
 			if(integratedList != null){
+				/*for(int i = 0;i<onlyShowList.Count;i++){
+					Convenience.y = i;
+					//testLog(onlyShowList[i],delay:false);
+				}
+				Convenience.y = 0;
+				Console.ReadKey();*/
 					for(int i = 0;i<integratedList.Count;i++){
 						TextAndPosition TAndP = integratedList[i];
 						if(TAndP.color!=null){
@@ -440,6 +446,7 @@ public class DisplayTextGame{
 		
 		
 		public void PrintPieceOfText(TextAndPosition text){ //한글자씩 출력하게 하는 메소드
+			int y = 0;
 			if(countPoint == 0){
 				stopText = (TextAndPosition)text.Clone();  //출력할 텍스트의 위치등의 값 복사
 				stopText.text ="";			//텍스트만 비우기
@@ -447,12 +454,19 @@ public class DisplayTextGame{
 			}
 			
 			for(countPoint = 0;countPoint < text.text.Length;countPoint++){
-				stopText.text += text.text[countPoint];
-				Console.SetCursorPosition(stopText[0]+GlobalPositionX,stopText[1]+GlobalPositionY);
-				Console.Write(stopText.text);
-				Thread.Sleep(delay);
+				if(text.text[countPoint] == '\n'){ //개행문자가 있을경우 다음줄부터 출력
+					stopText.text ="";
+					y++;
+				}
+				else{
+					stopText.text += text.text[countPoint];
+					Console.SetCursorPosition(stopText[0]+GlobalPositionX,stopText[1]+GlobalPositionY+y);
+					Console.Write(stopText.text);
+					Thread.Sleep(delay);
+				}
 			}
 			
+			stopText = null;
 			text.textDelay = 0;
 			countPoint = 0;
 			delay = delayBackup;

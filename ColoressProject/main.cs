@@ -81,7 +81,7 @@ namespace Game
 			
 			Task.Factory.StartNew(BattleCal);	
 			
-			DTG.Display(GameManager.SpawnMonster(CC.GetChoiceClone(currentChoice)));
+			DTG.Display(GameManager.SpawnMonster(CC.GetChoice(currentChoice)));
 			keyInfo = Console.ReadKey();
 			
 			while(keyInfo.Key != ConsoleKey.Escape)
@@ -94,11 +94,11 @@ namespace Game
 					currentChoice = (String)DTG.Cho.GetValueOn(DTG.currentSelectNum);
 
 					if(CList.GetMonster(currentChoice) != null){ currentChoice = BattlePhase(player,CList.GetMonster(currentChoice),DTG.Cho.Name); } //currentChoice에 현제 선택된 몬스터 이름이 들어가 있음 //8.23
-					//DTG.Cho.LeaveChoice();
+					DTG.Cho.LeaveChoice();
 					
 					if(CC.GetChoiceClone(currentChoice).ChoiceType == ChoiceType.QUICKNEXT) { runQuickNext(); } //QUICKNEXT구현을 위해 추가된 if문
 					
-					DTG.Display(GameManager.SpawnMonster(CC.GetChoiceClone(currentChoice)));
+					DTG.Display(GameManager.SpawnMonster(CC.GetChoice(currentChoice)));
 					keyInfo = Console.ReadKey();
 				}
 				else
@@ -734,3 +734,15 @@ Token을 활용해 봐야겠다.
 //movePhase에서 한쪽 방향으로 이동시키면 무조건 빠르게 회피또는 공격을 할 수 있게 되있었는데, 커서가 끝에 다다르면 처음 또는 마지막으로 이동하도록 구현해 막았다.
 
 //방어와 회피 실패시 플레이어의 리액션과 죽었을 경우 추가
+
+//2021.12.13
+//원래 내일 파견이 예정되어 있었으나..
+//부스터 샷을 맞지 않으면 파견갈 수 없다고 해서 못가게 되었다.. 코딩을 할 수 있게 되었으니 좋은건가..
+
+//SpawnMonster메소드에서 몬스터 선택지를 기존 선택지중 중앙에 있는 선택지를 기준으로 추가 되도록 되어있는데
+//해당 choice 중앙에 선택지가 없을 경우 제데로 된 위치에 선택지가 추가되지 않는 버그가 있다.
+
+//현재는 Choice를 이동할때 계속 새로운 Choice를 복제해 출력하는데. 새로운 Choice가 아닌기존 Choice의 상태를 유지하는 것도 필요할 것 같다.
+//기존 상태를 유지하도록 했다. LeaveChoice() 메소드를 통해 한번 들렸던 초이스를 다시 방문하면 다른 메세지가 출력되도록 하였다.
+//지금은 몬스터가 한번 스폰되면 계속 남아있는 문제가 있는데.
+//계속 남아있는 몬스터와 맵을 이동할때마다 없어졌다 스폰됫다를 반복하는 몬스터를 나누고 구현해봐야 할것 같다.

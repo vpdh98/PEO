@@ -703,6 +703,63 @@ namespace Characters
 			};
 			MonsterList.Add(monster.Name,monster);
 			
+			monster = new Monster(){
+				Name = "야생의 경민이",
+				MaxHp = 100,
+				Hp = 100,
+				Mp = 0,
+				AttackPower = 5,
+				Defense = 5,
+				SpawnChance = 10,
+				AttackSpeed = 3,
+				SelectMessage = new List<TextAndPosition> 
+				{new TextAndPosition("야생의 경민이!!!!",10),
+				new TextAndPosition("뭐지..? 경민..?",10),
+				new TextAndPosition("박.경.민",10)},
+				SpawnMessage = new List<TextAndPosition>()
+				{new TextAndPosition("야생의 경민이가 출현했다.",10),						   
+				 new TextAndPosition("말로만 듣던 냉장고?!",10)},
+				StateMessage = new List<TextAndPosition>()
+				{
+					new TextAndPosition("곧장이라도 날아올듯 팔팔하다.",10),
+					new TextAndPosition("수많은 공격에도 불구하고 피한방울 뿐이다.",10),
+					new TextAndPosition("경민이가 헐떡인다.",10),
+					new TextAndPosition("경민이가 쓰러졌다!",10)
+				},
+				BlockMessage = new List<TextAndPosition>()
+				{
+					new TextAndPosition("경민이를 막았다.",10),
+					new TextAndPosition("팔이 막은 그대로 으스러졌다.",10)
+				},
+				DodgeMessage = new List<TextAndPosition>()
+				{
+					new TextAndPosition("냉장고를 피했다.",10),
+					new TextAndPosition("정신을 차려보니 냉장고에 깔려있었다.",10)
+				},
+				ReactionMessage = new List<TextAndPosition>()
+				{
+					new TextAndPosition("간지러운듯 콧웃음을 친다.",10),
+					new TextAndPosition("움찔거린다.",10),
+					new TextAndPosition("경민이가 신음소리를 낸다.",10),
+					new TextAndPosition("경민이가 쓰러졌다!",10)
+				},
+				PlayerReactionMessage = new List<TextAndPosition>(){
+					new TextAndPosition("간지러운데..?",10),
+					new TextAndPosition("아야,아야! 아파용~",10),
+					new TextAndPosition("우리집 냉장고가 기억이 안 난다..\n 왜 냉장고를 생각하고 있지?",10),
+					new TextAndPosition("경민이에게 깔려 의식을 잃어간다...",10)
+				},
+				PreAttackMessage = new List<TextAndPosition>(){
+					new TextAndPosition("눈깜짝할 사이 경민이가 배치기를 시도한다.",10)
+				},
+				
+				AttackMessage = new List<TextAndPosition>(){
+					new TextAndPosition("경민이의 배치기!!!",10)
+				}
+			};
+			MonsterList.Add(monster.Name,monster);
+			
+			
 			///////////////////NPC/////////////////////////////
 		}
 		

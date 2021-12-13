@@ -148,7 +148,12 @@ public class Choice : ICloneable //선택지 부여 하는 클래스
 
 	public void LeaveChoice(){
 		if(ReturnText != null){
+			if(StreamText.Count != 0){
+				StreamText = ReturnText;
+			}
+			else{
 			OnlyShowText = ReturnText;
+			}
 		}
 	}
 	
@@ -163,6 +168,9 @@ public class Choice : ICloneable //선택지 부여 하는 클래스
 			this.StreamText = that.StreamText.ConvertAll(new Converter<TextAndPosition, TextAndPosition>(o => (TextAndPosition)o.Clone()));
 		if(that.BackgroundText != null)
 			this.BackgroundText = that.BackgroundText.ConvertAll(new Converter<TextAndPosition, TextAndPosition>(o => (TextAndPosition)o.Clone()));
+		if(that.ReturnText != null)
+			this.ReturnText = that.ReturnText.ConvertAll(new Converter<TextAndPosition, TextAndPosition>(o => (TextAndPosition)o.Clone()));
+		
 		this.IndicateChoice = new Dictionary<int,Object>(that.IndicateChoice);
 
 		this.QuickDelegate = that.QuickDelegate;

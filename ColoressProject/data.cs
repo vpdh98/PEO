@@ -89,18 +89,54 @@ public class Scenario{
 							{new TextAndPosition("오른쪽",1,19,true),
 							new TextAndPosition("가만히 있는다",7+clikX,8+clikY,true),
 							new TextAndPosition("아앗.",7+clikX,9+clikY,true),
+							 new TextAndPosition("문이 하나 보인다.",7+clikX,10+clikY,true),
 							new TextAndPosition("왼쪽",56,19,true)},
 				OnlyShowText = new List<TextAndPosition>()
 							{new TextAndPosition("용사는 길을 나섰다.",7+clikX,3+clikY,1),
 							new TextAndPosition("울창한 숲.",7+clikX,2+clikY,1)},
 				ReturnText = new List<TextAndPosition>()
 							{new TextAndPosition("여전히 울창한 숲.",7+clikX,2+clikY,1)},
-				IndicateChoice = new Dictionary<int,Object>(){{0,"c2-right"},{1,"testStream"},{2,"c2"},{3,"c2"}},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"c2-right"},{1,"testStream"},{2,"c2"},{3,"gyeongminsHouse"},{4,"c2"}},
 				MonsterList = new List<Monster>()
 							{characterList.GetMonster("슬라임"),
 							characterList.GetMonster("뒤틀린 망자"),
 							characterList.GetMonster("헐크")},
 				BackgroundText = backgrounds.GetBackground(1)
+			});
+			
+			clikX = 15;
+			clikY = 5;
+			choices.Add(new Choice(){
+				Name = "gyeongminsHouse",
+				SelectText = new List<TextAndPosition>()         //프로퍼티를 통한 초기화 생성자가 먼저 호출된다, 이게되네
+							{new TextAndPosition("오른쪽",1,19,true),
+							 new TextAndPosition("방으로 들어간다.",7+clikX,8+clikY,true),
+							new TextAndPosition("왼쪽",56,19,true)},
+				OnlyShowText = new List<TextAndPosition>()
+							{new TextAndPosition("문을 지나가니 쾅! 소리와 함께 문이 닫혔다.",7+clikX,3+clikY,1){AlignH = true},
+							 new TextAndPosition("여긴 어디지..?",7+clikX,4+clikY,1){AlignH = true},
+							new TextAndPosition("주변에 온통 음식물이 흩어져 있다.",7+clikX,5+clikY,1){AlignH = true}},
+				ReturnText = new List<TextAndPosition>()
+							{new TextAndPosition("무엇인가 근처를 흟고 다닌 흔적이 있다.",7+clikX,3+clikY,1){AlignH = true}},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"gyeongminsHouse"},{1,"gyeongminsHouse_Room"},{2,"gyeongminsHouse"}},
+				MonsterList = new List<Monster>()
+							{characterList.GetMonster("야생의 경민이")},
+				BackgroundText = backgrounds.GetBackground(1)
+			});
+			
+			clikX = 23;
+			clikY = 7;
+			choices.Add(new Choice(){
+				Name = "gyeongminsHouse_Room",
+				SelectText = new List<TextAndPosition>()
+							{new TextAndPosition("방을 나간다.",26+clikX,12+clikY,true){PriorityLayer = 2}},
+				StreamText = new List<TextAndPosition>()
+							{new TextAndPosition("평범한 방.",5+clikX,3+clikY,10){PriorityLayer = 1},
+							new TextAndPosition(1000,"방 밖에서 인기척이 느껴진다.",5+clikX,3+clikY,10,ConsoleColor.Red){PriorityLayer = 1,AlignH = true}},
+				ReturnText = new List<TextAndPosition>()
+							{new TextAndPosition("방안에는 차가운 냉기만이 흐른다.",5+clikX,3+clikY,10){PriorityLayer = 1,AlignH = true}},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"gyeongminsHouse"}},
+				BackgroundText = backgrounds.GetBackground(0)
 			});
 			
 			clikX = 23;

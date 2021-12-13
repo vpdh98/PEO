@@ -5,13 +5,14 @@ using System.Linq;
 
 public static class Convenience{
 	private static int logNum = 1;
+	public static int y = 0;
 	
 	public static void print(String s){
 		Console.WriteLine(s);
 	}
 	
 	public static void testLog(Object o,bool delay = true){
-		Console.SetCursorPosition(0,0);
+		Console.SetCursorPosition(0,y);
 		Console.WriteLine(logNum+":"+o);
 		if(delay)
 			Console.ReadKey();
