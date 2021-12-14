@@ -350,7 +350,7 @@ public class DisplayTextGame{
 							PrintPieceOfText(TAndP);
 							delay = 0;
 						}
-						else if(TAndP.text.Contains("\n")){
+						else if(TAndP.text.Contains("\n")){ //문장 사이에 개행문자가 있을시
 							String[] tString = TAndP.text.Split('\n');
 							for(int y = 0;y<tString.Length;y++){
 								Console.SetCursorPosition(TAndP[0]+GlobalPositionX,TAndP[1]+GlobalPositionY+y);
@@ -359,7 +359,6 @@ public class DisplayTextGame{
 						}
 						else{ //stopPoint == 0조건 추가하면 순차적으로 출력된다음 다음 내용 출력. 없에면 한꺼번에 출력
 							FrontDelay(TAndP);//해당 텍스트를 딜레이시키고 딜레이 0으로 만듦
-
 							Console.SetCursorPosition(TAndP[0]+GlobalPositionX,TAndP[1]+GlobalPositionY);
 							if(!isEmptyList<TextAndPosition>(selectList)){
 								if(TAndP.isSelect && choiceType != ChoiceType.QUICKNEXT){
@@ -506,8 +505,10 @@ public class DisplayTextGame{
 			
 		public String TextProcessing(String s,bool isSelect){ //항상 currentArrowingText에 할당된 Text에 화살표를 붙인다
 			if(isSelect && choiceType != ChoiceType.QUICKNEXT){
-				if(s.Equals(currentArrowingText))			//매개변수 s가 현재 선택된 Text면 화살표를 붙이고 아니면 화살표 없이 반환
+				if(s.Equals(currentArrowingText)){		//매개변수 s가 현재 선택된 Text면 화살표를 붙이고 아니면 화살표 없이 반환
+					Console.ForegroundColor = ConsoleColor.Yellow;
 					return ARROW+s;
+				}
 				else
 					return voidARROW+s;
 			}
@@ -673,8 +674,14 @@ public class DisplayTextGame{
 							if(TAndP.text.Contains("\n")){
 								String[] tString = TAndP.text.Split('\n');
 								for(int y = 0;y<tString.Length;y++){
-									Console.SetCursorPosition(TAndP[0]+GlobalPositionX,TAndP[1]+GlobalPositionY+y);
-									Console.Write(tString[y]);
+									try{
+										Console.SetCursorPosition(TAndP[0]+GlobalPositionX,TAndP[1]+GlobalPositionY+y);
+										Console.Write(tString[y]);
+									}catch(System.ArgumentOutOfRangeException e){
+										Console.Write(TAndP[0]+GlobalPositionX+",");
+										Console.WriteLine(TAndP[1]+GlobalPositionY+y);
+									}
+									
 								}
 							}
 							else{ //stopPoint == 0조건 추가하면 순차적으로 출력된다음 다음 내용 출력. 없에면 한꺼번에 출력

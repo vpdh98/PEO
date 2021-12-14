@@ -101,7 +101,7 @@ public class Scenario{
 							{characterList.GetMonster("슬라임"),
 							characterList.GetMonster("뒤틀린 망자"),
 							characterList.GetMonster("헐크")},
-				BackgroundText = backgrounds.GetBackground(1)
+				BackgroundText = backgrounds.GetBackground(6)
 			});
 			
 			clikX = 15;
@@ -121,7 +121,7 @@ public class Scenario{
 				IndicateChoice = new Dictionary<int,Object>(){{0,"gyeongminsHouse"},{1,"gyeongminsHouse_Room"},{2,"gyeongminsHouse"}},
 				MonsterList = new List<Monster>()
 							{characterList.GetMonster("야생의 경민이")},
-				BackgroundText = backgrounds.GetBackground(1)
+				BackgroundText = backgrounds.GetBackground(7)
 			});
 			
 			clikX = 23;
@@ -361,6 +361,8 @@ public class Backgrounds{
 		background.Add(new List<TextAndPosition>(new TextAndPosition[]{new TextAndPosition(LoadBackground("confirm"),17,2)}));
 		background.Add(new List<TextAndPosition>(new TextAndPosition[]{new TextAndPosition(LoadBackground("itemExplan"),16,2)}));
 		background.Add(new List<TextAndPosition>(new TextAndPosition[]{new TextAndPosition(LoadBackground("getItem"),15,7)}));
+		background.Add(new List<TextAndPosition>(new TextAndPosition[]{new TextAndPosition(LoadBackground("background8"),-25,-8)}));
+		background.Add(new List<TextAndPosition>(new TextAndPosition[]{new TextAndPosition(LoadBackground("background9"),-25,-5),new TextAndPosition(LoadBackground("background7"),0,0)}));
 
 		Coloring();
 	}

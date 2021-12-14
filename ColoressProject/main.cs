@@ -31,7 +31,7 @@ public static class Define
 		public const int SCREEN_WIDTH = 64;
 		public const int SCREEN_HEIGHT = 20;
 		public const int SCREEN_POS_X = 60;
-		public const int SCREEN_POS_Y = 3;
+		public const int SCREEN_POS_Y = 8;
 }
 
 public static class ItemData{
@@ -746,3 +746,11 @@ Token을 활용해 봐야겠다.
 //기존 상태를 유지하도록 했다. LeaveChoice() 메소드를 통해 한번 들렸던 초이스를 다시 방문하면 다른 메세지가 출력되도록 하였다.
 //지금은 몬스터가 한번 스폰되면 계속 남아있는 문제가 있는데.
 //계속 남아있는 몬스터와 맵을 이동할때마다 없어졌다 스폰됫다를 반복하는 몬스터를 나누고 구현해봐야 할것 같다.
+
+//2021.12.14
+//오늘은 배경을 출력하는 기능을 손봣다.
+//background에 두가지 이상의 배경을 넣으면 중첩시킬 수 있다.
+//첫번째 배경 위에 두번째 배경을 중첩시킬때 첫번째배경의 글자 크기보다 두번째 배경의 글자 크기가 작으면 그 차이만큼 그 줄의 길이가 더 짧아지는 에로사항이 있다..
+//그래서 그냥 배경위에 글씨만 출력하도록 해보려고 한다.
+//글씨만 출력되있으면 가독성이 떨어지므로 현재 선택된 선택지가 잘보이도록 색을 바꾸게 했다.
+//아이템 획득도 색을 바꾸도록 했다. (아이템 획득 메세지를 띄우는 AlertWindow매개변수에 ConsoleColor를 추가해 TextAndPosition 생성자의 color에 넣게함)

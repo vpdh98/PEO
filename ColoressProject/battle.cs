@@ -352,7 +352,7 @@ public static class BattleSystem{
 				globerPlayer.inven.AddItem(i);
 				int rx = random.Next(20,100);
 				int ry = random.Next(2,13);
-				AlertWindow(i.Name+" 획득!",windowXPos:rx,windowYPos:ry, textXPos:0,textYPos:9,background:5,delay:10);
+				AlertWindow(i.Name+" 획득!",windowXPos:rx,windowYPos:ry, textXPos:0,textYPos:9,background:5,delay:10,color:ConsoleColor.DarkYellow);
 			}
 			Console.ReadKey();
 			battleAnd = true;
