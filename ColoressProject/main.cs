@@ -11,6 +11,7 @@ using System.IO;
 using static BattleSystem;
 using static Convenience;
 using static ItemData;
+using static PlayData;
 //using Item;
 //using Battle;
 
@@ -40,6 +41,10 @@ public static class ItemData{
 
 public static class PlayData{
 	public static String savePoint = "c1";
+	public static String currentChoice = "c1"; //첫 화면
+	public static CharacterList CList = new CharacterList();
+	public static Choice currentOpenChoice; //현재 Display되고 있는 Choice를 담는변수. 접근에 주의!!
+	public static Choice accessAbleChoice; //접근할 Choice를 담는다
 }
 
 
@@ -52,10 +57,8 @@ namespace Game
 		public delegate void AttackMethod(Character Attacker,Character Defender);
 		public static AttackMethod attack;
 		static ConsoleKeyInfo keyInfo;
-		static String currentChoice = "c1"; //첫 화면
 		static DisplayTextGame DTG = new DisplayTextGame();
 		static ChoiceControler CC = new ChoiceControler(new Scenario());
-		static CharacterList CList = new CharacterList();
 		public static Player player = CList.GetPlayer("용사");
 		
 		public static void Main()
@@ -96,6 +99,8 @@ namespace Game
 					if(CList.GetMonster(currentChoice) != null){ currentChoice = BattlePhase(player,CList.GetMonster(currentChoice),DTG.Cho.Name); } //currentChoice에 현제 선택된 몬스터 이름이 들어가 있음 //8.23
 					DTG.Cho.LeaveChoice();
 					
+					if(CC.GetChoiceClone(currentChoice).ChoiceType == ChoiceType.QUICK) { runQuick(); }  //QUICK구현을 위해 추가된 if문
+					
 					if(CC.GetChoiceClone(currentChoice).ChoiceType == ChoiceType.QUICKNEXT) { runQuickNext(); } //QUICKNEXT구현을 위해 추가된 if문
 					
 					DTG.Display(GameManager.SpawnMonster(CC.GetChoice(currentChoice)));
@@ -116,6 +121,18 @@ namespace Game
 			DTG.Display(CC.GetChoiceClone(currentChoice));
 			currentChoice = (String)CC.GetChoiceClone(currentChoice).QuickNext();
 			Thread.Sleep(2000);
+			//keyInfo = Console.ReadKey();
+		}
+		
+		public static void runQuick()
+		{
+			DTG.Cho = CC.GetChoiceClone(currentChoice);
+			
+			currentChoice = (String)CC.GetChoiceClone(currentChoice).QuickNext();
+			Choice tcho = CC.GetChoiceClone(currentChoice);
+			accessAbleChoice = tcho;
+			DTG.Cho.QuickRun();
+			DTG.Display(GameManager.SpawnMonster(tcho));
 			//keyInfo = Console.ReadKey();
 		}
 		
@@ -754,3 +771,44 @@ Token을 활용해 봐야겠다.
 //그래서 그냥 배경위에 글씨만 출력하도록 해보려고 한다.
 //글씨만 출력되있으면 가독성이 떨어지므로 현재 선택된 선택지가 잘보이도록 색을 바꾸게 했다.
 //아이템 획득도 색을 바꾸도록 했다. (아이템 획득 메세지를 띄우는 AlertWindow매개변수에 ConsoleColor를 추가해 TextAndPosition 생성자의 color에 넣게함)
+
+//2021.12.15
+//현재 전투를 생각해보니 회피나 방어를 했을때의 메리트가 없다.
+//회피나 방어를 했을때 무조건 공격기회를 준다던지 공격 기회를 잡을 시간을 늘려준다던지 하는 메리트를 추가해야겠다.
+
+//배경을 좀더 정교하게 출력되도록 했다. (한칸짜리 공백문자를 두칸짜리 공백문자로 교체)
+
+//Choice가 실행될때 또는 선택지를 선택했을때 delegate를 실행시키려고 한다.
+//DisplayTextGame에 Choice를 초기화시킬때 실행시키는 방법과 
+//ChoiceType이 Quick일때 Main에서 따로 처리하는 방벙이 있다. 뭘로 할까?
+//두번째 방법으로 구현했다.
+//하지만 실제로 Quick을 통해 데이터값을 변경하거나 하려면 데이터를 소스코드에 놓는게 아닌
+//따로 파일에 저장해 놔야 가능할 것 같다.
+//지금은 경민이 집에서 경민이 방에 들어갔다 나오면 경민이가 스폰되는 기능을 넣으려 하는데
+//Quick타입의 선택지도 독립적으로 작동하는 선택지여서 전역변수가 아닌이상 접근을 할 수가 없다.
+//해결방법은 위에 말한데로 따로 파일에 저장해놓고 불러오기를 하던지
+//아님 전역변수로 모든 데이터를 올려놓으면 된다.
+//하지만 전역변수로 모든 데이터를 올려놓으면 메모리가 많이 사용될 것이다.(static으로 선언하기 때문)
+
+//전역변수로 Choice를 올렸다. 나중에 잘 보고 왠만하면 삭제하고 저장방식으로 하는것이 좋을듯하다.
+/* 주의해서 판단하고 결정할 것
+	위치 main.cs
+	
+	public static Choice currentOpenChoice; //현재 Display되고 있는 Choice를 담는변수. 접근에 주의!!
+	public static Choice accessAbleChoice; //접근할 Choice를 담는다
+	
+	
+	일단 구현해보려고 막짠 코드. QuickRun을 실행하면 accessAbleChoice에 MonsterList에 접근해서 스폰확률을 100으로 하게 햇는데 결과적으로 몬스터 스폰이 안된다.
+	public static void runQuick()
+		{
+			DTG.Cho = CC.GetChoiceClone(currentChoice);
+			
+			currentChoice = (String)CC.GetChoiceClone(currentChoice).QuickNext();
+			Choice tcho = CC.GetChoiceClone(currentChoice);
+			accessAbleChoice = tcho;
+			DTG.Cho.QuickRun();
+			DTG.Display(GameManager.SpawnMonster(tcho));
+			//keyInfo = Console.ReadKey();
+		}
+	
+	*/

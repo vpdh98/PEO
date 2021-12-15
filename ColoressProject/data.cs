@@ -109,16 +109,14 @@ public class Scenario{
 			choices.Add(new Choice(){
 				Name = "gyeongminsHouse",
 				SelectText = new List<TextAndPosition>()         //프로퍼티를 통한 초기화 생성자가 먼저 호출된다, 이게되네
-							{new TextAndPosition("오른쪽",1,19,true),
-							 new TextAndPosition("방으로 들어간다.",7+clikX,8+clikY,true),
-							new TextAndPosition("왼쪽",56,19,true)},
+							{new TextAndPosition("방으로 들어간다.",7+clikX,8+clikY,true)},
 				OnlyShowText = new List<TextAndPosition>()
 							{new TextAndPosition("문을 지나가니 쾅! 소리와 함께 문이 닫혔다.",7+clikX,3+clikY,1){AlignH = true},
 							 new TextAndPosition("여긴 어디지..?",7+clikX,4+clikY,1){AlignH = true},
 							new TextAndPosition("주변에 온통 음식물이 흩어져 있다.",7+clikX,5+clikY,1){AlignH = true}},
 				ReturnText = new List<TextAndPosition>()
 							{new TextAndPosition("무엇인가 근처를 흟고 다닌 흔적이 있다.",7+clikX,3+clikY,1){AlignH = true}},
-				IndicateChoice = new Dictionary<int,Object>(){{0,"gyeongminsHouse"},{1,"gyeongminsHouse_Room"},{2,"gyeongminsHouse"}},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"gyeongminsHouse_Room"}},
 				MonsterList = new List<Monster>()
 							{characterList.GetMonster("야생의 경민이")},
 				BackgroundText = backgrounds.GetBackground(7)
@@ -135,8 +133,18 @@ public class Scenario{
 							new TextAndPosition(1000,"방 밖에서 인기척이 느껴진다.",5+clikX,3+clikY,10,ConsoleColor.Red){PriorityLayer = 1,AlignH = true}},
 				ReturnText = new List<TextAndPosition>()
 							{new TextAndPosition("방안에는 차가운 냉기만이 흐른다.",5+clikX,3+clikY,10){PriorityLayer = 1,AlignH = true}},
-				IndicateChoice = new Dictionary<int,Object>(){{0,"gyeongminsHouse"}},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"spawnGyeonmin"}},
 				BackgroundText = backgrounds.GetBackground(0)
+			});
+			
+			choices.Add(new Choice(){
+				Name = "spawnGyeonmin",
+				ChoiceType = ChoiceType.QUICK,
+				QuickDelegate = ()=>{
+					Monster tmon = PlayData.accessAbleChoice.MonsterList[0];
+					tmon.SpawnChance = 100;
+				},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"gyeongminsHouse"}}
 			});
 			
 			clikX = 23;
@@ -361,8 +369,8 @@ public class Backgrounds{
 		background.Add(new List<TextAndPosition>(new TextAndPosition[]{new TextAndPosition(LoadBackground("confirm"),17,2)}));
 		background.Add(new List<TextAndPosition>(new TextAndPosition[]{new TextAndPosition(LoadBackground("itemExplan"),16,2)}));
 		background.Add(new List<TextAndPosition>(new TextAndPosition[]{new TextAndPosition(LoadBackground("getItem"),15,7)}));
-		background.Add(new List<TextAndPosition>(new TextAndPosition[]{new TextAndPosition(LoadBackground("background8"),-25,-8)}));
-		background.Add(new List<TextAndPosition>(new TextAndPosition[]{new TextAndPosition(LoadBackground("background9"),-25,-5),new TextAndPosition(LoadBackground("background7"),0,0)}));
+		background.Add(new List<TextAndPosition>(new TextAndPosition[]{new TextAndPosition(LoadBackground("forest2"),-50,-8),new TextAndPosition(LoadBackground("space1"),0,0)}));
+		background.Add(new List<TextAndPosition>(new TextAndPosition[]{new TextAndPosition(LoadBackground("background9"),-20,-5)}));
 
 		Coloring();
 	}

@@ -194,8 +194,10 @@ public class DisplayTextGame{
 		}
 	
 		public void Display(Choice choice){
+			
 			Init();
 			Cho = choice;
+			currentOpenChoice = choice;
 			Show();
 		}
 	
@@ -283,8 +285,8 @@ public class DisplayTextGame{
 				Normal();
 			if(choiceType == ChoiceType.BATTLE)
 				Battle();
-			if(choiceType == ChoiceType.QUICK)
-				Quick();
+			//if(choiceType == ChoiceType.QUICK)
+				//Quick();
 			if(choiceType == ChoiceType.QUICKNEXT)
 				QuickChoice();
 			//if(choiceType == ChoiceType.EXPLAN) //원래 개행문자를 처리할 수 있도록 아이템 설명창을 위해 만들어진 기능이였으나 그냥 기본 PrintAlgorithm에 추가하였다.
@@ -298,9 +300,10 @@ public class DisplayTextGame{
 		public void Battle(){
 		}
 		
-		public void Quick(){
+		/*public void Quick(){
 			cho.QuickRun();
-		}
+			currentChoice = (String)cho.QuickNext();
+		}*/
 		
 		public void QuickChoice(){
 			if(onlyShowList != null){

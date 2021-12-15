@@ -710,7 +710,7 @@ namespace Characters
 				Mp = 0,
 				AttackPower = 5,
 				Defense = 5,
-				SpawnChance = 10,
+				SpawnChance = 0,
 				AttackSpeed = 3,
 				SelectMessage = new List<TextAndPosition> 
 				{new TextAndPosition("야생의 경민이!!!!",10),
@@ -763,9 +763,29 @@ namespace Characters
 			///////////////////NPC/////////////////////////////
 		}
 		
+		public Monster GetMonsterOriginal(String name){
+			try{
+				return MonsterList[name];
+			}catch(Exception e){
+				Console.WriteLine(e);
+				return null;
+			}
+		}
+		
 		public Monster GetMonster(String name){
 			try{
 				return (Monster)MonsterList[name].Clone();
+			}catch(Exception e){
+				Console.WriteLine(e);
+				return null;
+			}
+		}
+		
+		public Monster GetMonster(String name,int spawn){
+			try{
+				Monster mons = (Monster)MonsterList[name].Clone();
+				mons.SpawnChance = spawn;
+				return mons;
 			}catch(Exception e){
 				Console.WriteLine(e);
 				return null;

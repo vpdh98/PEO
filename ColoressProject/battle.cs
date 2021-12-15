@@ -87,7 +87,7 @@ public static class DamageSystem
 	
 	public static DisplayTextGame BDTG = new DisplayTextGame();
 	public static ChoiceControler BCC = new ChoiceControler(new Scenario());
-	public static String currentChoice = "firstPhase"; //첫 화면
+	
 
 
 	public static void Attacking(Character Attacker,Character Defender)
@@ -179,6 +179,7 @@ public static class BattleSystem{
 	{
 		globerPlayer = player;
 		globerMonster = monster;
+		currentChoice = "firstPhase"; //첫 화면
 		
 		limit = 3*(1.0*globerPlayer.AttackSpeed / globerMonster.AttackSpeed);
 		
