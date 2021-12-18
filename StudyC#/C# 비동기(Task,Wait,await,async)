@@ -27,3 +27,42 @@ async Task<String> Method(){
 이런 식으로 리턴할 경우 컴파일러가 자동으로 Task<String>으로 변환해준다.
 
 
+await의 사용 예제
+
+public class main{
+	
+	public static async Task Count(){
+		int result = 0;
+		Console.WriteLine("Start Count");
+		var task1 = Task.Run(()=>{
+			int sum = 0;
+				for(int i = 0;i<10;i++){
+				sum+=i;
+				Thread.Sleep(100);
+			}
+			return sum;
+		});
+		Console.WriteLine("before await");
+		result = await task1;
+		Console.WriteLine("in Count finish");
+	}
+	
+	public static void Main(){
+		var tesk = Count();
+		Console.WriteLine("시작");
+		Console.WriteLine("끝");
+		tesk.Wait();
+	}
+}
+
+결과는 아래와 같이 나온다
+
+Start Count
+before await
+시작
+끝
+in Count finish
+async 메소드안에서 실행된 비동기 task를 
+await키워드를 쓴 시점에서 기다리고 task가 다 실행되면 나머지를 실행한다.
+main에서는 비동기로 코드를 계속 실행한다.
+만약 await task1 이 아니라 task1.Wait()을 사용했다면 task1의 작업이 다 끝난다음 main을 실행하게 된다.
