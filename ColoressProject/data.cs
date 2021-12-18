@@ -117,8 +117,6 @@ public class Scenario{
 				ReturnText = new List<TextAndPosition>()
 							{new TextAndPosition("무엇인가 근처를 흟고 다닌 흔적이 있다.",7+clikX,3+clikY,1){AlignH = true}},
 				IndicateChoice = new Dictionary<int,Object>(){{0,"gyeongminsHouse_Room"}},
-				MonsterList = new List<Monster>()
-							{characterList.GetMonster("야생의 경민이")},
 				BackgroundText = backgrounds.GetBackground(7)
 			});
 			
@@ -141,8 +139,7 @@ public class Scenario{
 				Name = "spawnGyeonmin",
 				ChoiceType = ChoiceType.QUICK,
 				QuickDelegate = ()=>{
-					Monster tmon = PlayData.accessAbleChoice.MonsterList[0];
-					tmon.SpawnChance = 100;
+					PlayData.accessAbleChoice.MonsterList.Add(PlayData.CList.GetMonster("야생의 경민이",100));
 				},
 				IndicateChoice = new Dictionary<int,Object>(){{0,"gyeongminsHouse"}}
 			});
@@ -370,7 +367,7 @@ public class Backgrounds{
 		background.Add(new List<TextAndPosition>(new TextAndPosition[]{new TextAndPosition(LoadBackground("itemExplan"),16,2)}));
 		background.Add(new List<TextAndPosition>(new TextAndPosition[]{new TextAndPosition(LoadBackground("getItem"),15,7)}));
 		background.Add(new List<TextAndPosition>(new TextAndPosition[]{new TextAndPosition(LoadBackground("forest2"),-50,-8),new TextAndPosition(LoadBackground("space1"),0,0)}));
-		background.Add(new List<TextAndPosition>(new TextAndPosition[]{new TextAndPosition(LoadBackground("background9"),-20,-5)}));
+		background.Add(new List<TextAndPosition>(new TextAndPosition[]{new TextAndPosition(LoadBackground("background9"),-20,-5),new TextAndPosition(LoadBackground("space3"),7,6)}));
 
 		Coloring();
 	}

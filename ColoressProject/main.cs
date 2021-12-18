@@ -84,7 +84,7 @@ namespace Game
 			
 			Task.Factory.StartNew(BattleCal);	
 			
-			DTG.Display(GameManager.SpawnMonster(CC.GetChoice(currentChoice)));
+			DTG.Display(GameManager.SpawnMonster_Stay(CC.GetChoice(currentChoice)));
 			keyInfo = Console.ReadKey();
 			
 			while(keyInfo.Key != ConsoleKey.Escape)
@@ -103,7 +103,7 @@ namespace Game
 					
 					if(CC.GetChoiceClone(currentChoice).ChoiceType == ChoiceType.QUICKNEXT) { runQuickNext(); } //QUICKNEXT구현을 위해 추가된 if문
 					
-					DTG.Display(GameManager.SpawnMonster(CC.GetChoice(currentChoice)));
+					DTG.Display(GameManager.SpawnMonster_Stay(CC.GetChoice(currentChoice)));
 					keyInfo = Console.ReadKey();
 				}
 				else
@@ -126,14 +126,13 @@ namespace Game
 		
 		public static void runQuick()
 		{
-			DTG.Cho = CC.GetChoiceClone(currentChoice);
-			
+			DTG.Cho = CC.GetChoice(currentChoice);
 			currentChoice = (String)CC.GetChoiceClone(currentChoice).QuickNext();
-			Choice tcho = CC.GetChoiceClone(currentChoice);
+			Choice tcho = CC.GetChoice(currentChoice);
 			accessAbleChoice = tcho;
-			DTG.Cho.QuickRun();
-			DTG.Display(GameManager.SpawnMonster(tcho));
-			//keyInfo = Console.ReadKey();
+			DTG.Cho.QuickRun(); //delegate실행
+			DTG.Cho.QuickDelegate = ()=>{}; //한번만 실행되도록 비움
+			DTG.Display(GameManager.SpawnMonster_Stay(tcho));
 		}
 		
 	}	
@@ -142,7 +141,7 @@ namespace Game
 	public static class GameManager
 	{
 		
-		public static Choice SpawnMonster(Choice choice)
+		public static Choice SpawnMonster_Stay(Choice choice)
 		{ //몬스터 선택지가 중앙에 있는 기존 선택지 마지막 열 다음으로 들어가도록 해주는 메소드
 			if(choice.MonsterList == null)
 			{
@@ -812,3 +811,29 @@ Token을 활용해 봐야겠다.
 		}
 	
 	*/
+//2021.12.18
+//delegate실행을 성공했다.
+/*
+QuickDelegate = ()=>{
+					PlayData.accessAbleChoice.MonsterList.Add(PlayData.CList.GetMonster("야생의 경민이",100));
+				}
+				*/
+//결국 전역변수에 접근하는 방식으로 실행했다.
+//앞으로 더 다양한 상호작용을 할 수 있을 것이다.
+
+//지금은 몬스터를 어떤 방식으로 필드에 소환할지 고민중이다. 그 내용은
+//1.한번만 스폰되는 몬스터
+
+//2.무한 스폰되는 몬스터
+//2-1.무한 스폰되지만 맵에 랜덤으로 스폰
+//2-2.무한 스폰되지만 맵에 한번 스폰되면 계속 머물러있음
+//Main에 있는 SpawnMonster_Stay로는 2-2만 구현이 된다.
+//2-2가 되는 방법은
+//SpawnMonster_Stay(Choice) 메소드를 호출하면
+//SpawnMonster_Stay에서 Choice.MonsterList에 있는 몬스터의 스폰 확률을 가져와 계산하여 Choice의 SelectingText에 추가시킨다.
+//그리고 그것을 출력하면 자연스럽게 SelectList에 들어가 있는 Monster를 출력하게 된다.
+
+//1,2번을 나누기 위해서는 먼저 몬스터 클래스에 구분할 수 있는 필드를 추가해야 할듯
+//그리고 DTG내부에서 MonsterList를 따로 관리해야 할 듯 하다.
+
+//Console.KeyAvailable라는 변수로 키가 버퍼에 입력 되었는지 확인할 수 있다는 정보를 얻음. 이게 된다면 플레이어가 따로 입력하지 않아도 몬스터가 공격하게됨. 실험해봐야겠음.

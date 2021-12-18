@@ -238,16 +238,29 @@ public class ChoiceControler{
 	}
 	
 	public Choice ChangeChoiceText(String choiceName,ChoiceControler choiceControler = null,TextAndPosition onlyShowText = null,TextAndPosition selectText = null){
-		Choice cho = this.GetChoice(choiceName);
 		if(choiceControler == null){
 			choiceControler = this;
 		}
+		
+		Choice cho = choiceControler.GetChoice(choiceName);
+		
 		if(onlyShowText != null){
 			cho.OnlyShowText = new List<TextAndPosition>() {onlyShowText};
 		}
 		if(selectText != null){
 			cho.SelectText = new List<TextAndPosition>() {selectText};
 		}
+		return cho;
+	}
+	
+	public Choice AddChoiceMonster(String choiceName,Monster monster,ChoiceControler choiceControler = null){
+		if(choiceControler == null){
+			choiceControler = this;
+		}
+		
+		Choice cho = choiceControler.GetChoice(choiceName);
+		
+		cho.MonsterList.Add(monster);
 		return cho;
 	}
 		
