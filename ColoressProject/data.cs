@@ -28,7 +28,7 @@ public class Scenario{
 				Name = "c1",
 				SelectText = new List<TextAndPosition>()         //프로퍼티를 통한 초기화 생성자가 먼저 호출된다, 이게되네
 							{new TextAndPosition(200,"Start",13+clikX,5+clikY,true){PriorityLayer = 3},
-							  new TextAndPosition(200,"Exit",13+clikX,6+clikY,true,ConsoleColor.Yellow){PriorityLayer = 4},
+							  new TextAndPosition(200,"Exit",13+clikX,6+clikY,true){PriorityLayer = 4},
 								new TextAndPosition(200,"옵션",13+clikX,7+clikY,true){PriorityLayer = 5}},
 				OnlyShowText = new List<TextAndPosition>()
 							{new TextAndPosition("The Colorless",10+clikX,3+clikY,10,ConsoleColor.Green){PriorityLayer = 1},

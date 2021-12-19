@@ -101,7 +101,7 @@ public static class DamageSystem
 		double attackerAttackPower = Attacker.AttackPower;
 		
 		double blockChance = BLOCK_CHANCE * (defenderDefense / attackerAttackPower);
-		testLog(blockChance);
+		//testLog(blockChance);
 		if(random.Next(1,101) < (int)blockChance)
 		{
 			successCheck = true;
@@ -194,54 +194,54 @@ public static class BattleSystem{
 		//Task.Run(()=>DisplayTimer());
 		
 		BDTG.Display(BCC.GetChoiceClone(currentChoice));
-		keyInfo = Console.ReadKey();
-
+		while(true){
+			keyInfo = Console.ReadKey();
+			if(keyInfo.Key == ConsoleKey.Enter){
+				currentChoice = (String)BDTG.Cho.GetValueOn(BDTG.currentSelectNum);
+				if(currentChoice == "end") return backField;
+				BDTG.Display(BCC.GetChoiceClone(currentChoice));
+				break;
+			}
+			BDTG.SelectingText(keyInfo);
+			BDTG.Display();
+		}
+		
 		while(!battleAnd)
 		{
-			
-			BDTG.SelectingText(keyInfo);
-			if(keyInfo.Key == ConsoleKey.Enter) //Enter
-			{
-				
-				currentChoice = (String)BDTG.Cho.GetValueOn(BDTG.currentSelectNum);
-
-				if(currentChoice == "end") return backField;
-				
-				if(currentChoice == "movePhase"){ 
-					BDTG.Display(BCC.GetChoiceClone(currentChoice));
-					TimerStart();
-					keyInfo = Console.ReadKey();
-				}
-				else if(!timeOut)
-				{
-					//testLog("Player Turn");
-					timerEnd = true;
-					timer.Wait();
-					PlayerTurn();
-				}
-				else
-				{
-					//testLog("Monster Turn");
-					//timer.Wait();
-					MonsterTurn();	
-				}
-				
+			TimerStart();
+			while(true){
+				Thread.Sleep(10);
+				if(timeOut){ MonsterTurn(); }
 				if(died)
 				{
 					died = false;
 					globerPlayer.Hp = globerPlayer.MaxHp; //살아날때 체력 회복
 					return savePoint;
 				}
+				if(Console.KeyAvailable) break;
 			}
-			else
-			{
-				BDTG.Display(); //Display의 Init()과 choice초기화가 없는 버전
-				keyInfo = Console.ReadKey();
+			keyInfo = Console.ReadKey();
+			BDTG.SelectingText(keyInfo);
+			if(keyInfo.Key == ConsoleKey.Enter){
+				currentChoice = (String)BDTG.Cho.GetValueOn(BDTG.currentSelectNum);
+				
+				if(currentChoice == "movePhase") continue;
+				timerEnd = true;
+				timer.Wait();
+				PlayerTurn();
+				timeOut = false;
+			}else{
+				BDTG.Display();
 			}
+			
+			
 		}
 		
 		return backField;
 	}
+	
+	
+	
 	public static void PlayerTurn(){
 		timerEnd = false;
 		turnAnd = false;
@@ -273,19 +273,19 @@ public static class BattleSystem{
 						BCC.ChangeChoiceText(choiceName:currentChoice,onlyShowText:new TextAndPosition(globerMonster.BlockFail(),15,9,1){AlignH = true});
 					}
 					BDTG.Display(BCC.GetChoiceClone(currentChoice));
-					keyInfo = Console.ReadKey();
+					Console.ReadKey();
 					
 					if(currentChoice == "failBlock"){
 						currentChoice = (String)BCC.GetChoiceClone(currentChoice).QuickNext(); //monsterReactionPhase
 						BCC.ChangeChoiceText(choiceName:currentChoice,onlyShowText:new TextAndPosition(globerPlayer.Reaction(),15,9,1){AlignH = true}); 
 						BDTG.Display(BCC.GetChoiceClone(currentChoice));
-						keyInfo = Console.ReadKey();
-						
-						currentChoice = (String)BCC.GetChoiceClone(currentChoice).QuickNext(); //movePhase
+						Console.ReadKey();
 					}
+					currentChoice = (String)BCC.GetChoiceClone(currentChoice).QuickNext(); //movePhase
+						BDTG.Display(BCC.GetChoiceClone(currentChoice));
 					
 					if(globerPlayer.Hp <= 0){ 
-						testLog("in die");
+						//testLog("in die");
 						died = true;
 						return;
 					}
@@ -305,19 +305,19 @@ public static class BattleSystem{
 						BCC.ChangeChoiceText(choiceName:currentChoice,onlyShowText:new TextAndPosition(globerMonster.DodgeFail(),15,9,1){AlignH = true});
 					}
 					BDTG.Display(BCC.GetChoiceClone(currentChoice));
-					keyInfo = Console.ReadKey();
+					Console.ReadKey();
 					
 					if(currentChoice == "failDodge"){
 						currentChoice = (String)BCC.GetChoiceClone(currentChoice).QuickNext();//monsterReactionPhase
 						BCC.ChangeChoiceText(choiceName:currentChoice,onlyShowText:new TextAndPosition(globerPlayer.Reaction(),15,9,1){AlignH = true});
 						BDTG.Display(BCC.GetChoiceClone(currentChoice));
-						keyInfo = Console.ReadKey();
-						
-						currentChoice = (String)BCC.GetChoiceClone(currentChoice).QuickNext();//movePhase
+						Console.ReadKey();
 					}
+					currentChoice = (String)BCC.GetChoiceClone(currentChoice).QuickNext();//movePhase
+					BDTG.Display(BCC.GetChoiceClone(currentChoice));
 					
 					if(globerPlayer.Hp <= 0){ 
-						testLog("in die");
+						//testLog("in die");
 						died = true;
 						return;
 					}
@@ -361,10 +361,8 @@ public static class BattleSystem{
 		}
 		else{
 			currentChoice = "movePhase";
-			
 			BDTG.Display(BCC.GetChoiceClone(currentChoice));
 			TimerStart();
-			keyInfo = Console.ReadKey();
 			turnAnd = true;
 		}
 	}
@@ -391,14 +389,13 @@ public static class BattleSystem{
 			currentChoice = "movePhase";
 			Console.ReadKey();
 			if(globerPlayer.Hp <= 0){ 
-				testLog("in die");
+				//testLog("in die");
 				died = true;
 				return;
 			}
 		
 			BDTG.Display(BCC.GetChoiceClone(currentChoice));
 			TimerStart();
-			keyInfo = Console.ReadKey();
 	}
 	
 	public static void BattleTimer()

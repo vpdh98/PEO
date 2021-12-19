@@ -1,0 +1,147 @@
+public class main{
+	public static bool timeout = false;
+	public static int count = 500;
+	public static bool timeFlag = false;
+	
+	public static void Main(){
+		Console.WriteLine("Press ESC to stop");
+
+		/*while (!(Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.Escape))
+		{
+			Console.WriteLine("ha!");
+			Thread.Sleep(1000);
+		}*/
+		
+		Console.WriteLine("Press ESC to stop");
+		while(true){
+			Console.WriteLine("Enter누르면 공격!");
+			Task task = Task.Factory.StartNew(Timer);
+			do {
+				while (! Console.KeyAvailable) {
+					if(timeout){
+						Console.WriteLine("몬스터 공격!");
+						Console.ReadKey();
+						timeout = false;
+					}
+			   }
+			} while (Console.ReadKey(true).Key != ConsoleKey.Enter);
+			
+			Console.WriteLine("플래이어 공격!");
+			timeFlag = true;
+			Console.ReadKey();
+			task.Wait();
+			timeout = false;
+			timeFlag = false;
+		}
+	}
+	
+	public static void Timer(){
+		for(int i = 0;i<count;i++){
+			if(timeFlag) return;
+			Thread.Sleep(10);
+		}
+		timeout = true;
+	}
+}
+
+
+BDTG.SelectingText(keyInfo);
+			if(keyInfo.Key == ConsoleKey.Enter) //Enter
+			{
+				
+				currentChoice = (String)BDTG.Cho.GetValueOn(BDTG.currentSelectNum);
+
+				if(currentChoice == "end") return backField;
+				
+				if(currentChoice == "movePhase"){ 
+					BDTG.Display(BCC.GetChoiceClone(currentChoice));
+					TimerStart();
+					keyInfo = Console.ReadKey();
+				}
+				else if(!timeOut)
+				{
+					//testLog("Player Turn");
+					timerEnd = true;
+					timer.Wait();
+					PlayerTurn();
+				}
+				else
+				{
+					//testLog("Monster Turn");
+					//timer.Wait();
+					MonsterTurn();	
+				}
+				
+				if(died)
+				{
+					died = false;
+					globerPlayer.Hp = globerPlayer.MaxHp; //살아날때 체력 회복
+					return savePoint;
+				}
+			}
+			else
+			{
+				BDTG.Display(); //Display의 Init()과 choice초기화가 없는 버전
+				keyInfo = Console.ReadKey();
+			}
+			
+			
+			
+			
+			
+			while(!battleAnd)
+		{
+			//testLog("In BattlePhase");
+			do {
+				if(currentChoice != "movePhase"){ break;}
+				while (! Console.KeyAvailable) {
+					//testLog("in KeyAvailable while");
+					if(timeOut){
+						//testLog("timeOut");
+						MonsterTurn();
+					}
+					else{
+						//testLog("KeyAvailable ReadKey");
+						testLog("ReadKey",false);
+						keyInfo = Console.ReadKey();
+						BDTG.SelectingText(keyInfo);
+						BDTG.Display(); //Display의 Init()과 choice초기화가 없는 버전
+						if(keyInfo.Key == ConsoleKey.Enter) break;
+					}
+			    }
+				Thread.Sleep(10);
+				if(keyInfo.Key != ConsoleKey.Enter){
+					
+					keyInfo = Console.ReadKey();
+					BDTG.SelectingText(keyInfo);
+					BDTG.Display(); //Display의 Init()과 choice초기화가 없는 버전
+				}
+			} while (keyInfo.Key != ConsoleKey.Enter);
+			currentChoice = (String)BDTG.Cho.GetValueOn(BDTG.currentSelectNum);
+			//testLog("OutWhile");
+			if(currentChoice == "movePhase"){ 
+				//testLog("movePhase");
+					BDTG.Display(BCC.GetChoiceClone(currentChoice));
+					TimerStart();
+			}else{
+				//testLog("PlayerTurn");
+				timerEnd = true;
+				timer.Wait();
+				PlayerTurn();
+				timeOut = false;
+			}
+			//testLog("10");
+			if(currentChoice == "end") return backField;
+			
+			if(died)
+			{
+				died = false;
+				globerPlayer.Hp = globerPlayer.MaxHp; //살아날때 체력 회복
+				return savePoint;
+			}
+			
+			
+		}
+		
+		return backField;
+	}
