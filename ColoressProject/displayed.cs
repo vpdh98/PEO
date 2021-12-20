@@ -7,6 +7,7 @@ using Game;
 using static Convenience;
 using static Define;
 using static PlayData;
+using Characters;
 
 
 
@@ -111,6 +112,8 @@ public class DisplayTextGame{
 		public List<TextAndPosition> integratedList;	//    "      선택지 선택 값 리스트(다음 choice)
 		public List<TextAndPosition> streamList;		//    "      같은줄에 순차적으로 출력하는 텍스트 리스트
 		public List<TextAndPosition> backgroundList;	//	  " 	 뒷배경 리스트
+		private List<TextAndPosition> spawnMonsterList;//스폰시킬 몬스터 선택지 리스트
+		private Dictionary<int,Object> indicateList;
 		public ChoiceType choiceType;					//선택지 타입
 		
 		public String currentArrowingText;						//현재 선택된 선택지
@@ -182,8 +185,10 @@ public class DisplayTextGame{
 				choiceType = cho.ChoiceType;
 				InputLists();
 				//BackgroundOverlap();
+				SpawnMonster_Random();
 				ListCombiner();
 				SavePointing();
+				
 			}
 		}
 	
@@ -206,10 +211,11 @@ public class DisplayTextGame{
 		}
 		
 		public void InputLists(){
-			selectList = cho.SelectText;
+			selectList = cho.SelectText.ConvertAll(new Converter<TextAndPosition, TextAndPosition>(o => (TextAndPosition)o.Clone()));//복사
 			onlyShowList = cho.OnlyShowText;
 			backgroundList = cho.BackgroundText;
 			streamList = cho.StreamText;
+			indicateList = new Dictionary<int,Object>(cho.IndicateChoice);//복사
 		}
 	
 		public int SearchSamePosition(List<TextAndPosition> list,TextAndPosition text){
@@ -695,5 +701,45 @@ public class DisplayTextGame{
 							Console.ForegroundColor = tempC;
 						}
 				}
+		}
+		
+		public void SpawnMonster_Random(){
+			Choice choice = Cho;
+			if(choice.MonsterList == null)
+			{
+				return;
+			}
+			Random random = new Random();
+			
+			//int count = 0; //2021.09.08추가
+			
+			List<Monster> monsterList = choice.MonsterList;
+			int selectListCount = selectList.Count;
+			int monsterListCount = monsterList.Count;
+			int spawnChance;
+			int firstX = GameManager.selectListFirststPositionX(selectList);
+			int lastY = GameManager.selectListLastPositionY(selectList);
+			int mPositionX = firstX;
+			int mPositionY = lastY+1;
+			for(int i= 0;i<monsterListCount;i++)
+			{
+				if(monsterList[i].IsSpawnOnce) continue;
+				//if(!monsterList[i].IsSpawn)
+				//{
+					spawnChance = monsterList[i].SpawnChance;
+					if(random.Next(1,101) < spawnChance)
+					{
+						alreadySpawnedMonsterList.Add(monsterList[i].Name);//소환한 몬스터를 리스트에 추가
+						selectList.Add(new TextAndPosition(monsterList[i].GetRandomSelectMessage().text,mPositionX,mPositionY++,true));//DTG내부에 복사된 selectList
+						indicateList.Add(selectList.Count-1,monsterList[i].Name);                            //DTG내부에 복사된 indicateList
+						//monsterList[i].IsSpawn = true;
+					}
+				//}
+			}
+			
+		}
+	
+		public Object GetCurrentSelectValue(){
+			return indicateList[currentSelectNum];
 		}
 }

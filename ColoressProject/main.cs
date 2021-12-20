@@ -45,6 +45,8 @@ public static class PlayData{
 	public static CharacterList CList = new CharacterList();
 	public static Choice currentOpenChoice; //현재 Display되고 있는 Choice를 담는변수. 접근에 주의!!
 	public static Choice accessAbleChoice; //접근할 Choice를 담는다
+	
+	public static List<String> alreadySpawnedMonsterList = new List<String>();
 }
 
 
@@ -84,7 +86,7 @@ namespace Game
 			
 			Task.Factory.StartNew(BattleCal);	
 			
-			DTG.Display(GameManager.SpawnMonster_Stay(CC.GetChoice(currentChoice)));
+			DTG.Display(GameManager.SpawnUniqueMonster_Stay(CC.GetChoice(currentChoice)));
 			keyInfo = Console.ReadKey();
 			
 			while(keyInfo.Key != ConsoleKey.Escape)
@@ -94,7 +96,7 @@ namespace Game
 				
 				if(keyInfo.Key == ConsoleKey.Enter) //Enter
 				{
-					currentChoice = (String)DTG.Cho.GetValueOn(DTG.currentSelectNum);
+					currentChoice = (String)DTG.GetCurrentSelectValue();
 
 					if(CList.GetMonster(currentChoice) != null){ currentChoice = BattlePhase(player,CList.GetMonster(currentChoice),DTG.Cho.Name); } //currentChoice에 현제 선택된 몬스터 이름이 들어가 있음 //8.23
 					DTG.Cho.LeaveChoice();
@@ -103,7 +105,7 @@ namespace Game
 					
 					if(CC.GetChoiceClone(currentChoice).ChoiceType == ChoiceType.QUICKNEXT) { runQuickNext(); } //QUICKNEXT구현을 위해 추가된 if문
 					
-					DTG.Display(GameManager.SpawnMonster_Stay(CC.GetChoice(currentChoice)));
+					DTG.Display(GameManager.SpawnUniqueMonster_Stay(CC.GetChoice(currentChoice)));
 					keyInfo = Console.ReadKey();
 				}
 				else
@@ -132,7 +134,7 @@ namespace Game
 			accessAbleChoice = tcho;
 			DTG.Cho.QuickRun(); //delegate실행
 			DTG.Cho.QuickDelegate = ()=>{}; //한번만 실행되도록 비움
-			DTG.Display(GameManager.SpawnMonster_Stay(tcho));
+			DTG.Display(GameManager.SpawnUniqueMonster_Stay(tcho));
 		}
 		
 	}	
@@ -141,7 +143,7 @@ namespace Game
 	public static class GameManager
 	{
 		
-		public static Choice SpawnMonster_Stay(Choice choice)
+		public static Choice SpawnUniqueMonster_Stay(Choice choice)
 		{ //몬스터 선택지가 중앙에 있는 기존 선택지 마지막 열 다음으로 들어가도록 해주는 메소드
 			if(choice.MonsterList == null)
 			{
@@ -162,11 +164,15 @@ namespace Game
 			int mPositionY = lastY+1;
 			for(int i= 0;i<monsterListCount;i++)
 			{
+				if(!monsterList[i].IsSpawnOnce) continue; //한번만 스폰되는 몬스터를 통과시킨다.
+				if(alreadySpawnedMonsterList.Contains(monsterList[i].Name)) continue; //이미 소환됫던 몬스터는 컷
+				
 				if(!monsterList[i].IsSpawn)
 				{
 					spawnChance = monsterList[i].SpawnChance;
 					if(random.Next(1,101) < spawnChance)
 					{
+						alreadySpawnedMonsterList.Add(monsterList[i].Name);//소환한 몬스터를 리스트에 추가
 						//monsterList[i].MonsterInfo();
 						Console.WriteLine(monsterList[i].Name);//@@@@@@@@@@@@@@@@@@@@@@
 						selectList.Add(new TextAndPosition(monsterList[i].GetRandomSelectMessage().text,mPositionX,mPositionY++,true));
@@ -179,7 +185,7 @@ namespace Game
 			return choice;
 		}
 		
-		static int selectListLastPositionX(List<TextAndPosition> sellist)
+		public static int selectListLastPositionX(List<TextAndPosition> sellist)
 		{
 			int lastNum = 0;
 			foreach(TextAndPosition tap in sellist){
@@ -189,7 +195,7 @@ namespace Game
 			}
 			return lastNum;
 		}
-		static int selectListLastPositionY(List<TextAndPosition> sellist)
+		public static int selectListLastPositionY(List<TextAndPosition> sellist)
 		{
 			int lastNum = 0;
 			foreach(TextAndPosition tap in sellist)
@@ -201,7 +207,7 @@ namespace Game
 			}
 			return lastNum;
 		}
-		static int selectListFirststPositionX(List<TextAndPosition> sellist)
+		public static int selectListFirststPositionX(List<TextAndPosition> sellist)
 		{
 			int firstNum = 9999;
 			foreach(TextAndPosition tap in sellist)
@@ -213,7 +219,7 @@ namespace Game
 			}
 			return firstNum;
 		}
-		static int selectListFirstPositionY(List<TextAndPosition> sellist)
+		public static int selectListFirstPositionY(List<TextAndPosition> sellist)
 		{
 			int firstNum = 9999;
 			foreach(TextAndPosition tap in sellist)
@@ -837,3 +843,23 @@ QuickDelegate = ()=>{
 //그리고 DTG내부에서 MonsterList를 따로 관리해야 할 듯 하다.
 
 //Console.KeyAvailable라는 변수로 키가 버퍼에 입력 되었는지 확인할 수 있다는 정보를 얻음. 이게 된다면 플레이어가 따로 입력하지 않아도 몬스터가 공격하게됨. 실험해봐야겠음.
+
+//2021.12.19
+//오늘은 배틀시스템을 좀더 자연스러운 방식으로 손봤다.
+//Console.KeyAvailable을 통해 플레이어의 입력이 없어도 몬스터의 공격이 실행되도록 했다.
+//그러기 위해서 BattlePhase의 루프를 거의 완전히 바꿧다.
+
+//2021.12.20
+//오늘은 몬스터 스폰을 구현해 봐야겠다.
+//더 생각을 해보니 사실상 1번과 2-1번만 있으면 될 것 같다.
+//한번만 소환되는 몬스터는 보스등 유니크한 몬스터일 것이고
+//무한 스폰되는 몬스터는 잡몹일 것이기 때문이다.
+//SpawnMonster_Stay를 손봐서 한번만 스폰되고 그 장소에 머무르는 몬스터를 스폰시키고
+//DisplayTextGame내부에서 무한 스폰 되는 몬스터를 관리하는 List를 따로 만들어 스폰시켜야 겠다.
+//전역 변수로 alreadySpawnedMonsterList를 만들어 한번이라도 스폰된 몬스터를 여기 담으려고 한다.
+
+//SpawnMonster_Stay를 SpawnUniqueMonster_Stay로 바꾸어 Monster 클래스에 추가한 isSpawnOnce가 true인 몬스터 객체만 한번만 스폰되도록 하였고
+//DisplayTextGame안에 selectList와 indicateList를 따로 만들어 choice의 리스트를 딥 카피 한 후 
+//각각 리스트에 DisplayTextGame내부에서 따로 spawn한 몬스터 리스트를 추가해서 Choice가 DTG에 초기화 될때마다 새로 스폰하도록 했다.
+//현재 플레이어가 맞아 죽을때 Battle내부에서 초기화 해야될 값과
+//유일 몬스터를 잡았을때 없에는 기능을 추가해야 한다.

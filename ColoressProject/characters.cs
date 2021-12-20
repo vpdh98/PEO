@@ -272,7 +272,9 @@ namespace Characters
 	public class Monster : Character,IDamageable,ICharacterState
 	{
 		public int SpawnChance{get;set;}
-		public bool IsSpawn{get;set;} = false;
+		public bool IsSpawn{get;set;} = false; 			//필드에 몬스터가 이미 있는지 확인하기 위한 변수
+		public bool IsSpawnOnce{get;set;} = false;		//이 몬스터가 한번만 스폰되는 몬스터인지를 나타내는 변수
+		
 		
 		
 		
@@ -403,6 +405,7 @@ namespace Characters
 		protected Monster(Monster that):base(that){
 			this.SpawnChance = that.SpawnChance;
 			this.IsSpawn = that.IsSpawn;
+			this.IsSpawnOnce = that.IsSpawnOnce;
 			this.SelectMessage = new List<TextAndPosition>();
 			this.SpawnMessage = new List<TextAndPosition>();
 			this.StateMessage = new List<TextAndPosition>();
@@ -714,6 +717,7 @@ namespace Characters
 				Defense = 5,
 				SpawnChance = 0,
 				AttackSpeed = 3,
+				IsSpawnOnce = true,
 				SelectMessage = new List<TextAndPosition> 
 				{new TextAndPosition("야생의 경민이!!!!",10),
 				new TextAndPosition("뭐지..? 경민..?",10),

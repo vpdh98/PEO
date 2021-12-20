@@ -38,6 +38,8 @@ public class Choice : ICloneable //선택지 부여 하는 클래스
 	private List<Monster> monsterList;
 	private List<NPC> npcList;
 	private ChoiceType choiceType;
+	
+	
 		
 	public Choice(){
 		selectTextNum = 0;

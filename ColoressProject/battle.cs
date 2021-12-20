@@ -197,7 +197,7 @@ public static class BattleSystem{
 		while(true){
 			keyInfo = Console.ReadKey();
 			if(keyInfo.Key == ConsoleKey.Enter){
-				currentChoice = (String)BDTG.Cho.GetValueOn(BDTG.currentSelectNum);
+				currentChoice = (String)BDTG.GetCurrentSelectValue();
 				if(currentChoice == "end") return backField;
 				BDTG.Display(BCC.GetChoiceClone(currentChoice));
 				break;
@@ -208,6 +208,14 @@ public static class BattleSystem{
 		
 		while(!battleAnd)
 		{
+			if(died)
+			{
+				died = false;
+				globerPlayer.Hp = globerPlayer.MaxHp; //살아날때 체력 회복
+				timeOut = false;
+				count = 0;
+				return savePoint;
+			}
 			TimerStart();
 			while(true){
 				Thread.Sleep(10);
@@ -216,6 +224,8 @@ public static class BattleSystem{
 				{
 					died = false;
 					globerPlayer.Hp = globerPlayer.MaxHp; //살아날때 체력 회복
+					timeOut = false;
+					count = 0;
 					return savePoint;
 				}
 				if(Console.KeyAvailable) break;
@@ -223,7 +233,7 @@ public static class BattleSystem{
 			keyInfo = Console.ReadKey();
 			BDTG.SelectingText(keyInfo);
 			if(keyInfo.Key == ConsoleKey.Enter){
-				currentChoice = (String)BDTG.Cho.GetValueOn(BDTG.currentSelectNum);
+				currentChoice = (String)BDTG.GetCurrentSelectValue();
 				
 				if(currentChoice == "movePhase") continue;
 				timerEnd = true;
@@ -287,6 +297,7 @@ public static class BattleSystem{
 					if(globerPlayer.Hp <= 0){ 
 						//testLog("in die");
 						died = true;
+						timeOut = false;
 						return;
 					}
 					turnAnd = true;
@@ -319,6 +330,7 @@ public static class BattleSystem{
 					if(globerPlayer.Hp <= 0){ 
 						//testLog("in die");
 						died = true;
+						timeOut = false;
 						return;
 					}
 					turnAnd = true;
