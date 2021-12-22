@@ -265,5 +265,11 @@ public class ChoiceControler{
 		cho.MonsterList.Add(monster);
 		return cho;
 	}
+	
+	public void RemoveChoiceSelectList(String choiceName,int selectIndex){
+		Choice choice = choiceDictionary[choiceName];
+		choice.SelectText.RemoveAt(selectIndex);
+		choice.IndicateChoice.Remove(selectIndex);
+	}
 		
 }

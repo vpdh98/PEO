@@ -142,6 +142,8 @@ public class DisplayTextGame{
 			integratedList = new List<TextAndPosition>();
 			streamList = new List<TextAndPosition>();
 			backgroundList = new List<TextAndPosition>();
+			indicateList = new Dictionary<int,Object>();
+			spawnMonsterList = new List<TextAndPosition>();
 			
 			if(SelectInit){
 				currentSelectNum = 0;
@@ -721,6 +723,7 @@ public class DisplayTextGame{
 			int lastY = GameManager.selectListLastPositionY(selectList);
 			int mPositionX = firstX;
 			int mPositionY = lastY+1;
+			
 			for(int i= 0;i<monsterListCount;i++)
 			{
 				if(monsterList[i].IsSpawnOnce) continue;
@@ -731,7 +734,10 @@ public class DisplayTextGame{
 					{
 						alreadySpawnedMonsterList.Add(monsterList[i].Name);//소환한 몬스터를 리스트에 추가
 						selectList.Add(new TextAndPosition(monsterList[i].GetRandomSelectMessage().text,mPositionX,mPositionY++,true));//DTG내부에 복사된 selectList
+						
+						//!@#!@#@!$%!@#$!@#$
 						indicateList.Add(selectList.Count-1,monsterList[i].Name);                            //DTG내부에 복사된 indicateList
+						
 						//monsterList[i].IsSpawn = true;
 					}
 				//}

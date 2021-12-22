@@ -82,4 +82,13 @@ public static class Convenience{
 			Console.WriteLine("[{0}]: {1}",count,d.ToString());
 		}
 	}
+	
+	public static T FindKeyByValue<T,G>(Dictionary<T,G> dictionary,G toFind){
+		foreach (KeyValuePair<T,G> pair in dictionary){
+			if(pair.Value.Equals(toFind)){
+				return pair.Key;
+			}
+		}
+		return default(T);
+	}
 }

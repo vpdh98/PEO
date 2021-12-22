@@ -33,6 +33,7 @@ public static class Define
 		public const int SCREEN_HEIGHT = 20;
 		public const int SCREEN_POS_X = 60;
 		public const int SCREEN_POS_Y = 8;
+		public delegate void Event();
 }
 
 public static class ItemData{
@@ -47,6 +48,8 @@ public static class PlayData{
 	public static Choice accessAbleChoice; //접근할 Choice를 담는다
 	
 	public static List<String> alreadySpawnedMonsterList = new List<String>();
+	
+	public static ChoiceControler WorldMap = new ChoiceControler(new Scenario());
 }
 
 
@@ -56,11 +59,11 @@ namespace Game
 {
 	public class main
 	{
-		public delegate void AttackMethod(Character Attacker,Character Defender);
-		public static AttackMethod attack;
+		//public delegate void AttackMethod(Character Attacker,Character Defender);
+		//public static AttackMethod attack;
 		static ConsoleKeyInfo keyInfo;
 		static DisplayTextGame DTG = new DisplayTextGame();
-		static ChoiceControler CC = new ChoiceControler(new Scenario());
+		
 		public static Player player = CList.GetPlayer("용사");
 		
 		public static void Main()
@@ -86,7 +89,7 @@ namespace Game
 			
 			Task.Factory.StartNew(BattleCal);	
 			
-			DTG.Display(GameManager.SpawnUniqueMonster_Stay(CC.GetChoice(currentChoice)));
+			DTG.Display(GameManager.SpawnUniqueMonster_Stay(WorldMap.GetChoice(currentChoice)));
 			keyInfo = Console.ReadKey();
 			
 			while(keyInfo.Key != ConsoleKey.Escape)
@@ -101,11 +104,10 @@ namespace Game
 					if(CList.GetMonster(currentChoice) != null){ currentChoice = BattlePhase(player,CList.GetMonster(currentChoice),DTG.Cho.Name); } //currentChoice에 현제 선택된 몬스터 이름이 들어가 있음 //8.23
 					DTG.Cho.LeaveChoice();
 					
-					if(CC.GetChoiceClone(currentChoice).ChoiceType == ChoiceType.QUICK) { runQuick(); }  //QUICK구현을 위해 추가된 if문
+					if(WorldMap.GetChoiceClone(currentChoice).ChoiceType == ChoiceType.QUICK) { runQuick(); }  //QUICK구현을 위해 추가된 if문
 					
-					if(CC.GetChoiceClone(currentChoice).ChoiceType == ChoiceType.QUICKNEXT) { runQuickNext(); } //QUICKNEXT구현을 위해 추가된 if문
-					
-					DTG.Display(GameManager.SpawnUniqueMonster_Stay(CC.GetChoice(currentChoice)));
+					if(WorldMap.GetChoiceClone(currentChoice).ChoiceType == ChoiceType.QUICKNEXT) { runQuickNext(); } //QUICKNEXT구현을 위해 추가된 if문
+					DTG.Display(GameManager.SpawnUniqueMonster_Stay(WorldMap.GetChoice(currentChoice)));
 					keyInfo = Console.ReadKey();
 				}
 				else
@@ -120,17 +122,17 @@ namespace Game
 		
 		public static void runQuickNext()
 		{
-			DTG.Display(CC.GetChoiceClone(currentChoice));
-			currentChoice = (String)CC.GetChoiceClone(currentChoice).QuickNext();
+			DTG.Display(WorldMap.GetChoiceClone(currentChoice));
+			currentChoice = (String)WorldMap.GetChoiceClone(currentChoice).QuickNext();
 			Thread.Sleep(2000);
 			//keyInfo = Console.ReadKey();
 		}
 		
 		public static void runQuick()
 		{
-			DTG.Cho = CC.GetChoice(currentChoice);
-			currentChoice = (String)CC.GetChoiceClone(currentChoice).QuickNext();
-			Choice tcho = CC.GetChoice(currentChoice);
+			DTG.Cho = WorldMap.GetChoice(currentChoice);
+			currentChoice = (String)WorldMap.GetChoiceClone(currentChoice).QuickNext();
+			Choice tcho = WorldMap.GetChoice(currentChoice);
 			accessAbleChoice = tcho;
 			DTG.Cho.QuickRun(); //delegate실행
 			DTG.Cho.QuickDelegate = ()=>{}; //한번만 실행되도록 비움
@@ -250,6 +252,12 @@ namespace Game
 			{
 				main.player.Hp += ((Potion)item).Hp;
 			}
+		}
+		
+		public static void DespawnMonster(String monsterName, Choice targetChoice){
+			int index = FindKeyByValue(targetChoice.IndicateChoice,monsterName);
+			targetChoice.SelectText.RemoveAt(index);
+			targetChoice.IndicateChoice.Remove(index);
 		}
 		
 	}
@@ -863,3 +871,42 @@ QuickDelegate = ()=>{
 //각각 리스트에 DisplayTextGame내부에서 따로 spawn한 몬스터 리스트를 추가해서 Choice가 DTG에 초기화 될때마다 새로 스폰하도록 했다.
 //현재 플레이어가 맞아 죽을때 Battle내부에서 초기화 해야될 값과
 //유일 몬스터를 잡았을때 없에는 기능을 추가해야 한다.
+
+//2021.12.22
+//오늘은 몬스터를 없에는 기능과
+//몬스터를 잡았을때 특정 이벤트 또는 원하는 장소로 돌아가는 기능을 추가해 보도록 하겠다.
+//유일 몬스터를 스폰하기 위해 정보가 추가되는 곳은
+//1.Choice.SelectList(List<TextAndPosition>)
+//2.Choice.indicateList(List<Object>)
+//위 두 리스트 이다.
+//Choice를 SpawnUniqueMonster_Stayd에 넣으면 Choice.MonsterList에서 몬스터 목록을 가져와
+//SelectList와 indicateList에 추가 시킨다.
+//그럼 몬스터를 없에기 위해서는 위 두 리스트에서 해당 몬스터를 제거 시켜야한다.
+//indicateList에 몬스터 이름이 값으로 들어가므로 indicateList의 이름과 battlePhase에 있는 몬스터의 이름이 일치하는 index를 구해서 없에면 될것 같다.
+
+//그대로 구현에 성공했다.
+//PlayData에 WorldMap을 추가해 게임 진행내내 진행되는 Choice를 한꺼번에 담아 관리하기로 했다.
+
+//다음은 특정 이벤트 발생이다.
+//이건 몬스터 객체에 delegate를 추가해야 할것 같다.
+//어떤 방식으로 구현할지 고민해보았다.
+//몬스터 객체에 delegate를 넣어도 다양한 이벤트를 발생시키려면
+//메소드 밖에 있는 여러 변수에 접글이 가능하게 해야 할텐데.
+//그럼 코드의 은닉성이 훼손될 우려가 있다.
+//스스로 규칙을 정할 필요가 있다.
+//그래서 생각한 것이 어짜피 monster객체는 battlePhase내에서만 생성되고 소멸하므로
+//battlePhase내부의 변수에 접근하는 코드로만 delegate를 만들고
+//다음에 갈 choice를 바꿀 수 있도록 하는 코드로만 짜기로 하였다.
+//battlePhase에 backField 변수만 바꿔주는 식으로 짜면 될 것이다.
+//추가로 choice의 값도 건드려야 할것 같다.
+//Define에 delegate void Event()를 추가해 범용적으로 쓸수 있게 하였다.
+//Monster객체 안에 Event타입 delegate DeathEvent를 추가해 구현했다.
+//DeathEvent에서 바꿀 수 있는 값
+//1.backField 값
+//2.WorldMap안에 있는 Choice의 값
+
+//간과한 점이 하나 있었다.
+//indicateList는 key와 value로 값을 저장하는 dictionary인데 
+//여기서 중간값을빼면 키값이 1,3처럼 중간이 비게되어 선택지를 추가하는 기능이 제데로 작동되지 않는다.
+//일단 runtime으로 indicateList의 값을 바꾸는 SpawnMonster_Random안에 indicateList의 키값 중복체크해서 인덱스를 따로 결정하는 기능을 넣어야겠다.
+//오늘은 시간이 다되서 이만

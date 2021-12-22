@@ -219,9 +219,9 @@ namespace Characters
 			double powerGap = (finalDamage / hp)*100;
 			
 			
-			testLog("finalDamage: "+finalDamage);
-			testLog("hp: "+hp);
-			testLog("powerGap: "+powerGap);
+			//testLog("finalDamage: "+finalDamage);
+			//testLog("hp: "+hp);
+			//testLog("powerGap: "+powerGap);
 			
 			if(100 <= powerGap || powerGap < 0)
 				return DIED;
@@ -276,7 +276,7 @@ namespace Characters
 		public bool IsSpawnOnce{get;set;} = false;		//이 몬스터가 한번만 스폰되는 몬스터인지를 나타내는 변수
 		
 		
-		
+		public Define.Event DeathEvent{get;set;} = null;
 		
 		
 		public List<TextAndPosition> SelectMessage{get;set;}
@@ -415,6 +415,8 @@ namespace Characters
 			this.PlayerReactionMessage = new List<TextAndPosition>();
 			this.PreAttackMessage = new List<TextAndPosition>();
 			this.AttackMessage = new List<TextAndPosition>();
+			
+			this.DeathEvent = that.DeathEvent;
 			
 			this.DropItems = that.DropItems;
 			
@@ -761,6 +763,11 @@ namespace Characters
 				
 				AttackMessage = new List<TextAndPosition>(){
 					new TextAndPosition("경민이의 배치기!!!",10)
+				},
+				
+				DeathEvent = ()=>{
+					DamageSystem.backField = "c2";
+					PlayData.WorldMap.RemoveChoiceSelectList("c2",3);
 				}
 			};
 			MonsterList.Add(monster.Name,monster);

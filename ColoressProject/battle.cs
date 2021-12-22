@@ -3,6 +3,7 @@ using Characters;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Game;
 using static Convenience;
 using static DamageSystem;
 using static GameWindows;
@@ -246,7 +247,6 @@ public static class BattleSystem{
 			
 			
 		}
-		
 		return backField;
 	}
 	
@@ -368,6 +368,12 @@ public static class BattleSystem{
 				AlertWindow(i.Name+" 획득!",windowXPos:rx,windowYPos:ry, textXPos:0,textYPos:9,background:5,delay:10,color:ConsoleColor.DarkYellow);
 			}
 			Console.ReadKey();
+			
+			
+			GameManager.DespawnMonster(globerMonster.Name,PlayData.WorldMap.GetChoice(backField));
+			if(globerMonster.DeathEvent != null)
+				globerMonster.DeathEvent();		//여기서 backField에 접근하므로 DespawnMonster가 먼저 실행되어야한다.
+				
 			battleAnd = true;
 			turnAnd = true;
 		}
