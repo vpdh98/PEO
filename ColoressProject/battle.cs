@@ -369,8 +369,9 @@ public static class BattleSystem{
 			}
 			Console.ReadKey();
 			
+			if(globerMonster.IsSpawnOnce)
+				GameManager.DespawnMonster(globerMonster.Name,PlayData.WorldMap.GetChoice(backField));
 			
-			GameManager.DespawnMonster(globerMonster.Name,PlayData.WorldMap.GetChoice(backField));
 			if(globerMonster.DeathEvent != null)
 				globerMonster.DeathEvent();		//여기서 backField에 접근하므로 DespawnMonster가 먼저 실행되어야한다.
 				

@@ -910,3 +910,16 @@ QuickDelegate = ()=>{
 //여기서 중간값을빼면 키값이 1,3처럼 중간이 비게되어 선택지를 추가하는 기능이 제데로 작동되지 않는다.
 //일단 runtime으로 indicateList의 값을 바꾸는 SpawnMonster_Random안에 indicateList의 키값 중복체크해서 인덱스를 따로 결정하는 기능을 넣어야겠다.
 //오늘은 시간이 다되서 이만
+
+//2021.12.23
+//중복체크 기능을 추가했다.
+//값을 하나씩 증가시키면서 indicateList안에 키값이 중복되는지 체크하고
+//중복되지 않는 값이 나오면 그 값으로 selectList와 indicateList에 insert해서 추가하도록 만들었다.
+//그런데 여기서 문제가 하나더 생겼다.
+// 0,1,2,3,4에 맞춰 selectList와 indicateList에 인덱스와 키값에 따른 value가 들어가 있었는데
+//만약 3이 삭제 되고 그 자리에 아무것도 추가되지 않는다면
+//selectList의 index는 0,1,2,3 이 되지만 indicateList의 키값은 0,1,2,4 가 되어서 3을 선택했을때 KeyNotFoundException이 뜨게 된다.
+//해결해보자.
+//DisplayTextGame에서 List들을 초기화할때 indicateList를 재정렬 해주는 메소드를 추가해 해결했다.
+//0,1,2,4이런식으로 키값이 들어있는 Dictionary를 넣으면 0,1,2,3처럼 만들어 준다.
+//결과적으로 키값의 중복체크기능은 무용지물이 됬다. 하지만 없에진 않으려고 한다.

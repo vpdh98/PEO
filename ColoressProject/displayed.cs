@@ -218,6 +218,7 @@ public class DisplayTextGame{
 			backgroundList = cho.BackgroundText;
 			streamList = cho.StreamText;
 			indicateList = new Dictionary<int,Object>(cho.IndicateChoice);//복사
+			indicateList = DictionaryRearrangement(indicateList);//indicateList재정렬 
 		}
 	
 		public int SearchSamePosition(List<TextAndPosition> list,TextAndPosition text){
@@ -724,6 +725,8 @@ public class DisplayTextGame{
 			int mPositionX = firstX;
 			int mPositionY = lastY+1;
 			
+			int countForContainsCheck = 0;
+			
 			for(int i= 0;i<monsterListCount;i++)
 			{
 				if(monsterList[i].IsSpawnOnce) continue;
@@ -732,11 +735,20 @@ public class DisplayTextGame{
 					spawnChance = monsterList[i].SpawnChance;
 					if(random.Next(1,101) < spawnChance)
 					{
+						for(countForContainsCheck = 0;countForContainsCheck<selectList.Count+1;countForContainsCheck++){ //indicateList의 중복된 키가 있는지 확인
+							if(!indicateList.ContainsKey(countForContainsCheck)){
+								break;
+							}
+						}
+						
+						
+						
 						alreadySpawnedMonsterList.Add(monsterList[i].Name);//소환한 몬스터를 리스트에 추가
-						selectList.Add(new TextAndPosition(monsterList[i].GetRandomSelectMessage().text,mPositionX,mPositionY++,true));//DTG내부에 복사된 selectList
+						selectList.Insert(countForContainsCheck,new TextAndPosition(monsterList[i].GetRandomSelectMessage().text,mPositionX,mPositionY++,true));//DTG내부에 복사된 selectList
 						
 						//!@#!@#@!$%!@#$!@#$
-						indicateList.Add(selectList.Count-1,monsterList[i].Name);                            //DTG내부에 복사된 indicateList
+						
+						indicateList.Add(countForContainsCheck,monsterList[i].Name);                            //DTG내부에 복사된 indicateList
 						
 						//monsterList[i].IsSpawn = true;
 					}
@@ -747,5 +759,21 @@ public class DisplayTextGame{
 	
 		public Object GetCurrentSelectValue(){
 			return indicateList[currentSelectNum];
+		}
+	
+		public Dictionary<int,Object> DictionaryRearrangement(Dictionary<int,Object> dic)
+		{ //dictionary를 재정렬 한다. 1,2,3,5 키값이 이런식으로 되있을경우 0,1,2,3이런식으로 바꾼다.
+			Dictionary<int,Object> newDic = new Dictionary<int,Object>();
+			int count = 0;
+			for(int i = 0;i<dic.Count;i++){
+				if(dic.ContainsKey(i)){
+					newDic.Add(i,dic[i]);
+				}
+				else{
+					count++;
+					newDic.Add(i,dic[i+count]);
+				}
+			}
+			return newDic;
 		}
 }
