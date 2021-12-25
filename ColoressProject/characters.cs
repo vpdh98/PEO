@@ -264,12 +264,12 @@ namespace Characters
 		}
 	}
 	
-	//*Monster클래스 수정시 주의사항*
+	//*Enemy클래스 수정시 주의사항*
 	//몬스터와 상호작용으로 발생하는 메세지들은 ~~Message로 명명한다
 	//Message류의 필드를 추가할때는 
 	//1.getter,setter 만들기 2.복사생성자 안에서 초기화해준후 copy구문 추가시키기
 	//를 반드시 해준다.
-	public class Monster : Character,IDamageable,ICharacterState
+	public class Enemy : Character,IDamageable,ICharacterState
 	{
 		public int SpawnChance{get;set;}
 		public bool IsSpawn{get;set;} = false; 			//필드에 몬스터가 이미 있는지 확인하기 위한 변수
@@ -292,7 +292,7 @@ namespace Characters
 		
 		public List<Item> DropItems{get;set;}
 	
-		public Monster(){
+		public Enemy(){
 			SelectMessage = new List<TextAndPosition>(){ new TextAndPosition(Name,10)};
 			SpawnMessage = new List<TextAndPosition>(){new TextAndPosition(Name+"이다.",10)};
 			BlockMessage = new List<TextAndPosition>(){ new TextAndPosition("막기성공",10),new TextAndPosition("막기실패",10)};
@@ -304,7 +304,7 @@ namespace Characters
 			DropItems = new List<Item>();
 		}
 		
-		public Monster(string name,int hp,int mp,int attack_power,int defense,int attack_speed):base(name,hp,mp,attack_power,defense,attack_speed){}
+		public Enemy(string name,int hp,int mp,int attack_power,int defense,int attack_speed):base(name,hp,mp,attack_power,defense,attack_speed){}
 		
 		override public AttackInfo Attack(){
 			AttackInfo aInfo = new AttackInfo();
@@ -402,7 +402,7 @@ namespace Characters
 			return tList;
 		}
 		
-		protected Monster(Monster that):base(that){
+		protected Enemy(Enemy that):base(that){
 			this.SpawnChance = that.SpawnChance;
 			this.IsSpawn = that.IsSpawn;
 			this.IsSpawnOnce = that.IsSpawnOnce;
@@ -441,10 +441,10 @@ namespace Characters
 		}
 		
 		override public Object Clone(){
-			return new Monster(this);
+			return new Enemy(this);
 		}
 		
-		public void MonsterInfo(){
+		public void EnemyInfo(){
 			foreach(TextAndPosition m in SelectMessage){
 				Console.WriteLine(m.text);
 			}
@@ -461,23 +461,10 @@ namespace Characters
 		}
 	}
 	
-	public class NPC : Character,IDamageable,ICharacterState
+	public class NPC : Enemy,IDamageable,ICharacterState
 	{
 		public NPC(){}
 		public NPC(string name,int hp,int mp,int attack_power,int defense,int attack_speed):base(name,hp,mp,attack_power,defense,attack_speed){}
-		
-		override public AttackInfo Attack(){
-			AttackInfo aInfo = new AttackInfo();
-			aInfo.FinalDamage = AttackPower;
-		 	return aInfo;
-		}
-		
-		override public AttackInfo Damage(AttackInfo attack_info){
-			AttackInfo aInfo = attack_info;
-			aInfo.CalDamage(Defense);
-			Hp -= aInfo.FinalDamage;
-			return aInfo;
-		}
 		
 		public string CurrentState(){
 			return "";
@@ -495,15 +482,15 @@ namespace Characters
 	
 	public class CharacterList{
 		Dictionary<String,Player> PlayerList{get;set;}
-		Dictionary<String,Monster> MonsterList{get;set;}
+		Dictionary<String,Enemy> EnemyList{get;set;}
 		Dictionary<String,NPC> NPCList{get;set;}
 		Player player;
-		Monster monster;
+		Enemy enemy;
 		NPC NPC;
 		
 		public CharacterList(){
 			PlayerList = new Dictionary<String,Player>();
-			MonsterList = new Dictionary<String,Monster>();
+			EnemyList = new Dictionary<String,Enemy>();
 			NPCList = new Dictionary<String,NPC>();
 			///////////////////Player/////////////////////////////
 			player = new Player(){
@@ -519,7 +506,7 @@ namespace Characters
 			PlayerList.Add(player.Name,player);
 			
 			
-			///////////////////Monster/////////////////////////////
+			///////////////////Enemy/////////////////////////////
 			/*
 				몬스터 객체 추가시 필수로 초기화 해 주어야 할 것
 				1.능력치
@@ -527,7 +514,7 @@ namespace Characters
 				2.메세지
 				SelectMessage,SpawnMessage,BlockMessage,DodgeMessage,ReactionMessage,PreAttackMessage,AttackMessage,
 			*/
-			monster = new Monster(){
+			enemy = new Enemy(){
 				Name = "슬라임",
 				MaxHp = 10,
 				Hp = 10,
@@ -595,9 +582,9 @@ namespace Characters
 					itemList.GetItem("전설의검",100)
 				}
 			};
-			MonsterList.Add(monster.Name,monster);
+			EnemyList.Add(enemy.Name,enemy);
 			
-			monster = new Monster(){
+			enemy = new Enemy(){
 				Name = "뒤틀린 망자",
 				MaxHp = 10,
 				Hp = 10,
@@ -652,9 +639,9 @@ namespace Characters
 					new TextAndPosition("망자의 손톱 할퀴기!",10)
 				}
 			};
-			MonsterList.Add(monster.Name,monster);
+			EnemyList.Add(enemy.Name,enemy);
 			
-			monster = new Monster(){
+			enemy = new Enemy(){
 				Name = "헐크",
 				MaxHp = 10000,
 				Hp = 10000,
@@ -708,9 +695,9 @@ namespace Characters
 					new TextAndPosition("헐크의 주먹 내려치기!",10)
 				}
 			};
-			MonsterList.Add(monster.Name,monster);
+			EnemyList.Add(enemy.Name,enemy);
 			
-			monster = new Monster(){
+			enemy = new Enemy(){
 				Name = "야생의 경민이",
 				MaxHp = 100,
 				Hp = 100,
@@ -770,33 +757,33 @@ namespace Characters
 					PlayData.WorldMap.RemoveChoiceSelectList("c2",3);
 				}
 			};
-			MonsterList.Add(monster.Name,monster);
+			EnemyList.Add(enemy.Name,enemy);
 			
 			
 			///////////////////NPC/////////////////////////////
 		}
 		
-		public Monster GetMonsterOriginal(String name){
+		public Enemy GetEnemyOriginal(String name){
 			try{
-				return MonsterList[name];
+				return EnemyList[name];
 			}catch(Exception e){
 				Console.WriteLine(e);
 				return null;
 			}
 		}
 		
-		public Monster GetMonster(String name){
+		public Enemy GetEnemy(String name){
 			try{
-				return (Monster)MonsterList[name].Clone();
+				return (Enemy)EnemyList[name].Clone();
 			}catch(Exception e){
 				Console.WriteLine(e);
 				return null;
 			}
 		}
 		
-		public Monster GetMonster(String name,int spawn){
+		public Enemy GetEnemy(String name,int spawn){
 			try{
-				Monster mons = (Monster)MonsterList[name].Clone();
+				Enemy mons = (Enemy)EnemyList[name].Clone();
 				mons.SpawnChance = spawn;
 				return mons;
 			}catch(Exception e){

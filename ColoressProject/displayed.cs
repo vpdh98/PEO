@@ -112,7 +112,7 @@ public class DisplayTextGame{
 		public List<TextAndPosition> integratedList;	//    "      선택지 선택 값 리스트(다음 choice)
 		public List<TextAndPosition> streamList;		//    "      같은줄에 순차적으로 출력하는 텍스트 리스트
 		public List<TextAndPosition> backgroundList;	//	  " 	 뒷배경 리스트
-		private List<TextAndPosition> spawnMonsterList;//스폰시킬 몬스터 선택지 리스트
+		private List<TextAndPosition> spawnEnemyList;//스폰시킬 몬스터 선택지 리스트
 		private Dictionary<int,Object> indicateList;
 		public ChoiceType choiceType;					//선택지 타입
 		
@@ -143,7 +143,7 @@ public class DisplayTextGame{
 			streamList = new List<TextAndPosition>();
 			backgroundList = new List<TextAndPosition>();
 			indicateList = new Dictionary<int,Object>();
-			spawnMonsterList = new List<TextAndPosition>();
+			spawnEnemyList = new List<TextAndPosition>();
 			
 			if(SelectInit){
 				currentSelectNum = 0;
@@ -187,7 +187,7 @@ public class DisplayTextGame{
 				choiceType = cho.ChoiceType;
 				InputLists();
 				//BackgroundOverlap();
-				SpawnMonster_Random();
+				SpawnEnemy_Random();
 				ListCombiner();
 				SavePointing();
 				
@@ -706,9 +706,9 @@ public class DisplayTextGame{
 				}
 		}
 		
-		public void SpawnMonster_Random(){
+		public void SpawnEnemy_Random(){
 			Choice choice = Cho;
-			if(choice.MonsterList == null)
+			if(choice.EnemyList == null)
 			{
 				return;
 			}
@@ -716,7 +716,7 @@ public class DisplayTextGame{
 			
 			//int count = 0; //2021.09.08추가
 			
-			List<Monster> monsterList = choice.MonsterList;
+			List<Enemy> monsterList = choice.EnemyList;
 			int selectListCount = selectList.Count;
 			int monsterListCount = monsterList.Count;
 			int spawnChance;
@@ -743,7 +743,7 @@ public class DisplayTextGame{
 						
 						
 						
-						alreadySpawnedMonsterList.Add(monsterList[i].Name);//소환한 몬스터를 리스트에 추가
+						alreadySpawnedEnemyList.Add(monsterList[i].Name);//소환한 몬스터를 리스트에 추가
 						selectList.Insert(countForContainsCheck,new TextAndPosition(monsterList[i].GetRandomSelectMessage().text,mPositionX,mPositionY++,true));//DTG내부에 복사된 selectList
 						
 						//!@#!@#@!$%!@#$!@#$

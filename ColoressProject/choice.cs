@@ -35,7 +35,7 @@ public class Choice : ICloneable //선택지 부여 하는 클래스
 	private List<TextAndPosition> backgroundText;
 	private List<TextAndPosition> returnText;
 	private Dictionary<int,Object> indicateChoice;
-	private List<Monster> monsterList;
+	private List<Enemy> monsterList;
 	private List<NPC> npcList;
 	private ChoiceType choiceType;
 	
@@ -51,7 +51,7 @@ public class Choice : ICloneable //선택지 부여 하는 클래스
 		streamText = new List<TextAndPosition>();
 		backgroundText = new List<TextAndPosition>();
 		indicateChoice = new Dictionary<int,Object>();
-		monsterList = new List<Monster>();
+		monsterList = new List<Enemy>();
 		npcList = new List<NPC>();
 		choiceType = ChoiceType.NORMAL;
 	}
@@ -114,7 +114,7 @@ public class Choice : ICloneable //선택지 부여 하는 클래스
 			indicateChoice = value;
 		}
 	}
-	public List<Monster> MonsterList{
+	public List<Enemy> EnemyList{
 		get{
 			return monsterList;
 		}
@@ -185,10 +185,10 @@ public class Choice : ICloneable //선택지 부여 하는 클래스
 		this.ChoiceType = that.ChoiceType;
 		this.IsSavePoint = that.IsSavePoint;
 
-		if(!isEmptyList(that.MonsterList)){
+		if(!isEmptyList(that.EnemyList)){
 			//try{
-			if(that.MonsterList[0] != null){
-				this.MonsterList = that.MonsterList.ConvertAll(new Converter<Monster, Monster>(o => (Monster)o.Clone()));
+			if(that.EnemyList[0] != null){
+				this.EnemyList = that.EnemyList.ConvertAll(new Converter<Enemy, Enemy>(o => (Enemy)o.Clone()));
 			}
 			//}catch(Exception e){}
 		}
@@ -255,14 +255,14 @@ public class ChoiceControler{
 		return cho;
 	}
 	
-	public Choice AddChoiceMonster(String choiceName,Monster monster,ChoiceControler choiceControler = null){
+	public Choice AddChoiceEnemy(String choiceName,Enemy monster,ChoiceControler choiceControler = null){
 		if(choiceControler == null){
 			choiceControler = this;
 		}
 		
 		Choice cho = choiceControler.GetChoice(choiceName);
 		
-		cho.MonsterList.Add(monster);
+		cho.EnemyList.Add(monster);
 		return cho;
 	}
 	

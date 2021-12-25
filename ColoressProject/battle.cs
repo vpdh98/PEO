@@ -61,7 +61,7 @@ public static class DamageSystem
 	public static Character Defender;
 	public static ActionType actionType;
 	
-	public static Monster globerMonster;
+	public static Enemy globerEnemy;
 	public static Player globerPlayer;
 	public static bool successCheck = false;
 	public static String reactionMessage;
@@ -176,22 +176,22 @@ public static class BattleSystem{
 			}
 		}
 
-	public static String BattlePhase(Player player,Monster monster,String back)
+	public static String BattlePhase(Player player,Enemy monster,String back)
 	{
 		globerPlayer = player;
-		globerMonster = monster;
+		globerEnemy = monster;
 		currentChoice = "firstPhase"; //첫 화면
 		
-		limit = 3*(1.0*globerPlayer.AttackSpeed / globerMonster.AttackSpeed);
+		limit = 3*(1.0*globerPlayer.AttackSpeed / globerEnemy.AttackSpeed);
 		
-		globerPlayer.ReactionMessage = globerMonster.PlayerReactionMessage;
+		globerPlayer.ReactionMessage = globerEnemy.PlayerReactionMessage;
 		
 		backField = back;
 		currentChoice = "firstPhase";
 		battleAnd = false;
 		timerStart = false;
-		BCC.ChangeChoiceText(choiceName:"movePhase",onlyShowText:new TextAndPosition(globerMonster.CurrentState(),15,3+5,1){AlignH = true});
-		BCC.ChangeChoiceText(choiceName:"firstPhase",onlyShowText:new TextAndPosition(globerMonster.GetRandomSpawnMessage().text,15,3+5,1){AlignH = true});
+		BCC.ChangeChoiceText(choiceName:"movePhase",onlyShowText:new TextAndPosition(globerEnemy.CurrentState(),15,3+5,1){AlignH = true});
+		BCC.ChangeChoiceText(choiceName:"firstPhase",onlyShowText:new TextAndPosition(globerEnemy.GetRandomSpawnMessage().text,15,3+5,1){AlignH = true});
 		//Task.Run(()=>DisplayTimer());
 		
 		BDTG.Display(BCC.GetChoiceClone(currentChoice));
@@ -220,7 +220,7 @@ public static class BattleSystem{
 			TimerStart();
 			while(true){
 				Thread.Sleep(10);
-				if(timeOut){ MonsterTurn(); }
+				if(timeOut){ EnemyTurn(); }
 				if(died)
 				{
 					died = false;
@@ -264,7 +264,7 @@ public static class BattleSystem{
 					BCC.ChangeChoiceText(choiceName:currentChoice,onlyShowText:new TextAndPosition(globerPlayer.AttackCry(),15,9,1){AlignH = true});
 					
 					Attacker = globerPlayer;
-					Defender = globerMonster;
+					Defender = globerEnemy;
 					Thread.Sleep(10);
 					BDTG.Display(BCC.GetChoiceClone(currentChoice));
 					Console.ReadKey();
@@ -273,14 +273,14 @@ public static class BattleSystem{
 				else if(currentChoice == "block"){ //Attacker,Defender에 값을 넣으면 서로 데미지 계산 1회 실행
 					actionType = ActionType.BLOCK;
 					Attacker = globerPlayer;
-					Defender = globerMonster;
+					Defender = globerEnemy;
 					Thread.Sleep(10);
 					if(successCheck){
 						currentChoice = "successBlock";
-						BCC.ChangeChoiceText(choiceName:currentChoice,onlyShowText:new TextAndPosition(globerMonster.BlockSuccess(),15,9,1){AlignH = true});
+						BCC.ChangeChoiceText(choiceName:currentChoice,onlyShowText:new TextAndPosition(globerEnemy.BlockSuccess(),15,9,1){AlignH = true});
 					}else{
 						currentChoice = "failBlock";
-						BCC.ChangeChoiceText(choiceName:currentChoice,onlyShowText:new TextAndPosition(globerMonster.BlockFail(),15,9,1){AlignH = true});
+						BCC.ChangeChoiceText(choiceName:currentChoice,onlyShowText:new TextAndPosition(globerEnemy.BlockFail(),15,9,1){AlignH = true});
 					}
 					BDTG.Display(BCC.GetChoiceClone(currentChoice));
 					Console.ReadKey();
@@ -306,14 +306,14 @@ public static class BattleSystem{
 				else if(currentChoice == "dodge"){ //Attacker,Defender에 값을 넣으면 서로 데미지 계산 1회 실행
 					actionType = ActionType.DODGE;
 					Attacker = globerPlayer;
-					Defender = globerMonster;
+					Defender = globerEnemy;
 					Thread.Sleep(10);
 					if(successCheck){
 						currentChoice = "successDodge";
-						BCC.ChangeChoiceText(choiceName:currentChoice,onlyShowText:new TextAndPosition(globerMonster.DodgeSuccess(),15,9,1){AlignH = true});
+						BCC.ChangeChoiceText(choiceName:currentChoice,onlyShowText:new TextAndPosition(globerEnemy.DodgeSuccess(),15,9,1){AlignH = true});
 					}else{
 						currentChoice = "failDodge";
-						BCC.ChangeChoiceText(choiceName:currentChoice,onlyShowText:new TextAndPosition(globerMonster.DodgeFail(),15,9,1){AlignH = true});
+						BCC.ChangeChoiceText(choiceName:currentChoice,onlyShowText:new TextAndPosition(globerEnemy.DodgeFail(),15,9,1){AlignH = true});
 					}
 					BDTG.Display(BCC.GetChoiceClone(currentChoice));
 					Console.ReadKey();
@@ -346,8 +346,8 @@ public static class BattleSystem{
 		currentChoice = (String)BCC.GetChoiceClone(currentChoice).QuickNext();
 		Choice cho;
 		if(currentChoice == "reactionPhase"){ //8.22
-			BCC.ChangeChoiceText(choiceName:currentChoice,onlyShowText:new TextAndPosition(globerMonster.Reaction(),15,9,1){AlignH = true});
-			BCC.ChangeChoiceText(choiceName:"movePhase",onlyShowText:new TextAndPosition(globerMonster.CurrentState(),15,3+5,1){AlignH = true});
+			BCC.ChangeChoiceText(choiceName:currentChoice,onlyShowText:new TextAndPosition(globerEnemy.Reaction(),15,9,1){AlignH = true});
+			BCC.ChangeChoiceText(choiceName:"movePhase",onlyShowText:new TextAndPosition(globerEnemy.CurrentState(),15,3+5,1){AlignH = true});
 		}
 		//12.07 공격 파워에 따른 메세지를 최대체력 비례에서 현재체력 비례로 변경함에 따라 몬스터에게 데미지가 들어가는 타이밍을 몬스터Reaction메세지를 받은 후로 바꾸려다가... 말음
 		//대신 이전 현재체력을 나타내는 것 변수 추가
@@ -355,11 +355,11 @@ public static class BattleSystem{
 		
 		BDTG.Display(BCC.GetChoiceClone(currentChoice));
 		keyInfo = Console.ReadKey();
-		if(globerMonster.HpState() == 3){ //8.22 몬스터의 HP상태가 빈사 상태일때 배틀 페이즈 종료 const int Died = 3
-			BCC.ChangeChoiceText(choiceName:"andPhase",onlyShowText:new TextAndPosition(globerMonster.CurrentState(),15,3+5,1){AlignH = true});
+		if(globerEnemy.HpState() == 3){ //8.22 몬스터의 HP상태가 빈사 상태일때 배틀 페이즈 종료 const int Died = 3
+			BCC.ChangeChoiceText(choiceName:"andPhase",onlyShowText:new TextAndPosition(globerEnemy.CurrentState(),15,3+5,1){AlignH = true});
 			BDTG.Display(BCC.GetChoiceClone("andPhase"));
 			keyInfo = Console.ReadKey();
-			List<Item> drops = globerMonster.ItemDrop();
+			List<Item> drops = globerEnemy.ItemDrop();
 			
 			foreach(Item i in drops){
 				globerPlayer.inven.AddItem(i);
@@ -369,11 +369,11 @@ public static class BattleSystem{
 			}
 			Console.ReadKey();
 			
-			if(globerMonster.IsSpawnOnce)
-				GameManager.DespawnMonster(globerMonster.Name,PlayData.WorldMap.GetChoice(backField));
+			if(globerEnemy.IsSpawnOnce)
+				GameManager.DespawnEnemy(globerEnemy.Name,PlayData.WorldMap.GetChoice(backField));
 			
-			if(globerMonster.DeathEvent != null)
-				globerMonster.DeathEvent();		//여기서 backField에 접근하므로 DespawnMonster가 먼저 실행되어야한다.
+			if(globerEnemy.DeathEvent != null)
+				globerEnemy.DeathEvent();		//여기서 backField에 접근하므로 DespawnEnemy가 먼저 실행되어야한다.
 				
 			battleAnd = true;
 			turnAnd = true;
@@ -388,25 +388,28 @@ public static class BattleSystem{
 	
 	
 	
-	public static void MonsterTurn(){
+	public static void EnemyTurn(){
 		timeOut = false;
-		BCC.ChangeChoiceText(choiceName:"monsterPreAttack",onlyShowText:new TextAndPosition(globerMonster.PreAttackSymptom(),15,3+5,1){AlignH = true});
-		BCC.ChangeChoiceText(choiceName:"monsterAttack",onlyShowText:new TextAndPosition(globerMonster.AttackCry(),15,3+5,1){AlignH = true});
+		BCC.ChangeChoiceText(choiceName:"monsterPreAttack",onlyShowText:new TextAndPosition(globerEnemy.PreAttackSymptom(),15,3+5,1){AlignH = true});
+		BCC.ChangeChoiceText(choiceName:"monsterAttack",onlyShowText:new TextAndPosition(globerEnemy.AttackCry(),15,3+5,1){AlignH = true});
 		String currentChoice = "monsterPreAttack"; //첫 화면
 			BDTG.Display(BCC.GetChoiceClone(currentChoice));
 			currentChoice = (String)BCC.GetChoiceClone(currentChoice).QuickNext();
-			Console.ReadKey();
+			WaitTimeOrInput(150); //1500ms를 기다리던지 아님 입력이 들어오면 다음으로 진행
+			//Console.ReadKey();
 		
 			BDTG.Display(BCC.GetChoiceClone(currentChoice));
-			Attacking(globerMonster,globerPlayer);
+			Attacking(globerEnemy,globerPlayer);
 			currentChoice = (String)BCC.GetChoiceClone(currentChoice).QuickNext();
-			Console.ReadKey();
+			WaitTimeOrInput(150);
+			//Console.ReadKey();
 				
 			BCC.ChangeChoiceText(choiceName:currentChoice,onlyShowText:new TextAndPosition(globerPlayer.Reaction(),15,9,1){AlignH = true});
 				
 			BDTG.Display(BCC.GetChoiceClone(currentChoice));
 			currentChoice = "movePhase";
-			Console.ReadKey();
+			WaitTimeOrInput(150);
+			//Console.ReadKey();
 			if(globerPlayer.Hp <= 0){ 
 				//testLog("in die");
 				died = true;

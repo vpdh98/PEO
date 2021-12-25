@@ -47,7 +47,7 @@ public static class PlayData{
 	public static Choice currentOpenChoice; //현재 Display되고 있는 Choice를 담는변수. 접근에 주의!!
 	public static Choice accessAbleChoice; //접근할 Choice를 담는다
 	
-	public static List<String> alreadySpawnedMonsterList = new List<String>();
+	public static List<String> alreadySpawnedEnemyList = new List<String>();
 	
 	public static ChoiceControler WorldMap = new ChoiceControler(new Scenario());
 }
@@ -89,7 +89,7 @@ namespace Game
 			
 			Task.Factory.StartNew(BattleCal);	
 			
-			DTG.Display(GameManager.SpawnUniqueMonster_Stay(WorldMap.GetChoice(currentChoice)));
+			DTG.Display(GameManager.SpawnUniqueEnemy_Stay(WorldMap.GetChoice(currentChoice)));
 			keyInfo = Console.ReadKey();
 			
 			while(keyInfo.Key != ConsoleKey.Escape)
@@ -101,13 +101,13 @@ namespace Game
 				{
 					currentChoice = (String)DTG.GetCurrentSelectValue();
 
-					if(CList.GetMonster(currentChoice) != null){ currentChoice = BattlePhase(player,CList.GetMonster(currentChoice),DTG.Cho.Name); } //currentChoice에 현제 선택된 몬스터 이름이 들어가 있음 //8.23
+					if(CList.GetEnemy(currentChoice) != null){ currentChoice = BattlePhase(player,CList.GetEnemy(currentChoice),DTG.Cho.Name); } //currentChoice에 현제 선택된 몬스터 이름이 들어가 있음 //8.23
 					DTG.Cho.LeaveChoice();
 					
 					if(WorldMap.GetChoiceClone(currentChoice).ChoiceType == ChoiceType.QUICK) { runQuick(); }  //QUICK구현을 위해 추가된 if문
 					
 					if(WorldMap.GetChoiceClone(currentChoice).ChoiceType == ChoiceType.QUICKNEXT) { runQuickNext(); } //QUICKNEXT구현을 위해 추가된 if문
-					DTG.Display(GameManager.SpawnUniqueMonster_Stay(WorldMap.GetChoice(currentChoice)));
+					DTG.Display(GameManager.SpawnUniqueEnemy_Stay(WorldMap.GetChoice(currentChoice)));
 					keyInfo = Console.ReadKey();
 				}
 				else
@@ -136,7 +136,7 @@ namespace Game
 			accessAbleChoice = tcho;
 			DTG.Cho.QuickRun(); //delegate실행
 			DTG.Cho.QuickDelegate = ()=>{}; //한번만 실행되도록 비움
-			DTG.Display(GameManager.SpawnUniqueMonster_Stay(tcho));
+			DTG.Display(GameManager.SpawnUniqueEnemy_Stay(tcho));
 		}
 		
 	}	
@@ -145,9 +145,9 @@ namespace Game
 	public static class GameManager
 	{
 		
-		public static Choice SpawnUniqueMonster_Stay(Choice choice)
+		public static Choice SpawnUniqueEnemy_Stay(Choice choice)
 		{ //몬스터 선택지가 중앙에 있는 기존 선택지 마지막 열 다음으로 들어가도록 해주는 메소드
-			if(choice.MonsterList == null)
+			if(choice.EnemyList == null)
 			{
 				return choice;
 			}
@@ -155,7 +155,7 @@ namespace Game
 			
 			//int count = 0; //2021.09.08추가
 			
-			List<Monster> monsterList = choice.MonsterList;
+			List<Enemy> monsterList = choice.EnemyList;
 			List<TextAndPosition> selectList = choice.SelectText;
 			int selectListCount = choice.selectTextNum;
 			int monsterListCount = monsterList.Count;
@@ -167,15 +167,15 @@ namespace Game
 			for(int i= 0;i<monsterListCount;i++)
 			{
 				if(!monsterList[i].IsSpawnOnce) continue; //한번만 스폰되는 몬스터를 통과시킨다.
-				if(alreadySpawnedMonsterList.Contains(monsterList[i].Name)) continue; //이미 소환됫던 몬스터는 컷
+				if(alreadySpawnedEnemyList.Contains(monsterList[i].Name)) continue; //이미 소환됫던 몬스터는 컷
 				
 				if(!monsterList[i].IsSpawn)
 				{
 					spawnChance = monsterList[i].SpawnChance;
 					if(random.Next(1,101) < spawnChance)
 					{
-						alreadySpawnedMonsterList.Add(monsterList[i].Name);//소환한 몬스터를 리스트에 추가
-						//monsterList[i].MonsterInfo();
+						alreadySpawnedEnemyList.Add(monsterList[i].Name);//소환한 몬스터를 리스트에 추가
+						//monsterList[i].EnemyInfo();
 						Console.WriteLine(monsterList[i].Name);//@@@@@@@@@@@@@@@@@@@@@@
 						selectList.Add(new TextAndPosition(monsterList[i].GetRandomSelectMessage().text,mPositionX,mPositionY++,true));
 						choice.IndicateChoice.Add(selectList.Count-1,monsterList[i].Name);                            //배틀페이즈로 들어가는 선택지로 추가
@@ -254,7 +254,7 @@ namespace Game
 			}
 		}
 		
-		public static void DespawnMonster(String monsterName, Choice targetChoice){
+		public static void DespawnEnemy(String monsterName, Choice targetChoice){
 			int index = FindKeyByValue(targetChoice.IndicateChoice,monsterName);
 			targetChoice.SelectText.RemoveAt(index);
 			targetChoice.IndicateChoice.Remove(index);
@@ -923,3 +923,17 @@ QuickDelegate = ()=>{
 //DisplayTextGame에서 List들을 초기화할때 indicateList를 재정렬 해주는 메소드를 추가해 해결했다.
 //0,1,2,4이런식으로 키값이 들어있는 Dictionary를 넣으면 0,1,2,3처럼 만들어 준다.
 //결과적으로 키값의 중복체크기능은 무용지물이 됬다. 하지만 없에진 않으려고 한다.
+
+//2021.12.25
+//오늘은 크리스마스다.
+//그런데 어제 당직을 서서 굉장히 짧은 하루였다.
+//그렇다.
+//오늘은 엔피씨를 만들어보겟다.
+//Monster클래스의 이름을 Enemy로 바꿧다.
+//그로 인해 관련 메소드,필드의 이름도 모두 바꿧다.
+//엔피씨의 가장 중요한 역활중 하나인 퀘스틀를 구현해보려고 하였다.
+//Quest클래스를 만들었다.
+//퀘스트를 주면 Quest객체를 Player에게 주는 방식으로 구현하려고 한다.
+//해당 퀘스트 조건을 완료해서 다시 그 NPC에게 가면
+//NPC는 준 퀘스트 목록 중 해당 퀘스트가 있는지 확인하고 있으면 
+//조건을 확인하고 보상을 주도록 구현할 것이다.

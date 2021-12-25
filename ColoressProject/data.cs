@@ -97,10 +97,10 @@ public class Scenario{
 				ReturnText = new List<TextAndPosition>()
 							{new TextAndPosition("여전히 울창한 숲.",7+clikX,2+clikY,1)},
 				IndicateChoice = new Dictionary<int,Object>(){{0,"c2-right"},{1,"testStream"},{2,"c2"},{3,"gyeongminsHouse"},{4,"c2"}},
-				MonsterList = new List<Monster>()
-							{characterList.GetMonster("슬라임"),
-							characterList.GetMonster("뒤틀린 망자"),
-							characterList.GetMonster("헐크")},
+				EnemyList = new List<Enemy>()
+							{characterList.GetEnemy("슬라임"),
+							characterList.GetEnemy("뒤틀린 망자"),
+							characterList.GetEnemy("헐크")},
 				BackgroundText = backgrounds.GetBackground(6)
 			});
 			
@@ -139,7 +139,7 @@ public class Scenario{
 				Name = "spawnGyeonmin",
 				ChoiceType = ChoiceType.QUICK,
 				QuickDelegate = ()=>{
-					PlayData.accessAbleChoice.MonsterList.Add(PlayData.CList.GetMonster("야생의 경민이",100));
+					PlayData.accessAbleChoice.EnemyList.Add(PlayData.CList.GetEnemy("야생의 경민이",100));
 				},
 				IndicateChoice = new Dictionary<int,Object>(){{0,"gyeongminsHouse"}}
 			});
@@ -186,9 +186,9 @@ public class Scenario{
 							{new TextAndPosition("여전히 울창한 숲.",7+clikX,2+clikY,1)},
 				IndicateChoice = new Dictionary<int,Object>(){{0,"t0827-1"},{1,"t0827-2"}},
 				
-				MonsterList = new List<Monster>()
-							{characterList.GetMonster("슬라임"),
-							characterList.GetMonster("뒤틀린 망자")},
+				EnemyList = new List<Enemy>()
+							{characterList.GetEnemy("슬라임"),
+							characterList.GetEnemy("뒤틀린 망자")},
 				BackgroundText = backgrounds.GetBackground(0)
 			});
 			
@@ -207,9 +207,9 @@ public class Scenario{
 							{new TextAndPosition("여전히 울창한 숲.",7+clikX,2+clikY,1)},
 				IndicateChoice = new Dictionary<int,Object>(){{0,"t0827-1"},{1,"t0827-2"}},
 				
-				MonsterList = new List<Monster>()
-							{characterList.GetMonster("슬라임"),
-							characterList.GetMonster("뒤틀린 망자")},
+				EnemyList = new List<Enemy>()
+							{characterList.GetEnemy("슬라임"),
+							characterList.GetEnemy("뒤틀린 망자")},
 				BackgroundText = backgrounds.GetBackground(0)
 			});
 			
@@ -228,9 +228,9 @@ public class Scenario{
 							{new TextAndPosition("여전히 울창한 숲.",7+clikX,2+clikY,1)},
 				IndicateChoice = new Dictionary<int,Object>(){{0,"t0828-1"},{1,"t0828-1"}},
 				
-				MonsterList = new List<Monster>()
-							{characterList.GetMonster("슬라임"),
-							characterList.GetMonster("뒤틀린 망자")},
+				EnemyList = new List<Enemy>()
+							{characterList.GetEnemy("슬라임"),
+							characterList.GetEnemy("뒤틀린 망자")},
 				BackgroundText = backgrounds.GetBackground(0)
 			});
 			
@@ -240,7 +240,7 @@ public class Scenario{
 							{new TextAndPosition("공격한다.",16,13,true),
 							new TextAndPosition("도망친다.",40,13,true)},
 				OnlyShowText = new List<TextAndPosition>()
-							{new TextAndPosition("globerMonster.GetRandomSpawnMessage().text",15,3+5,1){AlignH = true}},
+							{new TextAndPosition("globerEnemy.GetRandomSpawnMessage().text",15,3+5,1){AlignH = true}},
 				IndicateChoice = new Dictionary<int,Object>(){{0,"movePhase"},{1,"end"}},
 				BackgroundText = backgrounds.GetBackground(1)
 			});
@@ -251,7 +251,7 @@ public class Scenario{
 							 new TextAndPosition("방어",28,13,true),
 							new TextAndPosition("회피",40,13,true)},
 				OnlyShowText = new List<TextAndPosition>()
-							{new TextAndPosition("globerMonster.CurrentState()",15,3+5,1){AlignH = true}},
+							{new TextAndPosition("globerEnemy.CurrentState()",15,3+5,1){AlignH = true}},
 				IndicateChoice = new Dictionary<int,Object>(){{0,"attackPhase"},{1,"block"},{2,"dodge"}},
 				BackgroundText = backgrounds.GetBackground(1)
 			});
@@ -259,7 +259,7 @@ public class Scenario{
 				Name = "attackPhase",
 				ChoiceType = ChoiceType.QUICKNEXT,
 				OnlyShowText = new List<TextAndPosition>()
-							{new TextAndPosition("globerMonster.Name"+"베기!",5,10,10,ConsoleColor.Red){AlignH = true,PriorityLayer=1}},
+							{new TextAndPosition("globerEnemy.Name"+"베기!",5,10,10,ConsoleColor.Red){AlignH = true,PriorityLayer=1}},
 				IndicateChoice = new Dictionary<int,Object>(){{0,"reactionPhase"}},
 				BackgroundText = backgrounds.GetBackground(1)
 			});
@@ -276,7 +276,7 @@ public class Scenario{
 				SelectText = new List<TextAndPosition>()         
 							{new TextAndPosition("확인",16,13,true)},
 				OnlyShowText = new List<TextAndPosition>()
-							{new TextAndPosition("globerMonster.CurrentState()",15,3+5,1){AlignH = true}},
+							{new TextAndPosition("globerEnemy.CurrentState()",15,3+5,1){AlignH = true}},
 				IndicateChoice = new Dictionary<int,Object>(){{0,"backField"}},
 				BackgroundText = backgrounds.GetBackground(1)
 			});
@@ -316,7 +316,7 @@ public class Scenario{
 					Name = "monsterPreAttack",
 					ChoiceType = ChoiceType.QUICKNEXT,
 					OnlyShowText = new List<TextAndPosition>()
-								{new TextAndPosition("globerMonster.PreAttackCry()",15,3+5,1){AlignH = true}},
+								{new TextAndPosition("globerEnemy.PreAttackCry()",15,3+5,1){AlignH = true}},
 					IndicateChoice = new Dictionary<int,Object>(){{0,"monsterAttack"}},
 					BackgroundText = backgrounds.GetBackground(1)
 			});
@@ -325,7 +325,7 @@ public class Scenario{
 					Name = "monsterAttack",
 					ChoiceType = ChoiceType.QUICKNEXT,
 					OnlyShowText = new List<TextAndPosition>()
-								{new TextAndPosition("globerMonster.AttackCry()",15,3+5,1){AlignH = true}},
+								{new TextAndPosition("globerEnemy.AttackCry()",15,3+5,1){AlignH = true}},
 					IndicateChoice = new Dictionary<int,Object>(){{0,"monsterReactionPhase"}},
 					BackgroundText = backgrounds.GetBackground(1)
 			});

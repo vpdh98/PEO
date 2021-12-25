@@ -10,6 +10,17 @@ public static class Convenience{
 	public static int y = 0;
 	public static Object alwaysDisplay;
 	
+	public static bool WaitTimeOrInput(int count){
+		for(int i = 0;i<count && !Console.KeyAvailable;i++){
+				Thread.Sleep(10);
+			}
+		if(Console.KeyAvailable){
+			Console.ReadKey();
+			return true;
+		}
+		return false;
+	}
+	
 	public static void DisplayLog(){
 		Task.Factory.StartNew(()=>{
 			while(true){
