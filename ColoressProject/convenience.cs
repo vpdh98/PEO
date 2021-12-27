@@ -10,6 +10,13 @@ public static class Convenience{
 	public static int y = 0;
 	public static Object alwaysDisplay;
 	
+	public static List<T> ListClone<T>(List<T> list) where T : ICloneable{
+		if(list != null){
+				return list.ConvertAll(new Converter<T,T>(o => (T)o.Clone()));
+		}
+		return null;
+	}
+	
 	public static bool WaitTimeOrInput(int count){
 		for(int i = 0;i<count && !Console.KeyAvailable;i++){
 				Thread.Sleep(10);

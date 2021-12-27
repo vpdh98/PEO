@@ -103,6 +103,8 @@ namespace Characters
 	public class Player : Character,IDamageable,ICharacterState
 	{
 		public Inventory inven = new Inventory();
+		
+		public List<Quest> QuestList{get;set;}
 	
 		Weapon weapon;
 		public Weapon Weapon{
@@ -255,13 +257,11 @@ namespace Characters
 			return "";
 		}
 		
-		protected Player(Player that):base(that){
-						
-		}
+		//protected Player(Player that):base(that){}
 		
-		public Object Clone(){
+		/*public Object Clone(){
 			return new Player(this);
-		}
+		}*/
 	}
 	
 	//*Enemy클래스 수정시 주의사항*
@@ -461,8 +461,11 @@ namespace Characters
 		}
 	}
 	
-	public class NPC : Enemy,IDamageable,ICharacterState
+	public class NPC : Enemy,IDamageable,ICharacterState,ICloneable
 	{
+		public List<Quest> QuestList{get;set;}
+	
+	
 		public NPC(){}
 		public NPC(string name,int hp,int mp,int attack_power,int defense,int attack_speed):base(name,hp,mp,attack_power,defense,attack_speed){}
 		
@@ -471,7 +474,7 @@ namespace Characters
 		}
 		
 		protected NPC(NPC that):base(that){
-			
+				this.QuestList = (List<Quest>)ListClone<Quest>(that.QuestList);
 		}
 		
 		public Object Clone(){
