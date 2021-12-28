@@ -78,7 +78,7 @@ public static class GameWindows{
 								{new TextAndPosition(item.Explan(),textXPos,textYPos),
 								new TextAndPosition("방어력: "+arm.Defense,textXPos,textYPos+11)};
 		}
-		else if(item.Stackable){
+		else if(item.IsStackable){
 			tap = new List<TextAndPosition>()
 								{new TextAndPosition(item.Explan(),textXPos,textYPos),
 								new TextAndPosition("수량: "+item.Amount,textXPos,textYPos+11)};

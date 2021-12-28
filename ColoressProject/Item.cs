@@ -4,11 +4,11 @@ using static Convenience;
 using Game;
 
 
-public class Item{
+public class Item : IEquatable<Item>{
 	public String Name{get;set;}
 	
 	bool useable = false;
-	public bool Stackable{get;set;} = false;
+	public bool IsStackable{get;set;} = false;
 	
 	int amount = 1; //stackable이 true일때 사용
 	public int Amount{
@@ -34,6 +34,13 @@ public class Item{
 	
 	public virtual String Explan(){
 		return ItemExplan;
+	}
+	
+	public override bool Equals(Object obj){
+		if(obj == null) return false;
+		Item objAsItem = obj as Item;
+		if(objAsItem == null) return false;
+		else return Equals(objAsItem);
 	}
 	
 	public bool Equals(Item other){
@@ -105,7 +112,7 @@ public class ItemList{
 		item = new Item(){
 			Name = "슬라임 젤",
 			ItemExplan="슬라임의 일부이다.",
-			Stackable = true
+			IsStackable = true
 		};
 		itemList.Add(item.Name,item);
 	}

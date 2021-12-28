@@ -9,12 +9,14 @@ using static ItemData;
 
 namespace Characters
 {
-	interface IDamageable{
+	interface IDamageable
+	{
 		AttackInfo Attack();
 		AttackInfo Damage(AttackInfo attack_info);
 	}
 	
-	interface ICharacterState{
+	interface ICharacterState
+	{
 		string CurrentState();
 	}
 	
@@ -107,51 +109,66 @@ namespace Characters
 		public List<Quest> QuestList{get;set;}
 	
 		Weapon weapon;
-		public Weapon Weapon{
-			get{
+		public Weapon Weapon
+		{
+			get
+			{
 				return weapon;
 			}
-			set{
-				if(weapon == null){
+			set
+			{
+				if(weapon == null)
+				{
 					weapon = value;
 					weapon.IsEquip = true;
 					AttackMessage = weapon.AttackMessage;
 					AttackSpeed =+ weapon.AttackSpeed;
 				}
-				else{
-					if(weapon == value){
-						if(ConfirmWindow("이미 장착된 무기 입니다.\n해제하시겠습니까?",24,7)){
+				else
+				{
+					if(weapon == value)
+					{
+						if(ConfirmWindow("이미 장착된 무기 입니다.\n해제하시겠습니까?",24,7))
+						{
 							AttackSpeed =- weapon.AttackSpeed;
 							weapon.IsEquip = false;
 							weapon = null;
 							AttackMessage = null;
 						}
 					}
-					else{
-							AlertWindow("이미 무기가 존재합니다.",textXPos:24,textYPos:5);
+					else
+					{
+						AlertWindow("이미 무기가 존재합니다.",textXPos:24,textYPos:5);
 					}
 				}
 			}
 		}
 		Armor armor;
-		public Armor Armor{
-			get{
+		public Armor Armor
+		{
+			get
+			{
 				return armor;
 			}
-			set{
-				if(armor == null){
+			set
+			{
+				if(armor == null)
+				{
 					armor = value;
 					armor.IsEquip = true;
 					Defense += armor.Defense;
 				}
-				else{
+				else
+				{
 					if(armor == value){
-						if(ConfirmWindow("이미 장착된 방어구 입니다.\n해제하시겠습니까?",24,7)){
+						if(ConfirmWindow("이미 장착된 방어구 입니다.\n해제하시겠습니까?",24,7))
+						{
 							armor.IsEquip = false;
 							Defense -= armor.Defense;
 							armor = null;
 						}
-						else{
+						else
+						{
 							AlertWindow("이미 방어구가 존재합니다.",textXPos:24,textYPos:5);
 						}
 					}

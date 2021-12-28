@@ -4,8 +4,8 @@ using static Define;
 using static GameWindows;
 
 
-public class Inventory{
-	List<Item> inventory;
+public class Inventory {
+	public List<Item> InventoryList{get;set;}
 	Choice invenCho;
 	Dictionary<String,Item> invenListObject;
 	Backgrounds backgrounds = new Backgrounds();
@@ -14,25 +14,25 @@ public class Inventory{
 	int maximumCount = 20;
 	
 	public Inventory(){
-		inventory = new List<Item>();
+		InventoryList = new List<Item>();
 	}
 	
 	void Init(){
 		
 		Dictionary<int,Object> invenListName = new Dictionary<int,Object>();
-		for(int i = 0;i<inventory.Count;i++){
-			invenListName.Add(i,inventory[i].Name);
+		for(int i = 0;i<InventoryList.Count;i++){
+			invenListName.Add(i,InventoryList[i].Name);
 		}
 		List<TextAndPosition> itemList = new List<TextAndPosition>();
-		for(int i = 0;i<inventory.Count;i++){
+		for(int i = 0;i<InventoryList.Count;i++){
 			if(i < 10)
-				itemList.Add(new TextAndPosition(inventory[i].Name,18,i+2,true));
+				itemList.Add(new TextAndPosition(InventoryList[i].Name,18,i+2,true));
 			else
-				itemList.Add(new TextAndPosition(inventory[i].Name,36,i-8,true));
+				itemList.Add(new TextAndPosition(InventoryList[i].Name,36,i-8,true));
 		}
 		invenListObject = new Dictionary<String,Item>();
-		for(int i = 0;i<inventory.Count;i++){
-			invenListObject.Add(inventory[i].Name,inventory[i]);
+		for(int i = 0;i<InventoryList.Count;i++){
+			invenListObject.Add(InventoryList[i].Name,InventoryList[i]);
 		}
 	
 			invenCho = new Choice(){
@@ -50,11 +50,11 @@ public class Inventory{
 	}
 	
 	public bool AddItem(Item item){
-		if(item != null && inventory.Count<maximumCount){
-			Item tItem = inventory.Find(i => i.Name == item.Name);
+		if(item != null && InventoryList.Count<maximumCount){
+			Item tItem = InventoryList.Find(i => i.Name == item.Name);
 			if(tItem == null)
-				inventory.Add(item);
-			else if(tItem.Stackable){
+				InventoryList.Add(item);
+			else if(tItem.IsStackable){
 				tItem.Amount += 1;
 			}
 			return true;
@@ -63,12 +63,12 @@ public class Inventory{
 			return false;
 	}
 	
-	public Item GetItem(int num){
-		return inventory[num];
+	public Item GetItemIndex(int index){
+		return InventoryList[index];
 	}
 	
-	public Item GetItem(String name){
-		return inventory.Find(x => x.Name == name);
+	public Item GetItemName(String name){
+		return InventoryList.Find(x => x.Name == name);
 	}
 	
 	public void OpenInventory(){
@@ -78,10 +78,10 @@ public class Inventory{
 		while(!OutInven){
 				IDTG.Cho = invenCho; //초기 화면
 				IDTG.Show();
-				ExplanWindow(inventory[0],89,3,20,3);
+				ExplanWindow(InventoryList[0],89,3,20,3);
 				ConsoleKeyInfo c = Console.ReadKey();
 
-				while(c.Key != ConsoleKey.Escape && c.Key != ConsoleKey.I && inventory.Count != 0)
+				while(c.Key != ConsoleKey.Escape && c.Key != ConsoleKey.I && InventoryList.Count != 0)
 				{
 
 					IDTG.SelectingText(c);
@@ -110,12 +110,12 @@ public class Inventory{
 							if(((Equipment)i).IsEquip)
 								AlertWindow("장착된 장비는 버리실 수 없습니다.",textXPos:24,textYPos:9);
 							else if(ConfirmWindow("버리시겠습니까?",24,7)){
-								inventory.Remove(i);
+								InventoryList.Remove(i);
 								Init();
 							}
 						}
 						else if(ConfirmWindow("버리시겠습니까?",24,7)){
-							inventory.Remove(i);
+							InventoryList.Remove(i);
 							Init();
 						}
 					}

@@ -50,6 +50,8 @@ public static class PlayData{
 	public static List<String> alreadySpawnedEnemyList = new List<String>();
 	
 	public static ChoiceControler WorldMap = new ChoiceControler(new Scenario());
+	
+	public static Player player = CList.GetPlayer("용사");
 }
 
 
@@ -64,10 +66,12 @@ namespace Game
 		static ConsoleKeyInfo keyInfo;
 		static DisplayTextGame DTG = new DisplayTextGame();
 		
-		public static Player player = CList.GetPlayer("용사");
+		
 		
 		public static void Main()
 		{
+			player = CList.GetPlayer("용사");
+			
 			player.inven.AddItem(new Item());
 			player.inven.AddItem(itemList.GetItem("전설의검"));
 			player.inven.AddItem(new Item(){Name = "HP물약"});
@@ -238,11 +242,11 @@ namespace Game
 		{
 			if(item.GetType().Name == "Weapon")
 			{
-				main.player.Weapon = (Weapon)item;
+				PlayData.player.Weapon = (Weapon)item;
 			}
 			if(item.GetType().Name == "Armor")
 			{
-				main.player.Armor = (Armor)item;
+				PlayData.player.Armor = (Armor)item;
 			}
 		}
 		
@@ -250,7 +254,7 @@ namespace Game
 		{
 			if(item.GetType().Name == "Potion")
 			{
-				main.player.Hp += ((Potion)item).Hp;
+				PlayData.player.Hp += ((Potion)item).Hp;
 			}
 		}
 		
@@ -952,3 +956,11 @@ QuickDelegate = ()=>{
 //퀘스트 종류는 사냥,아이템 획득,장소방문,인물접촉 이 네가지로 하기로 했다.
 //오늘은 먼저 사냥 퀘스트를 구현했다.
 //CheckTarget메소드는 Target의 정보를 Object의 형태로 받을 수 있게 해 퀘스트 목표를 확인 할 수 있게 했다.
+
+//2021.12.28
+//어제 사냥 퀘스트를 구현하면서 간과 한 점이 있었다.
+//사냥 퀘스트 클래스에 잡아야할 몬스터 목록을 List로 만들어 여러 몬스터를 퀘스트 목표로 할 수 있도록 했는데
+//각각의 목표치를 따로 카운트하는 기능을 넣지 않았다. 넣자.
+//오늘은 장소방문과 아아템 획득 퀘스트를 추가했다.
+//그런데 Item획득 퀘스트 성공 여부를 구현하는 도중
+//Item 검색과 포함여부를 확인하는 부분이 완전하지 않다 내일 해결바람

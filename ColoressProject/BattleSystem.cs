@@ -150,6 +150,8 @@ public static class BattleSystem{
 		정적 변수인 Attacker,Defender에 공격자와 피격대상의 객체를 넣으면
 		해당 타입의 공격 판정이나 데미지 계산 등을 실행하고 정적변수를 비움
 		
+		*각각의 객체는 IDamageable인터페이스를 구현한 클래스의 객체여야함
+		
 	*/
 		public static void BattleCal()
 		{
