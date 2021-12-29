@@ -63,7 +63,7 @@ public static class Convenience{
 		
 	}
 	
-	public static bool isEmptyList<T>(List<T> list,bool print = false){
+	public static bool IsEmptyList<T>(List<T> list,bool print = false){
 		if(list == null){
 			if(print) Console.WriteLine("이 리스트는 null 입니다.");
 			//Console.ReadKey();

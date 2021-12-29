@@ -52,6 +52,8 @@ public static class PlayData{
 	public static ChoiceControler WorldMap = new ChoiceControler(new Scenario());
 	
 	public static Player player = CList.GetPlayer("용사");
+	
+	
 }
 
 
@@ -71,6 +73,7 @@ namespace Game
 		public static void Main()
 		{
 			player = CList.GetPlayer("용사");
+			QuestControler.AllQuestList = new QuestData().QuestDatas;
 			
 			player.inven.AddItem(new Item());
 			player.inven.AddItem(itemList.GetItem("전설의검"));
@@ -964,3 +967,13 @@ QuickDelegate = ()=>{
 //오늘은 장소방문과 아아템 획득 퀘스트를 추가했다.
 //그런데 Item획득 퀘스트 성공 여부를 구현하는 도중
 //Item 검색과 포함여부를 확인하는 부분이 완전하지 않다 내일 해결바람
+
+//2021.12.29
+//해결했다. List의 Find를 쓰니까 그냥 해결이 됫다.. 어젠 왜 안됫지..
+//오늘은 4개의 퀘스트 클래스를 모두 만들고
+//Reward클래스도 보상 종류별로 나눠 따로 만들었다.
+//그리고 한번 Quest를 만들어서 실행시켜보려고
+//QuestData클래스를 만들어 QuestControler안에 QuestData.QuestDatas를 넣고(이름이 모호해 바꿀생각이다)
+//QuestControler.GetQuestByName()을 통해 퀘스트를 불러와 NPC객체에 넣으려고 했는데
+//안된다.System.TypeInitializationException: The type initializer for 'PlayData' threw an exception. ---> System.NullReferenceException
+//이 떠서 안되는데 시간이 다되서 내일 해결해야겠다

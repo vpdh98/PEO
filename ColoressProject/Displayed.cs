@@ -326,7 +326,7 @@ public class DisplayTextGame{
 			ConsoleColor tempC;
 			if(currentArrowingText == null && selectList != null && choiceType != ChoiceType.QUICKNEXT)
 			{ //choice 첫 호출때 화살표가 보이게 하기 위함
-				if(!isEmptyList<TextAndPosition>(selectList))
+				if(!IsEmptyList<TextAndPosition>(selectList))
 				{
 					if(Cho.Name == "movePhase"){ //movePhase에서만 선택지 초기값 랜덤으로 
 						Random random = new Random();
@@ -372,7 +372,7 @@ public class DisplayTextGame{
 						else{ //stopPoint == 0조건 추가하면 순차적으로 출력된다음 다음 내용 출력. 없에면 한꺼번에 출력
 							FrontDelay(TAndP);//해당 텍스트를 딜레이시키고 딜레이 0으로 만듦
 							Console.SetCursorPosition(TAndP[0]+GlobalPositionX,TAndP[1]+GlobalPositionY);
-							if(!isEmptyList<TextAndPosition>(selectList)){
+							if(!IsEmptyList<TextAndPosition>(selectList)){
 								if(TAndP.isSelect && choiceType != ChoiceType.QUICKNEXT){
 									int temp = selectList.FindIndex(x => x.text == TAndP.text);
 									voidARROW = temp+1+".";

@@ -506,7 +506,7 @@ namespace Characters
 		Dictionary<String,NPC> NPCList{get;set;}
 		Player player;
 		Enemy enemy;
-		NPC NPC;
+		NPC npc;
 		
 		public CharacterList(){
 			PlayerList = new Dictionary<String,Player>();
@@ -781,6 +781,17 @@ namespace Characters
 			
 			
 			///////////////////NPC/////////////////////////////
+			npc = new NPC(){
+				Name = "촌장",
+				Hp = 10,
+				Mp = 10,
+				MaxHp = 10,
+				AttackPower = 1,
+				Defense = 1,
+				AttackSpeed = 2,
+				QuestList = new List<Quest>(){QuestControler.GetQuestByName("슬라임 사냥")}
+			};
+			NPCList.Add(npc.Name,npc);
 		}
 		
 		public Enemy GetEnemyOriginal(String name){

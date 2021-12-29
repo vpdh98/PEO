@@ -185,7 +185,7 @@ public class Choice : ICloneable //선택지 부여 하는 클래스
 		this.ChoiceType = that.ChoiceType;
 		this.IsSavePoint = that.IsSavePoint;
 
-		if(!isEmptyList(that.EnemyList)){
+		if(!IsEmptyList(that.EnemyList)){
 			//try{
 			if(that.EnemyList[0] != null){
 				this.EnemyList = that.EnemyList.ConvertAll(new Converter<Enemy, Enemy>(o => (Enemy)o.Clone()));

@@ -4,7 +4,7 @@ using static Convenience;
 using Game;
 
 
-public class Item : IEquatable<Item>{
+public class Item : IEquatable<Item>,ICloneable{
 	public String Name{get;set;}
 	
 	bool useable = false;
@@ -46,6 +46,20 @@ public class Item : IEquatable<Item>{
 	public bool Equals(Item other){
 		if(other==null) return false;
 		return (this.Name.Equals(other.Name));
+	}
+	
+	protected Item(Item that){
+		this.Name = that.Name;
+		this.useable = that.useable;
+		this.IsStackable = that.IsStackable;
+		this.Amount = that.Amount;
+		
+		this.ItemExplan = that.ItemExplan;
+		this.DropChance = that.DropChance;
+	}
+	
+	public Object Clone(){
+		return new Item(this);
 	}
 }
 
@@ -118,7 +132,7 @@ public class ItemList{
 	}
 	
 	public Item GetItem(String Name,double DropChance = 0){
-		Item i = itemList[Name];
+		Item i = (Item)itemList[Name].Clone();
 		i.DropChance = DropChance;
 		return i;
 	}
