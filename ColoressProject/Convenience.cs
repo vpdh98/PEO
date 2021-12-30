@@ -10,6 +10,18 @@ public static class Convenience{
 	public static int y = 0;
 	public static Object alwaysDisplay;
 	
+	
+	public static TextAndPosition TakeRandomMessage(List<TextAndPosition> messageList){
+		Random rand = new Random();
+		
+		if(messageList == null){
+			throw new Exception("Convenience.TakeRandomMessege : messageList가 null입니다"); 
+		}
+		
+		return messageList[rand.Next(0,messageList.Count)];
+		
+	}
+	
 	public static List<T> ListClone<T>(List<T> list) where T : ICloneable{
 		if(list != null){
 				return list.ConvertAll(new Converter<T,T>(o => (T)o.Clone()));

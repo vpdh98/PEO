@@ -303,26 +303,26 @@ public class EXPReward : Reward{
 
 public class QuestData{
 	public List<Quest> QuestDatas{get;set;} = new List<Quest>();
-	static Backgrounds backgrounds = new Backgrounds();
+	public Backgrounds backgrounds = new Backgrounds();
 	
 	public QuestData(){
 		QuestDatas.Add(new HuntQuest(){
 			QuestName = "슬라임 사냥",
 			QuestContents = new Choice(){
-				Name = "SlimeNuntQuest",
+				Name = "SlimeHuntQuest",
 				SelectText = new List<TextAndPosition>()         
 							{new TextAndPosition("수락한다.",16,13,true),
 							new TextAndPosition("거절한다.",40,13,true)},
 				OnlyShowText = new List<TextAndPosition>()
-							{new TextAndPosition("어서 오시게 젊은이여.\n 자네 강해보이는 구먼.\n 사실 우리 마을에 요즘 슬라임이 많아져\n 골치를 앓고 있네..\n자네가 좀 도와줄 수 있나?\n 슬라임 10마리만 잡아주면 되네.",15,3,1){AlignH = true}},
-				IndicateChoice = new Dictionary<int,Object>(){{0,"accept"},{1,"reject"}},
+							{new TextAndPosition("우리 마을에 요즘 슬라임이 많아져\n 골치를 앓고 있네..\n자네가 좀 도와줄 수 있나?\n 슬라임 10마리만 잡아주면 되네.",15,3,10){AlignH = true}},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"QuestAccept"},{1,"QuestReject"}},
 				BackgroundText = backgrounds.GetBackground(1)
 			},
 			QuestReward = new List<Reward>
 			{
 				new ItemReward()
 				{
-					Items = new List<Item>(){itemList.GetItem("전설의 검")}
+					Items = new List<Item>(){itemList.GetItem("전설의검")}
 				}
 			},
 			MonsterNameList = new List<String>(){

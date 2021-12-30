@@ -65,6 +65,13 @@ public class Item : IEquatable<Item>,ICloneable{
 
 public class Equipment : Item{
 	 public bool IsEquip {get;set;} = false;
+	protected Equipment(Equipment that):base(that){
+		this.IsEquip = that.IsEquip;
+	}
+	
+	public Object Clone(){
+		return new Equipment(this);
+	}
 }
 
 public class Weapon : Equipment{
@@ -77,6 +84,14 @@ public class Weapon : Equipment{
 		GameManager.Equip(this);
 	}
 	
+	protected Weapon(Weapon that) : base(that){
+		this.AttackPower = that.AttackPower;
+		this.AttackSpeed = that.AttackSpeed;
+	}
+	
+	public Object Clone(){
+		return new Weapon(this);
+	}
 }
 
 public class Armor : Equipment{
@@ -84,6 +99,14 @@ public class Armor : Equipment{
 	
 	public override void Use(){
 		GameManager.Equip(this);
+	}
+	
+	protected Armor(Armor that) : base(that){
+		this.Defense = that.Defense;
+	}
+	
+	public Object Clone(){
+		return new Armor(this);
 	}
 	
 }

@@ -73,7 +73,6 @@ namespace Game
 		public static void Main()
 		{
 			player = CList.GetPlayer("용사");
-			QuestControler.AllQuestList = new QuestData().QuestDatas;
 			
 			player.inven.AddItem(new Item());
 			player.inven.AddItem(itemList.GetItem("전설의검"));
@@ -977,3 +976,30 @@ QuickDelegate = ()=>{
 //QuestControler.GetQuestByName()을 통해 퀘스트를 불러와 NPC객체에 넣으려고 했는데
 //안된다.System.TypeInitializationException: The type initializer for 'PlayData' threw an exception. ---> System.NullReferenceException
 //이 떠서 안되는데 시간이 다되서 내일 해결해야겠다
+//그리고 퀘스트 NPC도 BattleSystem처럼 따로 Display루틴을 만들생각이다
+
+//2021.12.30
+//Main에서 QuestControler.AllQuestList = new QuestData().QuestDatas;
+//이렇게 초기화 했었는데, 이걸 Characters의 NPC추가 직전에 초기화 하니까 됫다.
+//TalkToNPC클래스를 추가해서 엔피씨 화면 출력을 따로 하려 한다.
+//NPC객체에 또 추가되야하는 필드는 대화목록 인데 그 종류를 약 6가지로 나눴다.
+//1.인사
+//2.퀘스트 수락
+//3.퀘스트 거절
+//4.퀘스트 완료
+//5.대화
+//6.재방문(퀘스트 수락,퀘스트 거절,인사,대화)
+//그에 따라 TalkToNPC에서 사용할 Choice의 종류도 대략 4가지로 나눠질것 같다.(인사,대화,퀘스트 거절수락,퀘스트 완료)
+
+//한가지 더 추가.
+//7.퀘스트 전조
+
+//Data에 인사,대화,퀘스트 수락,퀘스트 거절,퀘스트 완료 Choice를 추가 했다.
+//각 초이스 중에서 대화를 구현할때에는
+//NPC객체에 있는 ConversationMessage를 Choice에 StreamMessage에 하나씩 추가해주는 기능을 구현해야 한다.
+//그리고 NPC에 따라 인사 페이즈에서 선택지를 더 추가할 수 도 있게 해야되며
+//퀘스트 완료에서는 퀘스트 보상 페이즈로 연결되어야 하며 받은 보상의 목록을 띄어주어야 한다.
+//NPC에 따라서 플레이어와 전투 페이즈로 넘어갈 수 도 있다.
+//모두 Runtime중에 메세지가 바뀔 수 있도록 TalkToNPC에서 구현한다.
+
+//Item Clone하는 부분에서 무기clone이 제데로 안되는 부분을 수정하는데 시간이 없어서 제데로 못햇다 수정요함

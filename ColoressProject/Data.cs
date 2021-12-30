@@ -343,6 +343,58 @@ public class Scenario{
 					BackgroundText = backgrounds.GetBackground(5)
 			});
 			
+			choices.Add(new Choice(){
+				Name = "GreetPhase",
+				SelectText = new List<TextAndPosition>()         
+							{new TextAndPosition("대화.",16,13,true),
+							new TextAndPosition("PreQuestMessage",40,13,true)},
+				OnlyShowText = new List<TextAndPosition>()
+							{new TextAndPosition("GreetMessage",15,3+5,1){AlignH = true}},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"ConversationPhase"},{1,"QuestExplan"}},
+				BackgroundText = backgrounds.GetBackground(1)
+			});
+			
+			
+			clikX = 23;
+			clikY = 7;
+			choices.Add(new Choice(){
+				Name = "ConversationPhase",
+				StreamText = new List<TextAndPosition>()
+							{new TextAndPosition("Conversation1",5+clikX,3+clikY,10){PriorityLayer = 1},
+							new TextAndPosition(1000,"Conversation2",5+clikX,3+clikY,10,ConsoleColor.Red){PriorityLayer = 1,AlignH = true}},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"GreetPhase"}},
+				BackgroundText = backgrounds.GetBackground(0)
+			});
+			
+			
+			
+			choices.Add(new Choice(){
+				Name = "QuestAccept",
+				ChoiceType = ChoiceType.QUICKNEXT,
+				OnlyShowText = new List<TextAndPosition>()
+							{new TextAndPosition("QuestAcceptMessage",5,10,10){AlignH = true}},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"GreetPhase"}},
+				BackgroundText = backgrounds.GetBackground(1)
+			});
+			
+			choices.Add(new Choice(){
+				Name = "QuestReject",
+				ChoiceType = ChoiceType.QUICKNEXT,
+				OnlyShowText = new List<TextAndPosition>()
+							{new TextAndPosition("QuestRejectMessage",5,10,10){AlignH = true}},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"GreetPhase"}},
+				BackgroundText = backgrounds.GetBackground(1)
+			});
+			
+			choices.Add(new Choice(){
+				Name = "QuestComplete",
+				SelectText = new List<TextAndPosition>()         
+							{new TextAndPosition("보상을 받는다.",16,13,true)},
+				OnlyShowText = new List<TextAndPosition>()
+							{new TextAndPosition("QuestComplete",15,3+5,1){AlignH = true}},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"QuestReward"}},
+				BackgroundText = backgrounds.GetBackground(1)
+			});
 			
 			Count = choices.Count;
 		}

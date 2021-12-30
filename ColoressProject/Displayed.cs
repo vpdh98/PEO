@@ -421,7 +421,7 @@ public class DisplayTextGame{
 		}*/
 		
 		public void StreamPrint(TextAndPosition TAndP){
-			FrontDelay(TAndP);
+			//FrontDelay(TAndP);
 			delay = TAndP.textDelay;
 			if(streamCount != 0){
 				Console.SetCursorPosition(previousStream[0]+GlobalPositionX,previousStream[1]+GlobalPositionY);
@@ -429,6 +429,8 @@ public class DisplayTextGame{
 			}
 			streamCount = TAndP.text.Length+GetKoreanCount(TAndP.text);
 			PrintPieceOfText(TAndP);
+			if(delay > 0)
+				Console.ReadKey();
 			delay = 0;
 			previousStream = TAndP;
 		}
@@ -486,7 +488,7 @@ public class DisplayTextGame{
 		public void FrontDelay(TextAndPosition TAndP){ 
 			if(TAndP.textFrontDelay > 0){
 				Thread.Sleep(TAndP.textFrontDelay);
-				TAndP.textFrontDelay = 0;//한번 출력한 문자는 딜레이를 없엔다
+				TAndP.textFrontDelay = 0;//한번 출력한 문자는 front 딜레이를 없엔다
 			}
 		}
 		

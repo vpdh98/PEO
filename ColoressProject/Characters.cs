@@ -481,10 +481,58 @@ namespace Characters
 	public class NPC : Enemy,IDamageable,ICharacterState,ICloneable
 	{
 		public List<Quest> QuestList{get;set;}
+		public List<TextAndPosition> GreetMessage{get;set;}
+		public List<TextAndPosition> ConversationMessage{get;set;}
+		public List<TextAndPosition> QuestAcceptMessage{get;set;}
+		public List<TextAndPosition> QuestRejectMessage{get;set;}
+		public List<TextAndPosition> QuestCompleteMassage{get;set;}
+		public List<TextAndPosition> RevisitGreetMessage{get;set;}
+		public List<TextAndPosition> RevisitConversationMessage{get;set;}
+		public List<TextAndPosition> RevisitQuestAcceptMessage{get;set;}
+		public List<TextAndPosition> RevisitQuestRejectMessage{get;set;}
+		public List<TextAndPosition> PreQuestMessage{get;set;}
+		public List<TextAndPosition> RevisitPreQuestMessage{get;set;}
 	
 	
 		public NPC(){}
 		public NPC(string name,int hp,int mp,int attack_power,int defense,int attack_speed):base(name,hp,mp,attack_power,defense,attack_speed){}
+		
+		
+		public TextAndPosition GetGreetMessage(){
+			return TakeRandomMessage(GreetMessage);
+		}
+		public TextAndPosition GetConversationMessage(){
+			return TakeRandomMessage(ConversationMessage);
+		}
+		public TextAndPosition GetQuestAcceptMessage(){
+			return TakeRandomMessage(QuestAcceptMessage);
+		}
+		public TextAndPosition GetQuestRejectMessage(){
+			return TakeRandomMessage(QuestRejectMessage);
+		}
+		public TextAndPosition GetQuestCompleteMassage(){
+			return TakeRandomMessage(QuestCompleteMassage);
+		}
+		public TextAndPosition GetRevisitGreetMessage(){
+			return TakeRandomMessage(RevisitGreetMessage);
+		}
+		public TextAndPosition GetRevisitConversationMessage(){
+			return TakeRandomMessage(RevisitConversationMessage);
+		}
+		public TextAndPosition GetRevisitQuestAcceptMessage(){
+			return TakeRandomMessage(RevisitQuestAcceptMessage);
+		}
+		public TextAndPosition GetRevisitQuestRejectMessage(){
+			return TakeRandomMessage(RevisitQuestRejectMessage);
+		}
+		public TextAndPosition GetPreQuestMessage(){
+			return TakeRandomMessage(PreQuestMessage);
+		}
+		public TextAndPosition GetRevisitPreQuestMessage(){
+			return TakeRandomMessage(RevisitPreQuestMessage);
+		}
+		
+		
 		
 		public string CurrentState(){
 			return "";
@@ -781,6 +829,22 @@ namespace Characters
 			
 			
 			///////////////////NPC/////////////////////////////
+			/*
+			public List<Quest> QuestList{get;set;}
+			public List<TextAndPosition> GreetMessage{get;set;}
+			public List<TextAndPosition> ConversationMessage{get;set;}
+			public List<TextAndPosition> QuestAcceptMessage{get;set;}
+			public List<TextAndPosition> QuestRejectMessage{get;set;}
+			public List<TextAndPosition> QuestCompleteMassage{get;set;}
+			public List<TextAndPosition> RevisitGreetMessage{get;set;}
+			public List<TextAndPosition> RevisitConversationMessage{get;set;}
+			public List<TextAndPosition> RevisitQuestAcceptMessage{get;set;}
+			public List<TextAndPosition> RevisitQuestRejectMessage{get;set;}
+			public List<TextAndPosition> PreQuestMessage{get;set;}
+			public List<TextAndPosition> RevisitPreQuestMessage{get;set;}
+			*/
+			QuestControler.AllQuestList = new QuestData().QuestDatas;
+			
 			npc = new NPC(){
 				Name = "촌장",
 				Hp = 10,
@@ -789,6 +853,40 @@ namespace Characters
 				AttackPower = 1,
 				Defense = 1,
 				AttackSpeed = 2,
+				GreetMessage = new List<TextAndPosition>(){
+					new TextAndPosition("어서오시게 낮선/ 이여\\.",10)
+				},
+				ConversationMessage = new List<TextAndPosition>(){
+					new TextAndPosition("나는 마을 촌장이라네.",10)
+				},
+				QuestAcceptMessage = new List<TextAndPosition>(){
+					new TextAndPosition("오 정말 고맙네. 잘부탁하네.",10)
+				},
+				QuestRejectMessage = new List<TextAndPosition>(){
+					new TextAndPosition("...정 그렇다면 어쩔 수 없지.",10)
+				},
+				QuestCompleteMassage = new List<TextAndPosition>(){
+					new TextAndPosition("대단하구먼! 고맙네.",10)
+				},
+				RevisitGreetMessage = new List<TextAndPosition>(){
+					new TextAndPosition("또 왔구먼. 편히 있다 가게나.",10)
+				},
+				RevisitConversationMessage = new List<TextAndPosition>(){
+					new TextAndPosition("슬라임은 마을 앞 초원에서 많이 나온다네.",10)
+				},
+				RevisitQuestAcceptMessage = new List<TextAndPosition>(){
+					new TextAndPosition("어짜피 해줄 거면서... 아.. 아무것도 아니네. 고맙네",10)
+				},
+				RevisitQuestRejectMessage = new List<TextAndPosition>(){
+					new TextAndPosition("이 늙은이를 놀리는겐가!",10)
+				},
+				PreQuestMessage = new List<TextAndPosition>(){
+					new TextAndPosition("제가 도울 일이 있습니까?",10)
+				},
+				RevisitPreQuestMessage = new List<TextAndPosition>(){
+					new TextAndPosition("그 일 아직 있습니까?",10)
+				},
+				
 				QuestList = new List<Quest>(){QuestControler.GetQuestByName("슬라임 사냥")}
 			};
 			NPCList.Add(npc.Name,npc);
