@@ -96,13 +96,30 @@ public class Scenario{
 							new TextAndPosition("울창한 숲.",7+clikX,2+clikY,1)},
 				ReturnText = new List<TextAndPosition>()
 							{new TextAndPosition("여전히 울창한 숲.",7+clikX,2+clikY,1)},
-				IndicateChoice = new Dictionary<int,Object>(){{0,"c2-right"},{1,"testStream"},{2,"c2"},{3,"gyeongminsHouse"},{4,"c2"}},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"c2-right"},{1,"testStream"},{2,"c2"},{3,"gyeongminsHouse"},{4,"village"}},
 				EnemyList = new List<Enemy>()
 							{characterList.GetEnemy("슬라임"),
 							characterList.GetEnemy("뒤틀린 망자"),
 							characterList.GetEnemy("헐크")},
 				BackgroundText = backgrounds.GetBackground(6)
 			});
+			
+			clikX = 15;
+			clikY = 5;
+			choices.Add(new Choice(){
+				Name = "village",
+				SelectText = new List<TextAndPosition>()         //프로퍼티를 통한 초기화 생성자가 먼저 호출된다, 이게되네
+							{new TextAndPosition("누가 서있다",1,19,true)},
+				OnlyShowText = new List<TextAndPosition>()
+							{new TextAndPosition("작은 마을이다.",7+clikX,3+clikY,1),
+							new TextAndPosition("인기척이 거의 느껴지지 않는다.",7+clikX,2+clikY,1)},
+				ReturnText = new List<TextAndPosition>()
+							{new TextAndPosition("서늘한 공기에 햇살이 따스한 마을.",7+clikX,2+clikY,1)},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"촌장"}},
+				BackgroundText = backgrounds.GetBackground(0)
+			});
+			
+			
 			
 			clikX = 15;
 			clikY = 5;
@@ -347,10 +364,11 @@ public class Scenario{
 				Name = "GreetPhase",
 				SelectText = new List<TextAndPosition>()         
 							{new TextAndPosition("대화.",16,13,true),
-							new TextAndPosition("PreQuestMessage",40,13,true)},
+							new TextAndPosition("PreQuestMessage",40,13,true),
+							 new TextAndPosition("돌아간다.",52,19,true)},
 				OnlyShowText = new List<TextAndPosition>()
 							{new TextAndPosition("GreetMessage",15,3+5,1){AlignH = true}},
-				IndicateChoice = new Dictionary<int,Object>(){{0,"ConversationPhase"},{1,"QuestExplan"}},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"ConversationPhase"},{1,"QuestExplan"},{2,"end"}},
 				BackgroundText = backgrounds.GetBackground(1)
 			});
 			

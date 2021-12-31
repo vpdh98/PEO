@@ -19,14 +19,44 @@ public static class TalkToNPC{
 	public static NPC globalNPC;
 	public static String backField;
 	public static DisplayTextGame NpcDTG = new DisplayTextGame();
+	public static ChoiceControler NpcCC = new ChoiceControler();
+	public static String currentChoice = "GreetPhase";
 	
+	public static List<Quest> NpcQuestList;
+	public static Quest currentQuest;
+	/*
+	public List<Quest> QuestList{get;set;}
+			public List<TextAndPosition> GreetMessage{get;set;}
+			public List<TextAndPosition> ConversationMessage{get;set;}
+			public List<TextAndPosition> QuestAcceptMessage{get;set;}
+			public List<TextAndPosition> QuestRejectMessage{get;set;}
+			public List<TextAndPosition> QuestCompleteMassage{get;set;}
+			public List<TextAndPosition> RevisitGreetMessage{get;set;}
+			public List<TextAndPosition> RevisitConversationMessage{get;set;}
+			public List<TextAndPosition> RevisitQuestAcceptMessage{get;set;}
+			public List<TextAndPosition> RevisitQuestRejectMessage{get;set;}
+			public List<TextAndPosition> PreQuestMessage{get;set;}
+			public List<TextAndPosition> RevisitPreQuestMessage{get;set;}
+			
+			GreetPhase
+			ConversationPhase
+			QuestAccept
+			QuestReject
+			QuestComplete
+	*/
 	public static String Accost(Player player,NPC npc,String back){
 		globalPlayer = player;
 		globalNPC = npc;
 		backField = back;
 		
+		NpcQuestList = npc.QuestList;
 		
-		/*
+		NpcCC.ChangeChoiceText(choiceName:"GreetPhase",onlyShowText:npc.GetGreetMessage());
+		//NpcCC.ChangeChoiceText(choiceName:"ConversationPhase",onlyShowText:npc.GetGreetMessage());
+		//NpcCC.ChangeChoiceText(choiceName:"QuestAccept",onlyShowText:npc.GetGreetMessage());
+		//NpcCC.ChangeChoiceText(choiceName:"QuestReject",onlyShowText:npc.GetGreetMessage());
+		
+		
 		BDTG.Display(BCC.GetChoiceClone(currentChoice));
 		while(true){
 			keyInfo = Console.ReadKey();
@@ -40,46 +70,27 @@ public static class TalkToNPC{
 			BDTG.Display();
 		}
 		
-		while(!battleAnd)
+		while(currentChoice != "end")
 		{
-			if(died)
-			{
-				died = false;
-				globerPlayer.Hp = globerPlayer.MaxHp; //살아날때 체력 회복
-				timeOut = false;
-				count = 0;
-				return savePoint;
-			}
-			TimerStart();
-			while(true){
-				Thread.Sleep(10);
-				if(timeOut){ EnemyTurn(); }
-				if(died)
-				{
-					died = false;
-					globerPlayer.Hp = globerPlayer.MaxHp; //살아날때 체력 회복
-					timeOut = false;
-					count = 0;
-					return savePoint;
-				}
-				if(Console.KeyAvailable) break;
-			}
+			if(currentChoice == "end") return backField;
 			keyInfo = Console.ReadKey();
 			BDTG.SelectingText(keyInfo);
-			if(keyInfo.Key == ConsoleKey.Enter){
+			if(keyInfo.Key == ConsoleKey.Enter)
+			{
 				currentChoice = (String)BDTG.GetCurrentSelectValue();
-				
-				if(currentChoice == "movePhase") continue;
-				timerEnd = true;
-				timer.Wait();
-				PlayerTurn();
-				timeOut = false;
+				currentQuest = NpcQuestList.Find(q => q.QuestName.Equals(currentChoice));
+				if(currentQuest.QuestName == currentChoice)
+				{
+					BDTG.Display(currentQuest.QuestContents);
+				}else{
+					BDTG.Display(BCC.GetChoice(currentChoice));
+				}
 			}else{
 				BDTG.Display();
 			}
 			
 			
-		}*/
+		}
 		return backField;
 		
 	}

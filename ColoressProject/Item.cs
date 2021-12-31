@@ -58,18 +58,23 @@ public class Item : IEquatable<Item>,ICloneable{
 		this.DropChance = that.DropChance;
 	}
 	
-	public Object Clone(){
+	public virtual Object Clone(){
 		return new Item(this);
 	}
 }
 
 public class Equipment : Item{
 	 public bool IsEquip {get;set;} = false;
-	protected Equipment(Equipment that):base(that){
+	
+	public Equipment(){
+		
+	}
+	
+	protected Equipment(Equipment that) : base(that){
 		this.IsEquip = that.IsEquip;
 	}
 	
-	public Object Clone(){
+	public override Object Clone(){
 		return new Equipment(this);
 	}
 }
@@ -80,6 +85,10 @@ public class Weapon : Equipment{
 	
 	public List<TextAndPosition> AttackMessage{get;set;} = new List<TextAndPosition>(){ new TextAndPosition("나는 무기를 휘둘렀다.",10)};
 	
+	public Weapon(){
+		
+	}
+	
 	public override void Use(){
 		GameManager.Equip(this);
 	}
@@ -89,13 +98,17 @@ public class Weapon : Equipment{
 		this.AttackSpeed = that.AttackSpeed;
 	}
 	
-	public Object Clone(){
+	public override Object Clone(){
 		return new Weapon(this);
 	}
 }
 
 public class Armor : Equipment{
 	public int Defense{get;set;} = 0;
+	
+	public Armor(){
+		
+	}
 	
 	public override void Use(){
 		GameManager.Equip(this);
@@ -105,7 +118,7 @@ public class Armor : Equipment{
 		this.Defense = that.Defense;
 	}
 	
-	public Object Clone(){
+	public override Object Clone(){
 		return new Armor(this);
 	}
 	

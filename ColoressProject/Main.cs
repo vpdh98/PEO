@@ -108,6 +108,7 @@ namespace Game
 					currentChoice = (String)DTG.GetCurrentSelectValue();
 
 					if(CList.GetEnemy(currentChoice) != null){ currentChoice = BattlePhase(player,CList.GetEnemy(currentChoice),DTG.Cho.Name); } //currentChoice에 현제 선택된 몬스터 이름이 들어가 있음 //8.23
+					if(CList.GetNpcOriginal(currentChoice) != null){currentChoice = TalkToNPC.Accost(player,CList.GetNpcOriginal(currentChoice),DTG.Cho.Name);}
 					DTG.Cho.LeaveChoice();
 					
 					if(WorldMap.GetChoiceClone(currentChoice).ChoiceType == ChoiceType.QUICK) { runQuick(); }  //QUICK구현을 위해 추가된 if문
@@ -1003,3 +1004,12 @@ QuickDelegate = ()=>{
 //모두 Runtime중에 메세지가 바뀔 수 있도록 TalkToNPC에서 구현한다.
 
 //Item Clone하는 부분에서 무기clone이 제데로 안되는 부분을 수정하는데 시간이 없어서 제데로 못햇다 수정요함
+
+//2021.12.31
+//오늘은 올해의 마지막 날이다
+//이글을 읽는 당신 복 많이 받길
+//Item Clone문제는 해결했다.
+//원인은 Item부터 이어지는 복사생성자를 이용한 Clone메소드를 virtual,override 시키지 않아서 부모클래스의 Clone이 호출된 것이다.
+
+//Main에서 TalkToNPC.Accost()를 호출해서 NPC대화 창까지 띄우는데에 성공했다.
+//그런데 그 대화창 Choice의 onlyShowText를 변경하려하니 ChangeChoiceText에서 GetChoice를 해올때 KeyNotFoundException이 뜨는 오류가 있다 수정하자.

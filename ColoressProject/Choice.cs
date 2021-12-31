@@ -243,9 +243,8 @@ public class ChoiceControler{
 		if(choiceControler == null){
 			choiceControler = this;
 		}
-		
+		testLog(choiceName);
 		Choice cho = choiceControler.GetChoice(choiceName);
-		
 		if(onlyShowText != null){
 			cho.OnlyShowText = new List<TextAndPosition>() {onlyShowText};
 		}

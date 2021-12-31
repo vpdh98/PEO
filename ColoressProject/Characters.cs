@@ -540,6 +540,7 @@ namespace Characters
 		
 		protected NPC(NPC that):base(that){
 				this.QuestList = (List<Quest>)ListClone<Quest>(that.QuestList);
+				
 		}
 		
 		public Object Clone(){
@@ -904,6 +905,15 @@ namespace Characters
 		public Enemy GetEnemy(String name){
 			try{
 				return (Enemy)EnemyList[name].Clone();
+			}catch(Exception e){
+				Console.WriteLine(e);
+				return null;
+			}
+		}
+		
+		public NPC GetNpcOriginal(String name){ //원본임. 복사할 필요가 없다고 판단 2021.12.31
+			try{
+				return (NPC)NPCList[name];
 			}catch(Exception e){
 				Console.WriteLine(e);
 				return null;
