@@ -492,6 +492,7 @@ namespace Characters
 		public List<TextAndPosition> RevisitQuestRejectMessage{get;set;}
 		public List<TextAndPosition> PreQuestMessage{get;set;}
 		public List<TextAndPosition> RevisitPreQuestMessage{get;set;}
+		public List<TextAndPosition> QuestIntroductionMessage{get;set;}
 	
 	
 		public NPC(){}
@@ -501,8 +502,8 @@ namespace Characters
 		public TextAndPosition GetGreetMessage(){
 			return TakeRandomMessage(GreetMessage);
 		}
-		public TextAndPosition GetConversationMessage(){
-			return TakeRandomMessage(ConversationMessage);
+		public List<TextAndPosition> GetConversationMessageList(){ //대화는 StreamText를 통해 할 것임으로 List<TextAndPosition>로 통체로 보넴
+			return ConversationMessage;
 		}
 		public TextAndPosition GetQuestAcceptMessage(){
 			return TakeRandomMessage(QuestAcceptMessage);
@@ -530,6 +531,9 @@ namespace Characters
 		}
 		public TextAndPosition GetRevisitPreQuestMessage(){
 			return TakeRandomMessage(RevisitPreQuestMessage);
+		}
+		public TextAndPosition GetQuestIntroductionMessage(){
+			return TakeRandomMessage(QuestIntroductionMessage);
 		}
 		
 		
@@ -823,7 +827,7 @@ namespace Characters
 				
 				DeathEvent = ()=>{
 					DamageSystem.backField = "c2";
-					PlayData.WorldMap.RemoveChoiceSelectList("c2",3);
+					PlayData.WorldMap.RemoveChoiceSelectText("c2",3);
 				}
 			};
 			EnemyList.Add(enemy.Name,enemy);
@@ -858,7 +862,9 @@ namespace Characters
 					new TextAndPosition("어서오시게 낮선/ 이여\\.",10)
 				},
 				ConversationMessage = new List<TextAndPosition>(){
-					new TextAndPosition("나는 마을 촌장이라네.",10)
+					new TextAndPosition("나는 마을 촌장이라네.",10),
+					new TextAndPosition("외부인은 정말 오랜만에 보는구먼.",10),
+					new TextAndPosition("편히 있다 가게나.",10)
 				},
 				QuestAcceptMessage = new List<TextAndPosition>(){
 					new TextAndPosition("오 정말 고맙네. 잘부탁하네.",10)
@@ -887,6 +893,9 @@ namespace Characters
 				RevisitPreQuestMessage = new List<TextAndPosition>(){
 					new TextAndPosition("그 일 아직 있습니까?",10)
 				},
+				QuestIntroductionMessage = new List<TextAndPosition>(){
+					new TextAndPosition("일은 많지. 자 골라보게.",10)
+				},
 				
 				QuestList = new List<Quest>(){QuestControler.GetQuestByName("슬라임 사냥")}
 			};
@@ -913,7 +922,7 @@ namespace Characters
 		
 		public NPC GetNpcOriginal(String name){ //원본임. 복사할 필요가 없다고 판단 2021.12.31
 			try{
-				return (NPC)NPCList[name];
+				return NPCList[name];
 			}catch(Exception e){
 				Console.WriteLine(e);
 				return null;

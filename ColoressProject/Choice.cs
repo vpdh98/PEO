@@ -239,17 +239,20 @@ public class ChoiceControler{
 		return (Choice)choiceDictionary[choiceName].Clone();
 	}
 	
-	public Choice ChangeChoiceText(String choiceName,ChoiceControler choiceControler = null,TextAndPosition onlyShowText = null,TextAndPosition selectText = null){
+	public Choice ChangeChoiceText(String choiceName,ChoiceControler choiceControler = null,TextAndPosition onlyShowText = null,TextAndPosition selectText = null,List<TextAndPosition> streamText = null){
 		if(choiceControler == null){
 			choiceControler = this;
 		}
-		testLog(choiceName);
+		//testLog(choiceName);
 		Choice cho = choiceControler.GetChoice(choiceName);
 		if(onlyShowText != null){
 			cho.OnlyShowText = new List<TextAndPosition>() {onlyShowText};
 		}
 		if(selectText != null){
 			cho.SelectText = new List<TextAndPosition>() {selectText};
+		}
+		if(streamText != null){
+			cho.StreamText = streamText;
 		}
 		return cho;
 	}
@@ -265,10 +268,21 @@ public class ChoiceControler{
 		return cho;
 	}
 	
-	public void RemoveChoiceSelectList(String choiceName,int selectIndex){
+	public void RemoveChoiceSelectText(String choiceName,int selectIndex){
 		Choice choice = choiceDictionary[choiceName];
 		choice.SelectText.RemoveAt(selectIndex);
 		choice.IndicateChoice.Remove(selectIndex);
+	}
+	
+	public void AddChoiceSelectText(String choiceName,TextAndPosition selectText,Object indicate){
+		Choice choice = choiceDictionary[choiceName];
+		choice.SelectText.Add(selectText);
+		choice.IndicateChoice.Add(choice.SelectText.Count,indicate);
+	}
+	
+	public void ChangeChoiceSelectText(String choiceName,int index,String selectString){
+		Choice choice = choiceDictionary[choiceName];
+		choice.SelectText[index].text = selectString;
 	}
 		
 }

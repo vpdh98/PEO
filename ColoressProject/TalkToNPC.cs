@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Game;
 using static Convenience;
-using static DamageSystem;
+//using static DamageSystem;
 using static GameWindows;
 using static PlayData;
 
@@ -19,11 +19,13 @@ public static class TalkToNPC{
 	public static NPC globalNPC;
 	public static String backField;
 	public static DisplayTextGame NpcDTG = new DisplayTextGame();
-	public static ChoiceControler NpcCC = new ChoiceControler();
+	public static ChoiceControler NpcCC = new ChoiceControler(new Scenario());
 	public static String currentChoice = "GreetPhase";
 	
 	public static List<Quest> NpcQuestList;
 	public static Quest currentQuest;
+	
+	public static ConsoleKeyInfo keyInfo;
 	/*
 	public List<Quest> QuestList{get;set;}
 			public List<TextAndPosition> GreetMessage{get;set;}
@@ -51,42 +53,67 @@ public static class TalkToNPC{
 		
 		NpcQuestList = npc.QuestList;
 		
-		NpcCC.ChangeChoiceText(choiceName:"GreetPhase",onlyShowText:npc.GetGreetMessage());
-		//NpcCC.ChangeChoiceText(choiceName:"ConversationPhase",onlyShowText:npc.GetGreetMessage());
-		//NpcCC.ChangeChoiceText(choiceName:"QuestAccept",onlyShowText:npc.GetGreetMessage());
-		//NpcCC.ChangeChoiceText(choiceName:"QuestReject",onlyShowText:npc.GetGreetMessage());
+		currentChoice = "GreetPhase";
+		
+		NpcCC.ChangeChoiceText(choiceName:"GreetPhase",onlyShowText:new TextAndPosition(npc.GetGreetMessage().text,15,3+5,1){AlignH = true});
+		if(NpcQuestList != null&&NpcQuestList.Count > 0){
+			int firstX = 22;
+			int lastY = 13;
+			NpcCC.ChangeChoiceSelectText("GreetPhase",1,npc.GetPreQuestMessage().text);
+			for(int i=0;i<NpcQuestList.Count;i++){
+				NpcCC.AddChoiceSelectText("QuestIntroduction",new TextAndPosition(NpcQuestList[i].QuestName,firstX,lastY++ +1,true),NpcQuestList[i].QuestName);
+				firstX = GameManager.selectListFirststPositionX(NpcCC.GetChoice("QuestIntroduction").SelectText);
+				lastY = GameManager.selectListLastPositionY(NpcCC.GetChoice("QuestIntroduction").SelectText);
+			}
+		}
+		else{
+			NpcCC.RemoveChoiceSelectText("GreetPhase",1);
+		}
 		
 		
-		BDTG.Display(BCC.GetChoiceClone(currentChoice));
+		NpcCC.ChangeChoiceText(choiceName:"ConversationPhase",streamText:npc.GetConversationMessageList());
+		NpcCC.ChangeChoiceText(choiceName:"QuestAccept",onlyShowText:npc.GetQuestAcceptMessage());
+		NpcCC.ChangeChoiceText(choiceName:"QuestReject",onlyShowText:npc.GetQuestRejectMessage());
+		
+		NpcDTG.Display(NpcCC.GetChoiceClone(currentChoice));
 		while(true){
 			keyInfo = Console.ReadKey();
 			if(keyInfo.Key == ConsoleKey.Enter){
-				currentChoice = (String)BDTG.GetCurrentSelectValue();
+				currentChoice = (String)NpcDTG.GetCurrentSelectValue();
 				if(currentChoice == "end") return backField;
-				BDTG.Display(BCC.GetChoiceClone(currentChoice));
+				currentQuest = NpcQuestList.Find(q => q.QuestName.Equals(currentChoice));
+				if(currentQuest != null && currentQuest.QuestName == currentChoice)
+				{
+					NpcDTG.Display(currentQuest.QuestContents);
+				}
+				else{
+					testLog(currentChoice);
+					NpcDTG.Display(NpcCC.GetChoice(currentChoice));
+				}
 				break;
 			}
-			BDTG.SelectingText(keyInfo);
-			BDTG.Display();
+			NpcDTG.SelectingText(keyInfo);
+			NpcDTG.Display();
 		}
 		
 		while(currentChoice != "end")
 		{
-			if(currentChoice == "end") return backField;
+			
 			keyInfo = Console.ReadKey();
-			BDTG.SelectingText(keyInfo);
+			NpcDTG.SelectingText(keyInfo);
 			if(keyInfo.Key == ConsoleKey.Enter)
 			{
-				currentChoice = (String)BDTG.GetCurrentSelectValue();
-				currentQuest = NpcQuestList.Find(q => q.QuestName.Equals(currentChoice));
-				if(currentQuest.QuestName == currentChoice)
-				{
-					BDTG.Display(currentQuest.QuestContents);
-				}else{
-					BDTG.Display(BCC.GetChoice(currentChoice));
+				currentChoice = (String)NpcDTG.GetCurrentSelectValue();
+				
+				
+					NpcDTG.Display(NpcCC.GetChoice(currentChoice));
+					if(NpcDTG.Cho.ChoiceType == ChoiceType.QUICKNEXT){
+						currentChoice = (String)NpcDTG.Cho.QuickNext();
+						NpcDTG.Display(NpcCC.GetChoice(currentChoice));
+					
 				}
 			}else{
-				BDTG.Display();
+				NpcDTG.Display();
 			}
 			
 			

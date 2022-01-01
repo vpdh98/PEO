@@ -109,13 +109,14 @@ public class Scenario{
 			choices.Add(new Choice(){
 				Name = "village",
 				SelectText = new List<TextAndPosition>()         //프로퍼티를 통한 초기화 생성자가 먼저 호출된다, 이게되네
-							{new TextAndPosition("누가 서있다",1,19,true)},
+							{new TextAndPosition("누가 서있다",7+clikX,8+clikY,true),
+							new TextAndPosition("돌아간다.",1,19,true)},
 				OnlyShowText = new List<TextAndPosition>()
 							{new TextAndPosition("작은 마을이다.",7+clikX,3+clikY,1),
 							new TextAndPosition("인기척이 거의 느껴지지 않는다.",7+clikX,2+clikY,1)},
 				ReturnText = new List<TextAndPosition>()
 							{new TextAndPosition("서늘한 공기에 햇살이 따스한 마을.",7+clikX,2+clikY,1)},
-				IndicateChoice = new Dictionary<int,Object>(){{0,"촌장"}},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"촌장"},{1,"c2"}},
 				BackgroundText = backgrounds.GetBackground(0)
 			});
 			
@@ -368,7 +369,27 @@ public class Scenario{
 							 new TextAndPosition("돌아간다.",52,19,true)},
 				OnlyShowText = new List<TextAndPosition>()
 							{new TextAndPosition("GreetMessage",15,3+5,1){AlignH = true}},
-				IndicateChoice = new Dictionary<int,Object>(){{0,"ConversationPhase"},{1,"QuestExplan"},{2,"end"}},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"ConversationPhase"},{1,"QuestIntroduction"},{2,"end"}},
+				BackgroundText = backgrounds.GetBackground(1)
+			});
+			
+			choices.Add(new Choice(){
+				Name = "QuestIntroduction",
+				SelectText = new List<TextAndPosition>()         
+							{new TextAndPosition("아뇨 괜찮습니다.",44,19,true)},
+				OnlyShowText = new List<TextAndPosition>()
+							{new TextAndPosition("QuestExplan",15,3+5,1){AlignH = true}},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"GreetPhase"}},
+				BackgroundText = backgrounds.GetBackground(1)
+			});
+			
+			choices.Add(new Choice(){
+				Name = "QuestExplan",
+				SelectText = new List<TextAndPosition>()         
+							{new TextAndPosition("아뇨 괜찮습니다.",44,19,true)},
+				OnlyShowText = new List<TextAndPosition>()
+							{new TextAndPosition("QuestExplan",15,3+5,1){AlignH = true}},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"GreetPhase"}},
 				BackgroundText = backgrounds.GetBackground(1)
 			});
 			
@@ -377,6 +398,7 @@ public class Scenario{
 			clikY = 7;
 			choices.Add(new Choice(){
 				Name = "ConversationPhase",
+				ChoiceType = ChoiceType.QUICKNEXT,
 				StreamText = new List<TextAndPosition>()
 							{new TextAndPosition("Conversation1",5+clikX,3+clikY,10){PriorityLayer = 1},
 							new TextAndPosition(1000,"Conversation2",5+clikX,3+clikY,10,ConsoleColor.Red){PriorityLayer = 1,AlignH = true}},

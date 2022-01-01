@@ -108,7 +108,7 @@ namespace Game
 					currentChoice = (String)DTG.GetCurrentSelectValue();
 
 					if(CList.GetEnemy(currentChoice) != null){ currentChoice = BattlePhase(player,CList.GetEnemy(currentChoice),DTG.Cho.Name); } //currentChoice에 현제 선택된 몬스터 이름이 들어가 있음 //8.23
-					if(CList.GetNpcOriginal(currentChoice) != null){currentChoice = TalkToNPC.Accost(player,CList.GetNpcOriginal(currentChoice),DTG.Cho.Name);}
+					if(CList.GetNpcOriginal(currentChoice) != null){currentChoice = TalkToNPC.Accost(player,CList.GetNpcOriginal(currentChoice),DTG.Cho.Name);} //currentChoice에 NPC의 이름이 들어가면 실행
 					DTG.Cho.LeaveChoice();
 					
 					if(WorldMap.GetChoiceClone(currentChoice).ChoiceType == ChoiceType.QUICK) { runQuick(); }  //QUICK구현을 위해 추가된 if문
@@ -228,6 +228,8 @@ namespace Game
 			}
 			return firstNum;
 		}
+		
+		
 		public static int selectListFirstPositionY(List<TextAndPosition> sellist)
 		{
 			int firstNum = 9999;
