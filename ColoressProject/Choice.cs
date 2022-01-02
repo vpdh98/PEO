@@ -5,6 +5,7 @@ using System.Threading;
 using static Convenience;
 using System.Linq;
 using System.IO;
+using Game;
 
 public enum ChoiceType{
 			NORMAL,		//선택지
@@ -28,6 +29,8 @@ public class Choice : ICloneable //선택지 부여 하는 클래스
 	public Quick QuickDelegate{get;set;} 
 	
 	public bool IsSavePoint{get;set;} = false;
+	
+	public bool IsVisit{get;set;} = false;
 
 	private List<TextAndPosition> selectText;
 	private List<TextAndPosition> onlyShowText;
@@ -159,6 +162,102 @@ public class Choice : ICloneable //선택지 부여 하는 클래스
 		}
 	}
 	
+	public void TextArrangement(){//Layout종류에 따라 Text들을 정렬 ChoiceControler에 Scenario를 넣을때 호출했다.
+		int firstX = 0;
+		int lastY = 0;
+		if(selectText != null){
+			for(int i = 0;i<selectText.Count;i++){ //SelectText의 레이아웃 정렬
+				TextAndPosition tap = selectText[i];
+				if(tap.Layout == null) continue;
+				if(tap.Layout == TextLayout.SELECT_DEFAULT){
+					if(selectText.Count == 1){
+						tap[0] = 22;
+						tap[1] = 13;
+					}
+					else{
+						firstX = GameManager.selectListFirststPositionX(selectText);
+						lastY = GameManager.selectListLastPositionY(selectText);
+						tap[0] = firstX;
+						tap[1] = lastY;
+					}
+				}
+			}
+		}
+		if(selectText != null){
+			for(int i = 0;i<selectText.Count;i++){//SelectText중 CROSSROADS의 레이아웃 정렬
+				TextAndPosition tap = selectText[i];
+				List<TextAndPosition> crossroads = new List<TextAndPosition>();
+				for(int j = 0;j<selectText.Count;j++){
+					if(selectText[i][1] >= 19)
+						crossroads.Add(selectText[i]);
+				}
+				if(crossroads.Count != 0){
+					if(tap.Layout == TextLayout.CROSSROADS_DEFAULT){
+						if(crossroads.Count == 1){
+							tap[0] = 1;
+							tap[1] = 19;
+						}
+						else if(crossroads.Count == 2){
+							firstX = 60 - (tap.text.Length + Convenience.GetKoreanCount(tap.text));
+							tap[0] = firstX;
+							tap[1] = 19;
+						}
+						else if(crossroads.Count > 2){
+							throw new Exception("이미 갈림길이 2개 있음.");
+						}
+
+					}
+				}
+			}
+		}
+		if(onlyShowText != null){
+			for(int i = 0;i<onlyShowText.Count;i++){
+				TextAndPosition tap = onlyShowText[i];
+				if(tap.Layout == null) continue;
+				if(tap.Layout == TextLayout.ONLY_SHOW_DEFAULT){
+					if(onlyShowText.Count == 1){
+						tap[0] = 15;
+						tap[1] = 8;
+					}
+					else{
+						firstX = GameManager.selectListFirststPositionX(onlyShowText);
+						lastY = GameManager.selectListLastPositionY(onlyShowText);
+						tap[0] = firstX;
+						tap[1] = lastY;
+					}
+				}
+			}
+		}
+		if(streamText != null){
+			for(int i = 0;i<streamText.Count;i++){
+				TextAndPosition tap = streamText[i];
+				if(tap.Layout == null) continue;
+				if(tap.Layout == TextLayout.ONLY_SHOW_DEFAULT){
+					tap[0] = 15;
+					tap[1] = 8;
+				}
+			}
+		}
+		if(returnText != null){
+			for(int i = 0;i<returnText.Count;i++){
+				TextAndPosition tap = returnText[i];
+				if(tap.Layout == null) continue;
+				if(tap.Layout == TextLayout.ONLY_SHOW_DEFAULT){
+					if(returnText.Count == 1){
+						tap[0] = 15;
+						tap[1] = 8;
+					}
+					else{
+						firstX = GameManager.selectListFirststPositionX(returnText);
+						lastY = GameManager.selectListLastPositionY(returnText);
+						tap[0] = firstX;
+						tap[1] = lastY;
+					}
+				}
+			}
+		}
+	}
+	
 	
 
 	protected Choice(Choice that):this(){
@@ -209,8 +308,12 @@ public class ChoiceControler{
 	}
 	
 	public ChoiceControler(Scenario scenario):this(){
+		Choice temp;
+		
 		for(int i = 0;i<scenario.Count;i++){
-			choiceDictionary.Add(scenario[i].Name,(Choice)scenario[i].Clone());
+			temp  = (Choice)scenario[i].Clone();
+			temp.TextArrangement(); //Text들의 Layout에 따라 재정렬
+			choiceDictionary.Add(scenario[i].Name,temp);
 		}
 	}
 
@@ -239,7 +342,7 @@ public class ChoiceControler{
 		return (Choice)choiceDictionary[choiceName].Clone();
 	}
 	
-	public Choice ChangeChoiceText(String choiceName,ChoiceControler choiceControler = null,TextAndPosition onlyShowText = null,TextAndPosition selectText = null,List<TextAndPosition> streamText = null){
+	public Choice ChangeChoiceText(String choiceName,ChoiceControler choiceControler = null,TextAndPosition onlyShowText = null,TextAndPosition selectText = null,List<TextAndPosition> streamText = null,TextAndPosition returnText = null){
 		if(choiceControler == null){
 			choiceControler = this;
 		}
@@ -254,6 +357,10 @@ public class ChoiceControler{
 		if(streamText != null){
 			cho.StreamText = streamText;
 		}
+		if(returnText != null){
+			cho.ReturnText = new List<TextAndPosition>() {returnText};
+		}
+		cho.TextArrangement();
 		return cho;
 	}
 	
@@ -265,6 +372,7 @@ public class ChoiceControler{
 		Choice cho = choiceControler.GetChoice(choiceName);
 		
 		cho.EnemyList.Add(monster);
+		cho.TextArrangement();
 		return cho;
 	}
 	
@@ -278,11 +386,13 @@ public class ChoiceControler{
 		Choice choice = choiceDictionary[choiceName];
 		choice.SelectText.Add(selectText);
 		choice.IndicateChoice.Add(choice.SelectText.Count,indicate);
+		choice.TextArrangement();
 	}
 	
 	public void ChangeChoiceSelectText(String choiceName,int index,String selectString){
 		Choice choice = choiceDictionary[choiceName];
 		choice.SelectText[index].text = selectString;
+		choice.TextArrangement();
 	}
 		
 }

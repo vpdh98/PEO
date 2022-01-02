@@ -1014,4 +1014,36 @@ QuickDelegate = ()=>{
 //원인은 Item부터 이어지는 복사생성자를 이용한 Clone메소드를 virtual,override 시키지 않아서 부모클래스의 Clone이 호출된 것이다.
 
 //Main에서 TalkToNPC.Accost()를 호출해서 NPC대화 창까지 띄우는데에 성공했다.
-//그런데 그 대화창 Choice의 onlyShowText를 변경하려하니 ChangeChoiceText에서 GetChoice를 해올때 KeyNotFoundException이 뜨는 오류가 있다 수정하자.
+//그런데 그 대화창 Choice의 onlyShowText를 변경하려하니 ChangeChoiceText에서 GetChoice를 해올때 KeyNotFoundException이 뜨는 오류가 있다 수정하자.-> ChoiceControler의 객체를 생성할때 Scenario를 안넣어서 발생한 문제였다.
+
+//2021.01.02
+//어제 코딩을 하다가 시간이 부족해서 주석은 못적었다
+//어제는 퀘스트를 구현하였다.
+//Npc클래스
+//QuestIntoductionMessage를 추가 : Data에 IndicatePhase를 추가하고 그 Choice의 OnlyShowText를 대체하는 변수
+//GetComversationMessageList()->List<TextAndPosition> 로 변경 :ConversationPhase Choice의 StreamText를 대체하기 위한 메소드
+//Choice(ChoiceControler)
+//초이스의 내용을 변경하는 기능을 수행하는 메소드들을 추가했다.
+//ChangeChoiceText, AddChoiceSelectText, ChangeChoiceSelectText 이다
+//RemoveChoiceSelectList를 RemoveChoiceSelectText로 변경: 좀더 직관적으로 맞는 이름으로 변경
+//QuestExplan Choice 만듬: 해당 Choice에는 Quest객체에 QuestContents를 넣어 퀘스트 내용을 출력하게 함
+//TalkToNPC
+//QuestIntoduction에 Quest들의 선택지를 추가하기 위한 코드를 넣었다.
+//퀘스트 기능의 작동 순서는
+//Choice 선택 화면 에서
+//NPC선택 -> NPC불러와서 TalkToNPC.Accost()실행 -> Accost에서 첫화면 출력 -> NPC.QuestList에 퀘스트가 하나이상 존재하면 QuestIntoduction로 갈 수 있는 선택지 추가 -> QuestIntoduction에 퀘스트 선택하는 선택지 추가 -> 퀘스트 선택시 QuestExplan으로 넘어가 Quest.QuestContents를 출력 -> 수락시 QuestAccept로 넘어감(거절시 QuestReject)
+
+//오늘은 TextAndPosition에 Layout변수를 만들고
+//ONLY_SHOW_DEFAULT, SELECT_DEFAULT, CROSSROAD_DEFAULT (streamText,returnText는 ONLY_SHOW_DEFAULT에 속하게 했다.)
+//이렇게 세가지 레이아웃 enum을 만들어 각각의 옵션마다 자동으로 text의 포지션을 잡아주는 기능을 넣었다.
+//Choice.Arrangement() 메소드가 그것인데, Choice의 Text를 바꿀때나 ChoiceControler에 Scenario를 초기화 할때 호출되어 레이아웃대로 재정렬 할 수 있도록 하였다.
+
+//레이아웃은 기존에 있는 텍스트의 위치를 기준으로 결정되게 했는데, 아무 텍스트도 없을경우 기본값을 넣어주게 했다.
+//StreamText의 경우 레이아웃을 설정하면 지금은 하나의 TextAndPosition만 넣을 수 있게 되어있다. 나중에 수정요함
+
+//현재 퀘스트는 제데로 뜨지만
+//퀘스트를 수락했을때 받을 수 있는 퀘스트 목록에서 사라지는 기능과
+//퀘스트가 진행중임을 나타낼 수 있는 기능과
+//실질적으로 플레이어가 퀘스트 객체를 가져오는 기능이 아직 구현되지 않았다.
+//물론 퀘스트 완료도 구현되지 않았다.
+//다 구현해보자. 물론 오늘은 말고...

@@ -378,12 +378,12 @@ public class Scenario{
 				SelectText = new List<TextAndPosition>()         
 							{new TextAndPosition("아뇨 괜찮습니다.",44,19,true)},
 				OnlyShowText = new List<TextAndPosition>()
-							{new TextAndPosition("QuestExplan",15,3+5,1){AlignH = true}},
+							{new TextAndPosition("QuestIntroduction",15,3+5,1){AlignH = true}},
 				IndicateChoice = new Dictionary<int,Object>(){{0,"GreetPhase"}},
 				BackgroundText = backgrounds.GetBackground(1)
 			});
 			
-			choices.Add(new Choice(){
+			choices.Add(new Choice(){ //Choice 전체가 다른 Choice로 대체 됨
 				Name = "QuestExplan",
 				SelectText = new List<TextAndPosition>()         
 							{new TextAndPosition("아뇨 괜찮습니다.",44,19,true)},

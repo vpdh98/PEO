@@ -859,33 +859,33 @@ namespace Characters
 				Defense = 1,
 				AttackSpeed = 2,
 				GreetMessage = new List<TextAndPosition>(){
-					new TextAndPosition("어서오시게 낮선/ 이여\\.",10)
+					new TextAndPosition("어서오시게 낮선/ 이여\\.",10){AlignH = true,Layout = TextLayout.ONLY_SHOW_DEFAULT}
 				},
 				ConversationMessage = new List<TextAndPosition>(){
-					new TextAndPosition("나는 마을 촌장이라네.",10),
-					new TextAndPosition("외부인은 정말 오랜만에 보는구먼.",10),
-					new TextAndPosition("편히 있다 가게나.",10)
+					new TextAndPosition("나는 마을 촌장이라네.",10){AlignH = true,Layout = TextLayout.ONLY_SHOW_DEFAULT},
+					new TextAndPosition("외부인은 정말 오랜만에 보는구먼.",10){AlignH = true,Layout = TextLayout.ONLY_SHOW_DEFAULT},
+					new TextAndPosition("편히 있다 가게나.",10){AlignH = true,Layout = TextLayout.ONLY_SHOW_DEFAULT}
 				},
 				QuestAcceptMessage = new List<TextAndPosition>(){
-					new TextAndPosition("오 정말 고맙네. 잘부탁하네.",10)
+					new TextAndPosition("오 정말 고맙네. 잘부탁하네.",10){AlignH = true,Layout = TextLayout.ONLY_SHOW_DEFAULT}
 				},
 				QuestRejectMessage = new List<TextAndPosition>(){
-					new TextAndPosition("...정 그렇다면 어쩔 수 없지.",10)
+					new TextAndPosition("...정 그렇다면 어쩔 수 없지.",10){AlignH = true,Layout = TextLayout.ONLY_SHOW_DEFAULT}
 				},
 				QuestCompleteMassage = new List<TextAndPosition>(){
-					new TextAndPosition("대단하구먼! 고맙네.",10)
+					new TextAndPosition("대단하구먼! 고맙네.",10){AlignH = true,Layout = TextLayout.ONLY_SHOW_DEFAULT}
 				},
 				RevisitGreetMessage = new List<TextAndPosition>(){
-					new TextAndPosition("또 왔구먼. 편히 있다 가게나.",10)
+					new TextAndPosition("또 왔구먼. 편히 있다 가게나.",10){AlignH = true,Layout = TextLayout.ONLY_SHOW_DEFAULT}
 				},
 				RevisitConversationMessage = new List<TextAndPosition>(){
-					new TextAndPosition("슬라임은 마을 앞 초원에서 많이 나온다네.",10)
+					new TextAndPosition("슬라임은 마을 앞 초원에서 많이 나온다네.",10){AlignH = true,Layout = TextLayout.ONLY_SHOW_DEFAULT}
 				},
 				RevisitQuestAcceptMessage = new List<TextAndPosition>(){
-					new TextAndPosition("어짜피 해줄 거면서... 아.. 아무것도 아니네. 고맙네",10)
+					new TextAndPosition("어짜피 해줄 거면서... 아.. 아무것도 아니네. 고맙네",10){AlignH = true,Layout = TextLayout.ONLY_SHOW_DEFAULT}
 				},
 				RevisitQuestRejectMessage = new List<TextAndPosition>(){
-					new TextAndPosition("이 늙은이를 놀리는겐가!",10)
+					new TextAndPosition("이 늙은이를 놀리는겐가!",10){AlignH = true,Layout = TextLayout.ONLY_SHOW_DEFAULT}
 				},
 				PreQuestMessage = new List<TextAndPosition>(){
 					new TextAndPosition("제가 도울 일이 있습니까?",10)
@@ -894,7 +894,7 @@ namespace Characters
 					new TextAndPosition("그 일 아직 있습니까?",10)
 				},
 				QuestIntroductionMessage = new List<TextAndPosition>(){
-					new TextAndPosition("일은 많지. 자 골라보게.",10)
+					new TextAndPosition("일은 많지. 자 골라보게.",10){AlignH = true,Layout = TextLayout.ONLY_SHOW_DEFAULT}
 				},
 				
 				QuestList = new List<Quest>(){QuestControler.GetQuestByName("슬라임 사냥")}

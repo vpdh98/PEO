@@ -10,6 +10,12 @@ using static PlayData;
 using Characters;
 
 
+public enum TextLayout{
+	NO_LAYOUT,
+	ONLY_SHOW_DEFAULT,
+	SELECT_DEFAULT,
+	CROSSROADS_DEFAULT
+}
 
 public class TextAndPosition : ICloneable{
 		public String text{set;get;}	//나타낼 텍스트
@@ -25,6 +31,7 @@ public class TextAndPosition : ICloneable{
 		public bool AlignH = false;		//텍스트 중앙 정렬 여부
 		public String Highlight{get;set;}
 		public ConsoleColor HighlightColor{get;set;}
+		public TextLayout Layout{get;set;}
 		
 	
 		
@@ -73,6 +80,7 @@ public class TextAndPosition : ICloneable{
 			this.AlignH = that.AlignH;
 			this.Highlight = that.Highlight;
 			this.HighlightColor = that.HighlightColor;
+			this.Layout = that.Layout;
 		}
 		
 		public Object Clone(){
@@ -201,11 +209,11 @@ public class DisplayTextGame{
 		}
 	
 		public void Display(Choice choice){
-			
 			Init();
 			Cho = choice;
 			currentOpenChoice = choice;
 			Show();
+			choice.IsVisit = true;
 		}
 	
 		public void Display(){
@@ -433,16 +441,6 @@ public class DisplayTextGame{
 				Console.ReadKey();
 			delay = 0;
 			previousStream = TAndP;
-		}
-		
-		public int GetKoreanCount(String text){
-			int count = 0;
-			for(int i = 0;i<text.Length;i++){
-				if(char.GetUnicodeCategory(text[i])==System.Globalization.UnicodeCategory.OtherLetter){
-					count++;
-				}
-			}
-			return count;
 		}
 		
 		public String ReturnSpace(int count){

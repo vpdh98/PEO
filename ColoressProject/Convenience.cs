@@ -10,6 +10,15 @@ public static class Convenience{
 	public static int y = 0;
 	public static Object alwaysDisplay;
 	
+	public static int GetKoreanCount(String text){
+			int count = 0;
+			for(int i = 0;i<text.Length;i++){
+				if(char.GetUnicodeCategory(text[i])==System.Globalization.UnicodeCategory.OtherLetter){
+					count++;
+				}
+			}
+			return count;
+		}
 	
 	public static TextAndPosition TakeRandomMessage(List<TextAndPosition> messageList){
 		Random rand = new Random();

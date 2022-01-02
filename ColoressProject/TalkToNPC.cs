@@ -54,27 +54,33 @@ public static class TalkToNPC{
 		NpcQuestList = npc.QuestList;
 		
 		currentChoice = "GreetPhase";
-		
-		NpcCC.ChangeChoiceText(choiceName:"GreetPhase",onlyShowText:new TextAndPosition(npc.GetGreetMessage().text,15,3+5,1){AlignH = true});
-		if(NpcQuestList != null&&NpcQuestList.Count > 0){
-			int firstX = 22;
-			int lastY = 13;
-			NpcCC.ChangeChoiceSelectText("GreetPhase",1,npc.GetPreQuestMessage().text);
-			for(int i=0;i<NpcQuestList.Count;i++){
-				NpcCC.AddChoiceSelectText("QuestIntroduction",new TextAndPosition(NpcQuestList[i].QuestName,firstX,lastY++ +1,true),NpcQuestList[i].QuestName);
-				firstX = GameManager.selectListFirststPositionX(NpcCC.GetChoice("QuestIntroduction").SelectText);
-				lastY = GameManager.selectListLastPositionY(NpcCC.GetChoice("QuestIntroduction").SelectText);
+		testLog(!NpcCC.GetChoice(currentChoice).IsVisit);
+		if(!NpcCC.GetChoice(currentChoice).IsVisit){
+			NpcCC.ChangeChoiceText(choiceName:"GreetPhase",onlyShowText:new TextAndPosition(npc.GetGreetMessage().text,15,3+5,1){AlignH = true});
+			if(NpcQuestList != null&&NpcQuestList.Count > 0){
+				int firstX = 22; //선택지가 아무것도 없을때 첫 선택지의 위치
+				int lastY = 13;
+				NpcCC.ChangeChoiceSelectText("GreetPhase",1,npc.GetPreQuestMessage().text);
+				for(int i=0;i<NpcQuestList.Count;i++){
+					NpcCC.AddChoiceSelectText("QuestIntroduction",new TextAndPosition(NpcQuestList[i].QuestName,firstX,lastY++ +1,true),NpcQuestList[i].QuestName);
+					firstX = GameManager.selectListFirststPositionX(NpcCC.GetChoice("QuestIntroduction").SelectText);
+					lastY = GameManager.selectListLastPositionY(NpcCC.GetChoice("QuestIntroduction").SelectText);
+				}
 			}
+			else{
+				NpcCC.RemoveChoiceSelectText("GreetPhase",1);
+			}
+
+
+			NpcCC.ChangeChoiceText(choiceName:"ConversationPhase",streamText:npc.GetConversationMessageList());
+			NpcCC.ChangeChoiceText(choiceName:"QuestAccept",onlyShowText:npc.GetQuestAcceptMessage());
+			NpcCC.ChangeChoiceText(choiceName:"QuestReject",onlyShowText:npc.GetQuestRejectMessage());
+			NpcCC.ChangeChoiceText(choiceName:"QuestIntroduction",onlyShowText:npc.GetQuestIntroductionMessage());
+			NpcCC.ChangeChoiceText(choiceName:"GreetPhase",returnText:npc.GetRevisitGreetMessage());
+			NpcCC.ChangeChoiceText(choiceName:"QuestAccept",returnText:npc.GetRevisitQuestAcceptMessage());
+			NpcCC.ChangeChoiceText(choiceName:"QuestReject",returnText:npc.GetRevisitQuestRejectMessage());
+			NpcCC.ChangeChoiceText(choiceName:"ConversationPhase",returnText:npc.GetRevisitConversationMessage());
 		}
-		else{
-			NpcCC.RemoveChoiceSelectText("GreetPhase",1);
-		}
-		
-		
-		NpcCC.ChangeChoiceText(choiceName:"ConversationPhase",streamText:npc.GetConversationMessageList());
-		NpcCC.ChangeChoiceText(choiceName:"QuestAccept",onlyShowText:npc.GetQuestAcceptMessage());
-		NpcCC.ChangeChoiceText(choiceName:"QuestReject",onlyShowText:npc.GetQuestRejectMessage());
-		
 		NpcDTG.Display(NpcCC.GetChoiceClone(currentChoice));
 		while(true){
 			keyInfo = Console.ReadKey();
@@ -85,10 +91,11 @@ public static class TalkToNPC{
 				if(currentQuest != null && currentQuest.QuestName == currentChoice)
 				{
 					NpcDTG.Display(currentQuest.QuestContents);
+					NpcDTG.Cho.LeaveChoice();
 				}
 				else{
-					testLog(currentChoice);
 					NpcDTG.Display(NpcCC.GetChoice(currentChoice));
+					NpcDTG.Cho.LeaveChoice();
 				}
 				break;
 			}
@@ -104,13 +111,24 @@ public static class TalkToNPC{
 			if(keyInfo.Key == ConsoleKey.Enter)
 			{
 				currentChoice = (String)NpcDTG.GetCurrentSelectValue();
+				if(currentChoice == "end") return backField;
 				
-				
+				currentQuest = NpcQuestList.Find(q => q.QuestName.Equals(currentChoice));
+				if(currentQuest != null && currentQuest.QuestName == currentChoice)
+				{
+					NpcDTG.Display(currentQuest.QuestContents);
+					NpcDTG.Cho.LeaveChoice();
+				}
+				else{
 					NpcDTG.Display(NpcCC.GetChoice(currentChoice));
+					NpcDTG.Cho.LeaveChoice();
+				}
+					
 					if(NpcDTG.Cho.ChoiceType == ChoiceType.QUICKNEXT){
 						currentChoice = (String)NpcDTG.Cho.QuickNext();
+						Console.ReadKey();
 						NpcDTG.Display(NpcCC.GetChoice(currentChoice));
-					
+						NpcDTG.Cho.LeaveChoice();
 				}
 			}else{
 				NpcDTG.Display();
