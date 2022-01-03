@@ -157,7 +157,7 @@ public class Choice : ICloneable //선택지 부여 하는 클래스
 				StreamText = ReturnText;
 			}
 			else{
-			OnlyShowText = ReturnText;
+				OnlyShowText = ReturnText;
 			}
 		}
 	}
@@ -384,8 +384,8 @@ public class ChoiceControler{
 	
 	public void AddChoiceSelectText(String choiceName,TextAndPosition selectText,Object indicate){
 		Choice choice = choiceDictionary[choiceName];
-		choice.SelectText.Add(selectText);
 		choice.IndicateChoice.Add(choice.SelectText.Count,indicate);
+		choice.SelectText.Add(selectText);
 		choice.TextArrangement();
 	}
 	

@@ -14,6 +14,8 @@ public enum NpcType{
 	MERCHANT
 }
 
+
+
 public static class TalkToNPC{
 	public static Player globalPlayer;
 	public static NPC globalNPC;
@@ -26,6 +28,9 @@ public static class TalkToNPC{
 	public static Quest currentQuest;
 	
 	public static ConsoleKeyInfo keyInfo;
+	
+	public static String lastQuestName;
+	public static int lastQuestIndex;
 	/*
 	public List<Quest> QuestList{get;set;}
 			public List<TextAndPosition> GreetMessage{get;set;}
@@ -54,7 +59,6 @@ public static class TalkToNPC{
 		NpcQuestList = npc.QuestList;
 		
 		currentChoice = "GreetPhase";
-		testLog(!NpcCC.GetChoice(currentChoice).IsVisit);
 		if(!NpcCC.GetChoice(currentChoice).IsVisit){
 			NpcCC.ChangeChoiceText(choiceName:"GreetPhase",onlyShowText:new TextAndPosition(npc.GetGreetMessage().text,15,3+5,1){AlignH = true});
 			if(NpcQuestList != null&&NpcQuestList.Count > 0){
@@ -91,11 +95,11 @@ public static class TalkToNPC{
 				if(currentQuest != null && currentQuest.QuestName == currentChoice)
 				{
 					NpcDTG.Display(currentQuest.QuestContents);
-					NpcDTG.Cho.LeaveChoice();
+					lastQuestName = currentChoice;
+					lastQuestIndex = NpcDTG.currentSelectNum;
 				}
 				else{
 					NpcDTG.Display(NpcCC.GetChoice(currentChoice));
-					NpcDTG.Cho.LeaveChoice();
 				}
 				break;
 			}
@@ -111,26 +115,55 @@ public static class TalkToNPC{
 			if(keyInfo.Key == ConsoleKey.Enter)
 			{
 				currentChoice = (String)NpcDTG.GetCurrentSelectValue();
-				if(currentChoice == "end") return backField;
+				if(currentChoice == "end"){ 
+					NpcCC.GetChoice("ConversationPhase").LeaveChoice();
+					NpcCC.GetChoice("GreetPhase").LeaveChoice();
+					return backField;
+				}
 				
+				if(currentChoice == "QuestAccept"){
+					globalPlayer.QuestList.Add(NpcQuestList.Find(q => q.QuestName.Equals(lastQuestName)));//마지막에 수락한 Quest의 객체를 플레이어에게 넘김
+					NpcCC.RemoveChoiceSelectText("QuestIntroduction",lastQuestIndex); //목록에서 삭제
+				}
+				if(currentChoice == "QuestReject"){
+					Quest tQuest = NpcQuestList.Find(q => q.QuestName.Equals(lastQuestName));
+					if(tQuest.isReject){
+						NpcCC.ChangeChoiceText(choiceName:"QuestAccept",onlyShowText:npc.GetRevisitQuestAcceptMessage());
+						NpcCC.ChangeChoiceText(choiceName:"QuestReject",onlyShowText:npc.GetRevisitQuestRejectMessage());
+					}else{
+						NpcCC.ChangeChoiceText(choiceName:"QuestAccept",onlyShowText:npc.GetQuestAcceptMessage());
+						NpcCC.ChangeChoiceText(choiceName:"QuestReject",onlyShowText:npc.GetQuestRejectMessage());
+					}
+						
+				}
+				
+				//AAAAAAA선택한 Choice Display전AAAAAAA//
 				currentQuest = NpcQuestList.Find(q => q.QuestName.Equals(currentChoice));
 				if(currentQuest != null && currentQuest.QuestName == currentChoice)
 				{
+					lastQuestIndex = NpcDTG.currentSelectNum;
 					NpcDTG.Display(currentQuest.QuestContents);
-					NpcDTG.Cho.LeaveChoice();
+					lastQuestName = currentChoice;
 				}
 				else{
 					NpcDTG.Display(NpcCC.GetChoice(currentChoice));
-					NpcDTG.Cho.LeaveChoice();
+				}
+				//VVVVVVV선택한 Choice Display후VVVVVVV//
+				if(currentChoice == "QuestReject"){
+					NpcQuestList.Find(q => q.QuestName.Equals(lastQuestName)).isReject = true;
+					testLog(NpcQuestList.Find(q => q.QuestName.Equals(lastQuestName)).isReject);
 				}
 					
-					if(NpcDTG.Cho.ChoiceType == ChoiceType.QUICKNEXT){
-						currentChoice = (String)NpcDTG.Cho.QuickNext();
-						Console.ReadKey();
-						NpcDTG.Display(NpcCC.GetChoice(currentChoice));
-						NpcDTG.Cho.LeaveChoice();
+				if(NpcDTG.Cho.ChoiceType == ChoiceType.QUICKNEXT){
+					currentChoice = (String)NpcDTG.Cho.QuickNext();
+					Console.ReadKey();
+					NpcDTG.Display(NpcCC.GetChoice(currentChoice));
 				}
-			}else{
+				
+				
+			}
+			else
+			{
 				NpcDTG.Display();
 			}
 			

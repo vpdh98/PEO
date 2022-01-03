@@ -165,6 +165,13 @@ public class ItemList{
 			IsStackable = true
 		};
 		itemList.Add(item.Name,item);
+		
+		item = new Armor(){
+			Name = "황금갑옷",
+			ItemExplan="전설의 황금갑옷\n전설적인 갑옷이다.\n전설적인 갑옷이여서 그런지\n순도 100%의 황금임에도\n꽤 높은 방어력을 자랑한다.",
+			Defense = 10
+		};
+		itemList.Add(item.Name,item);
 	}
 	
 	public Item GetItem(String Name,double DropChance = 0){

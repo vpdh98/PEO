@@ -34,6 +34,8 @@ public class Quest : ICloneable{ //퀘스트 객체, 이걸 NPC와 Player끼리 
 	public List<Reward> QuestReward{get;set;}  //퀘스트 보상,여러개일 수 있다.
 	public bool isComplete = false; //퀘스트 완료 여부
 	public bool isAccept = false; //퀘스트 수락 여부
+	public bool isReject = false; //퀘스트 한번이라도 거절했는지
+	
 	
 	public Quest(){
 		
@@ -71,7 +73,7 @@ public class HuntQuest : Quest
 	
 	public override void CheckComplete()
 	{
-		for(int i = 0;i<MonsterCount.Count;i++)
+		for(int i = 0;i<MonsterNameList.Count;i++)
 		{
 			if(MonsterCount[i] < TargetNum[i])
 			{
@@ -79,6 +81,7 @@ public class HuntQuest : Quest
 			}
 		}
 		isComplete = true;
+		testLog("QuestComplete");
 	}
 	
 	public override bool CheckTarget(Object info)
@@ -94,7 +97,12 @@ public class HuntQuest : Quest
 		}
 		if(MonsterNameList.Contains(enemy.Name))
 		{
-			MonsterCount[MonsterNameList.IndexOf(enemy.Name)]++;
+			try{
+				MonsterCount[MonsterNameList.IndexOf(enemy.Name)]++;
+			}catch(Exception e){
+				MonsterCount.Add(0);
+				MonsterCount[MonsterNameList.IndexOf(enemy.Name)]++;
+			}
 			CheckComplete();
 			return true;
 		}
@@ -327,6 +335,33 @@ public class QuestData{
 			},
 			MonsterNameList = new List<String>(){
 				"슬라임"
+			},
+			TargetNum = new List<int>(){
+				10
+			}
+		});
+		
+		QuestDatas.Add(new HuntQuest(){
+			QuestName = "망자 사냥",
+			QuestContents = new Choice(){
+				Name = "DeadManHuntQuest",
+				SelectText = new List<TextAndPosition>()         
+							{new TextAndPosition("수락한다.",16,13,true),
+							new TextAndPosition("거절한다.",40,13,true)},
+				OnlyShowText = new List<TextAndPosition>()
+							{new TextAndPosition("망자들이 마을 주변에 몰려들고 있다네.\n이유는 모르겠지만..\n 망자의 수를 조금 줄여줄 수 있겠나?",15,3,10){AlignH = true}},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"QuestAccept"},{1,"QuestReject"}},
+				BackgroundText = backgrounds.GetBackground(1)
+			},
+			QuestReward = new List<Reward>
+			{
+				new ItemReward()
+				{
+					Items = new List<Item>(){itemList.GetItem("황금갑옷")}
+				}
+			},
+			MonsterNameList = new List<String>(){
+				"망자"
 			},
 			TargetNum = new List<int>(){
 				10

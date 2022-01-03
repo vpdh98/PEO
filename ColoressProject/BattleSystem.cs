@@ -361,6 +361,10 @@ public static class BattleSystem{
 			BCC.ChangeChoiceText(choiceName:"andPhase",onlyShowText:new TextAndPosition(globerEnemy.CurrentState(),15,3+5,1){AlignH = true});
 			BDTG.Display(BCC.GetChoiceClone("andPhase"));
 			keyInfo = Console.ReadKey();
+			
+			globerPlayer.PlayerQuestCheck(globerEnemy);
+			testLog(((HuntQuest)globerPlayer.QuestList[0]).MonsterCount[0]);
+			
 			List<Item> drops = globerEnemy.ItemDrop();
 			
 			foreach(Item i in drops){

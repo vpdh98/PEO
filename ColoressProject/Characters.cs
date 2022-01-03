@@ -106,7 +106,7 @@ namespace Characters
 	{
 		public Inventory inven = new Inventory();
 		
-		public List<Quest> QuestList{get;set;}
+		public List<Quest> QuestList{get;set;} = new List<Quest>();
 	
 		Weapon weapon;
 		public Weapon Weapon
@@ -268,6 +268,12 @@ namespace Characters
 			Hp -= aInfo.FinalDamage;
 			this.attackInfo = aInfo;
 			return aInfo;
+		}
+		
+		public void PlayerQuestCheck(Object info){
+			for(int i = 0;i<QuestList.Count;i++){
+				QuestList[i].CheckTarget(info);
+			}
 		}
 		
 		public string CurrentState(){
@@ -897,7 +903,10 @@ namespace Characters
 					new TextAndPosition("일은 많지. 자 골라보게.",10){AlignH = true,Layout = TextLayout.ONLY_SHOW_DEFAULT}
 				},
 				
-				QuestList = new List<Quest>(){QuestControler.GetQuestByName("슬라임 사냥")}
+				QuestList = new List<Quest>(){
+					QuestControler.GetQuestByName("슬라임 사냥"),
+					QuestControler.GetQuestByName("망자 사냥")
+				}
 			};
 			NPCList.Add(npc.Name,npc);
 		}
