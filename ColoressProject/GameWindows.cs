@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using Characters;
 using static Define;
 
 public static class GameWindows{
@@ -95,5 +96,31 @@ public static class GameWindows{
 		
 		CDTG.Cho = ConfirmCho; //화면 할당
 		CDTG.Show();
+	}
+	
+	public static void StateWindow(Player player,int XPos,int YPos){
+		DisplayTextGame SDTG = new DisplayTextGame(false){GlobalPositionX=XPos,GlobalPositionY=YPos,ScreenSize_Width = 28,ScreenSize_Height = 21};
+		
+		Choice StateCho = new Choice(){
+				Name = "StateWindow",
+				OnlyShowText = new List<TextAndPosition>(){
+					new TextAndPosition("[   상태창   ]",1,1){AlignH = true},
+					new TextAndPosition("이름:"+player.Name,1,2),
+					new TextAndPosition("HP:"+player.Hp+"/"+player.MaxHp,1,3),
+					new TextAndPosition("공격력:"+player.AttackPower+(player.Weapon==null?"":"+"+player.Weapon.AttackPower+"("+player.Weapon.Name+")"),1,4),
+					new TextAndPosition("방어력:"+player.Defense+(player.Armor==null?"":"("+player.Armor.Name+")"),1,5),
+					new TextAndPosition("스피드:"+player.AttackSpeed,1,6),
+					new TextAndPosition("상태이상:",1,7),
+					new TextAndPosition("--진행중인 퀘스트 목록--",0,8){AlignH = true}
+				},
+				BackgroundText = backgrounds.GetBackground(8)
+		};
+		for(int i = 0;i<player.QuestList.Count;i++){
+			Quest tQuest = player.QuestList[i];
+			StateCho.OnlyShowText.Add(new TextAndPosition(""+(1+i)+"."+tQuest.QuestName+(tQuest.isComplete?"(완료)":"(진행중)"),1,9+i));
+		}
+		
+		SDTG.Cho = StateCho; //화면 할당
+		SDTG.Show();
 	}
 }

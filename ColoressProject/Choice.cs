@@ -29,8 +29,8 @@ public class Choice : ICloneable //선택지 부여 하는 클래스
 	public Quick QuickDelegate{get;set;} 
 	
 	public bool IsSavePoint{get;set;} = false;
-	
 	public bool IsVisit{get;set;} = false;
+	public bool IsShowStateWindow{get;set;} = true;
 
 	private List<TextAndPosition> selectText;
 	private List<TextAndPosition> onlyShowText;
@@ -283,6 +283,7 @@ public class Choice : ICloneable //선택지 부여 하는 클래스
 		this.Name = that.Name;
 		this.ChoiceType = that.ChoiceType;
 		this.IsSavePoint = that.IsSavePoint;
+		this.IsShowStateWindow = that.IsShowStateWindow;
 
 		if(!IsEmptyList(that.EnemyList)){
 			//try{

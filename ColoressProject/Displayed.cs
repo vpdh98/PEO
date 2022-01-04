@@ -131,6 +131,9 @@ public class DisplayTextGame{
 		public int delayBackup = 0;						//딜레이 변경후 이전 딜레이로 다시 돌아오기 위해 선언한 변수
 		const String ARROW ="=>";						//선택 문자열 앞에 생성할 문자
 		String voidARROW="  ";							//Arrow크기만큼 앞을 비운다
+	
+		public int ScreenSize_Width{get;set;} = Define.SCREEN_WIDTH;
+		public int ScreenSize_Height{get;set;} = Define.SCREEN_HEIGHT;
 		
 		public int GlobalPositionX{get;set;} = SCREEN_POS_X;				//화면 전체의 위치 x값
 		public int GlobalPositionY{get;set;} = SCREEN_POS_Y;					//y값
@@ -213,11 +216,17 @@ public class DisplayTextGame{
 			Cho = choice;
 			currentOpenChoice = choice;
 			Show();
+			if(Cho.IsShowStateWindow){
+				GameWindows.StateWindow(PlayData.player,20,8);
+			}
 			choice.IsVisit = true;
 		}
 	
 		public void Display(){
 			Show();
+			if(Cho.IsShowStateWindow){
+				GameWindows.StateWindow(PlayData.player,20,8);
+			}
 		}
 		
 		public void InputLists(){
@@ -279,16 +288,16 @@ public class DisplayTextGame{
 			int length = 0;
 			if(TAndP.text.Contains("\n")){
 				String[] ts = TAndP.text.Split('\n');
-				length = ts[0].Length;
+				length = ts[0].Length + GetKoreanCount(ts[0]);
 			}else{
-				length = TAndP.text.Length;
+				length = TAndP.text.Length+GetKoreanCount(TAndP.text);
 			}
 			int frontPadding = 0;
-			int backPadding = Define.SCREEN_WIDTH;
+			int backPadding = ScreenSize_Width;
 			while(frontPadding < backPadding){
-				backPadding = Define.SCREEN_WIDTH - (frontPadding++ + length);
+				backPadding = ScreenSize_Width - (++frontPadding + length);
 			}
-			TAndP.x = frontPadding - 4;
+			TAndP.x = frontPadding;
 		}
 		
 		public void Show()

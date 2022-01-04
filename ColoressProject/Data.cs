@@ -35,7 +35,8 @@ public class Scenario{
 							new TextAndPosition("개발:Peo",1,1,100){PriorityLayer = 2}},
 				IndicateChoice = new Dictionary<int,Object>(){{0,"c2"},{1,"test"},{2,"option"}},
 				BackgroundText = backgrounds.GetBackground(0),
-				IsSavePoint = true
+				IsSavePoint = true,
+				IsShowStateWindow = false
 			});
 			
 			clikX = 20;
@@ -460,6 +461,7 @@ public class Backgrounds{
 		background.Add(new List<TextAndPosition>(new TextAndPosition[]{new TextAndPosition(LoadBackground("getItem"),15,7)}));
 		background.Add(new List<TextAndPosition>(new TextAndPosition[]{new TextAndPosition(LoadBackground("forest2"),-50,-8),new TextAndPosition(LoadBackground("space1"),0,0)}));
 		background.Add(new List<TextAndPosition>(new TextAndPosition[]{new TextAndPosition(LoadBackground("background9"),-20,-5),new TextAndPosition(LoadBackground("space3"),7,6)}));
+		background.Add(new List<TextAndPosition>(new TextAndPosition[]{new TextAndPosition(LoadBackground("state"),0,0)}));
 
 		Coloring();
 	}

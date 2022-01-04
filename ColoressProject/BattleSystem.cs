@@ -363,10 +363,8 @@ public static class BattleSystem{
 			keyInfo = Console.ReadKey();
 			
 			globerPlayer.PlayerQuestCheck(globerEnemy);
-			testLog(((HuntQuest)globerPlayer.QuestList[0]).MonsterCount[0]);
-			
+			//testLog(((HuntQuest)globerPlayer.QuestList[0]).MonsterCount[0]);
 			List<Item> drops = globerEnemy.ItemDrop();
-			
 			foreach(Item i in drops){
 				globerPlayer.inven.AddItem(i);
 				int rx = random.Next(20,100);
@@ -374,7 +372,6 @@ public static class BattleSystem{
 				AlertWindow(i.Name+" 획득!",windowXPos:rx,windowYPos:ry, textXPos:0,textYPos:9,background:5,delay:10,color:ConsoleColor.DarkYellow);
 			}
 			Console.ReadKey();
-			
 			if(globerEnemy.IsSpawnOnce)
 				GameManager.DespawnEnemy(globerEnemy.Name,PlayData.WorldMap.GetChoice(backField));
 			

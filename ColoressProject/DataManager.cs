@@ -4,7 +4,7 @@ using static DataPath;
 
 
 static class DataPath{
-	public const String BACKGROUND_PATH = "Save/";
+	public const String BACKGROUND_PATH = "Save/Backgrounds/";
 }
 
 public static class DataManager{

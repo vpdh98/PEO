@@ -122,7 +122,7 @@ namespace Characters
 					weapon = value;
 					weapon.IsEquip = true;
 					AttackMessage = weapon.AttackMessage;
-					AttackSpeed =+ weapon.AttackSpeed;
+					AttackSpeed += weapon.AttackSpeed;
 				}
 				else
 				{
@@ -130,7 +130,7 @@ namespace Characters
 					{
 						if(ConfirmWindow("이미 장착된 무기 입니다.\n해제하시겠습니까?",24,7))
 						{
-							AttackSpeed =- weapon.AttackSpeed;
+							AttackSpeed -= weapon.AttackSpeed;
 							weapon.IsEquip = false;
 							weapon = null;
 							AttackMessage = null;
