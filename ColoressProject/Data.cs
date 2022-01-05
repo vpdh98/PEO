@@ -450,7 +450,7 @@ public class Scenario{
 				QuickDelegate = ()=>{
 					PlayData.accessAbleChoice.EnemyList.Add(PlayData.CList.GetEnemy("야생의 경민이",100));
 				},
-				IndicateChoice = new Dictionary<int,Object>(){{0,"gyeongminsHouse"}}
+				IndicateChoice = new Dictionary<int,Object>(){{0,"GreetPhase"}}
 			});
 			
 			
