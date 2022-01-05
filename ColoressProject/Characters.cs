@@ -499,6 +499,8 @@ namespace Characters
 		public List<TextAndPosition> PreQuestMessage{get;set;}
 		public List<TextAndPosition> RevisitPreQuestMessage{get;set;}
 		public List<TextAndPosition> QuestIntroductionMessage{get;set;}
+		public List<TextAndPosition> CompleteQuestListMessage{get;set;}
+		public List<TextAndPosition> PreCompleteQuestListMessage{get;set;}
 	
 	
 		public NPC(){}
@@ -540,6 +542,12 @@ namespace Characters
 		}
 		public TextAndPosition GetQuestIntroductionMessage(){
 			return TakeRandomMessage(QuestIntroductionMessage);
+		}
+		public TextAndPosition GetCompleteQuestListMessage(){
+			return TakeRandomMessage(CompleteQuestListMessage);
+		}
+		public TextAndPosition GetPreCompleteQuestListMessage(){
+			return TakeRandomMessage(PreCompleteQuestListMessage);
 		}
 		
 		
@@ -901,6 +909,12 @@ namespace Characters
 				},
 				QuestIntroductionMessage = new List<TextAndPosition>(){
 					new TextAndPosition("일은 많지. 자 골라보게.",10){AlignH = true,Layout = TextLayout.ONLY_SHOW_DEFAULT}
+				},
+				CompleteQuestListMessage = new List<TextAndPosition>(){
+					new TextAndPosition("오. 해결했다고?",true){AlignH = true,Layout = TextLayout.ONLY_SHOW_DEFAULT}
+				},
+				PreCompleteQuestListMessage = new List<TextAndPosition>(){
+					new TextAndPosition("해결했습니다.",40,13,true){AlignH = true}
 				},
 				
 				QuestList = new List<Quest>(){

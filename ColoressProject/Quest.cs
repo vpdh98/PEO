@@ -12,6 +12,7 @@ using System.Linq;
 using static Convenience;
 using static ItemData;
 using static PlayData;
+using static GameWindows;
 
 public static class QuestControler{ //퀘스트목록을 관리
 	public static List<Quest> AllQuestList{get;set;}//모든 퀘스트 목록
@@ -23,9 +24,29 @@ public static class QuestControler{ //퀘스트목록을 관리
 		return AllQuestList.Find(q => q.QuestName.Equals(name));
 	}
 	
-	public static bool QuestComplete(Quest quest){
+	public static bool ContainsCompleteQuest(List<Quest> questList){
+		foreach(Quest q in questList){
+			if(q.isComplete){
+				return true;
+			}
+		}
 		return false;
 	}
+	
+	public static List<Quest> SameQuestList(List<Quest> qList1,List<Quest> qList2){
+		if(qList1 == null || qList2 == null) return new List<Quest>();
+		
+		List<Quest> tQuestList = new List<Quest>();
+		for(int j = 0;j<qList1.Count;j++){
+			for(int i =0 ;i < qList2.Count;i++){
+				if(qList1[j].QuestName == qList2[i].QuestName){
+					tQuestList.Add(qList2[i]);
+				}
+			}
+		}
+		return tQuestList;
+	}
+	
 }
 
 public class Quest : ICloneable{ //퀘스트 객체, 이걸 NPC와 Player끼리 주고 받으면서 퀘스트를 주거나 완료한다.
@@ -287,8 +308,12 @@ public class ItemReward : Reward{
 	}
 	
 	public override void TakeReward(){
+		Random random = new Random();
 		for(int i = 0;i<Items.Count;i++){
 			player.inven.AddItem(Items[i]);
+			int rx = random.Next(20,100);
+			int ry = random.Next(2,13);
+			AlertWindow(Items[i].Name+" 획득!",windowXPos:rx,windowYPos:ry, textXPos:0,textYPos:9,background:5,delay:10,color:ConsoleColor.DarkYellow);
 		}
 	}
 }
@@ -337,7 +362,7 @@ public class QuestData{
 				"슬라임"
 			},
 			TargetNum = new List<int>(){
-				10
+				1
 			}
 		});
 		

@@ -165,6 +165,7 @@ public class Choice : ICloneable //선택지 부여 하는 클래스
 	public void TextArrangement(){//Layout종류에 따라 Text들을 정렬 ChoiceControler에 Scenario를 넣을때 호출했다.
 		int firstX = 0;
 		int lastY = 0;
+		int count = 0;
 		if(selectText != null){
 			for(int i = 0;i<selectText.Count;i++){ //SelectText의 레이아웃 정렬
 				TextAndPosition tap = selectText[i];
@@ -178,7 +179,7 @@ public class Choice : ICloneable //선택지 부여 하는 클래스
 						firstX = GameManager.selectListFirststPositionX(selectText);
 						lastY = GameManager.selectListLastPositionY(selectText);
 						tap[0] = firstX;
-						tap[1] = lastY;
+						tap[1] = lastY + ++count;
 					}
 				}
 			}
@@ -381,10 +382,13 @@ public class ChoiceControler{
 		Choice choice = choiceDictionary[choiceName];
 		choice.SelectText.RemoveAt(selectIndex);
 		choice.IndicateChoice.Remove(selectIndex);
+		choice.TextArrangement();
 	}
 	
 	public void AddChoiceSelectText(String choiceName,TextAndPosition selectText,Object indicate){
 		Choice choice = choiceDictionary[choiceName];
+		choice.IndicateChoice = GameManager.DictionaryRearrangement(choice.IndicateChoice);
+		//testLog(choice.IndicateChoice[choice.SelectText.Count]);
 		choice.IndicateChoice.Add(choice.SelectText.Count,indicate);
 		choice.SelectText.Add(selectText);
 		choice.TextArrangement();

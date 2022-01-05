@@ -51,6 +51,11 @@ public class TextAndPosition : ICloneable{
 			this.text = text;
 			this.textDelay = textDelay;
 		}
+	
+		public TextAndPosition(String text,bool isSelect){
+			this.text = text;
+			this.isSelect = isSelect;
+		}
 		
 		public TextAndPosition(String text,ConsoleColor color,int textDelay):this(text,textDelay){
 			this.color = color;
@@ -235,7 +240,7 @@ public class DisplayTextGame{
 			backgroundList = cho.BackgroundText;
 			streamList = cho.StreamText;
 			indicateList = new Dictionary<int,Object>(cho.IndicateChoice);//복사
-			indicateList = DictionaryRearrangement(indicateList);//indicateList재정렬 
+			indicateList = GameManager.DictionaryRearrangement(indicateList);//indicateList재정렬 
 		}
 	
 		public int SearchSamePosition(List<TextAndPosition> list,TextAndPosition text){
@@ -770,19 +775,4 @@ public class DisplayTextGame{
 			return indicateList[currentSelectNum];
 		}
 	
-		public Dictionary<int,Object> DictionaryRearrangement(Dictionary<int,Object> dic)
-		{ //dictionary를 재정렬 한다. 1,2,3,5 키값이 이런식으로 되있을경우 0,1,2,3이런식으로 바꾼다.
-			Dictionary<int,Object> newDic = new Dictionary<int,Object>();
-			int count = 0;
-			for(int i = 0;i<dic.Count;i++){
-				if(dic.ContainsKey(i)){
-					newDic.Add(i,dic[i]);
-				}
-				else{
-					count++;
-					newDic.Add(i,dic[i+count]);
-				}
-			}
-			return newDic;
-		}
 }

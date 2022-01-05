@@ -269,6 +269,21 @@ namespace Game
 			targetChoice.IndicateChoice.Remove(index);
 		}
 		
+		public static Dictionary<int,Object> DictionaryRearrangement(Dictionary<int,Object> dic)
+		{ //dictionary를 재정렬 한다. 1,2,3,5 키값이 이런식으로 되있을경우 0,1,2,3이런식으로 바꾼다.
+			Dictionary<int,Object> newDic = new Dictionary<int,Object>();
+			int count = 0;
+			for(int i = 0;i<dic.Count;i++){
+				if(dic.ContainsKey(i)){
+					newDic.Add(i,dic[i]);
+				}
+				else{
+					count++;
+					newDic.Add(i,dic[i+count]);
+				}
+			}
+			return newDic;
+		}
 	}
 	
 	/*class TextSerialization{
@@ -1092,3 +1107,19 @@ QuickDelegate = ()=>{
 //몬스터의 상태창은 만들지 고민해봐야겠다. 몬스터의 정보를 공개할지 아니면 한번 잡아본 몬스터의 정보만 공개할지에 대해 생각해보자.
 //그리고 텍스트가 점멸하는 기능을 추가해봐야겠다.(예를들어 공격을 받았을때 HP수치가 깜빡인다던지)
 //HP수치를 숫자말고 하트나 바로 나타내는 것도 생각해보자
+
+//2022.01.05
+//오늘은 일단 퀘스트 완료와 그 보상 지급을 구현해보려고 한다.
+//아직 HuntQuest밖에 구현이 안되었지만 나머지는 차근차근 구현해보자.
+
+//화면 밀림 현상에 대해 해결책이 떠올랐다. 그 해결책은 바로 배경출력을 파트별로 나눠서 해주는 것이다
+//지금은 한줄씩 출력이 되도록 되어 있는데 한자한자 받아서 구역을 나눠 따로 출력해준다면 괜찮을 것이라는 생각이 들었다. 주말에 해보는 것이 좋겟다.
+
+//퀘스트 완료 실행 순서
+//1.Player와 NPC간의 서로 QuestList를 비교해서 같은 퀘스트가 있는지 확인
+//2.같은 퀘스트 중 isComplete가 true인 퀘스트가 있는지 확인
+//3.isComplete가 true인 퀘스트를 완료 가능 Choice에 선택지로 추가
+
+//완료 부분 중에 보상 지급 만 구현하면됨
+//QuestCompleteList 화면에서 완료한 퀘스트 선택지를 선택해서 QuestComplete 화면으로 들어갈때 해당 퀘스트의 이름을 가져와서 QuestReward의 delegate에 보상을 지급하는 기능을 구현해야한다.
+//시간이 없어서 내일

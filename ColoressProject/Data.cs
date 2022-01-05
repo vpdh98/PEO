@@ -428,6 +428,13 @@ public class Scenario{
 			});
 			
 			choices.Add(new Choice(){
+				Name = "CompleteQuestList",
+				OnlyShowText = new List<TextAndPosition>()
+							{new TextAndPosition("CompleteQuestListMessage",15,3+5,1){AlignH = true}},
+				BackgroundText = backgrounds.GetBackground(1)
+			});
+			
+			choices.Add(new Choice(){
 				Name = "QuestComplete",
 				SelectText = new List<TextAndPosition>()         
 							{new TextAndPosition("보상을 받는다.",16,13,true)},
@@ -436,6 +443,17 @@ public class Scenario{
 				IndicateChoice = new Dictionary<int,Object>(){{0,"QuestReward"}},
 				BackgroundText = backgrounds.GetBackground(1)
 			});
+			
+			choices.Add(new Choice(){
+				Name = "QuestReward",
+				ChoiceType = ChoiceType.QUICK,
+				QuickDelegate = ()=>{
+					PlayData.accessAbleChoice.EnemyList.Add(PlayData.CList.GetEnemy("야생의 경민이",100));
+				},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"gyeongminsHouse"}}
+			});
+			
+			
 			
 			Count = choices.Count;
 		}

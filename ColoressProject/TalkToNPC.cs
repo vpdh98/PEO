@@ -52,6 +52,8 @@ public static class TalkToNPC{
 			QuestComplete
 	*/
 	public static String Accost(Player player,NPC npc,String back){
+		List<Quest> sameQuestList = QuestControler.SameQuestList(player.QuestList,npc.QuestList);
+		
 		globalPlayer = player;
 		globalNPC = npc;
 		backField = back;
@@ -84,6 +86,25 @@ public static class TalkToNPC{
 			NpcCC.ChangeChoiceText(choiceName:"QuestAccept",returnText:npc.GetRevisitQuestAcceptMessage());
 			NpcCC.ChangeChoiceText(choiceName:"QuestReject",returnText:npc.GetRevisitQuestRejectMessage());
 			NpcCC.ChangeChoiceText(choiceName:"ConversationPhase",returnText:npc.GetRevisitConversationMessage());
+		}else{
+			if(QuestControler.ContainsCompleteQuest(sameQuestList) && NpcCC.GetChoice("GreetPhase").IndicateChoice[1] == "QuestIntroduction"){
+				NpcCC.RemoveChoiceSelectText("GreetPhase",1);
+				NpcCC.ChangeChoiceText(choiceName:"QuestComplete",onlyShowText:npc.GetQuestCompleteMassage());
+				NpcCC.ChangeChoiceText(choiceName:"CompleteQuestList",onlyShowText:npc.GetCompleteQuestListMessage());
+				testLog("1");
+				NpcCC.AddChoiceSelectText("GreetPhase",npc.GetPreCompleteQuestListMessage(),"CompleteQuestList");
+			}
+			
+			if(sameQuestList != null && sameQuestList.Count > 0){
+				int firstX = 22; //선택지가 아무것도 없을때 첫 선택지의 위치
+				int lastY = 13;
+				for(int i=0;i<sameQuestList.Count;i++){
+					NpcCC.AddChoiceSelectText("CompleteQuestList",new TextAndPosition(sameQuestList[i].QuestName,firstX,lastY++ +1,true),"QuestComplete");
+					firstX = GameManager.selectListFirststPositionX(NpcCC.GetChoice("CompleteQuestList").SelectText);
+					lastY = GameManager.selectListLastPositionY(NpcCC.GetChoice("CompleteQuestList").SelectText);
+				}
+			}
+			
 		}
 		NpcDTG.Display(NpcCC.GetChoiceClone(currentChoice));
 		while(true){
@@ -132,6 +153,10 @@ public static class TalkToNPC{
 						NpcCC.ChangeChoiceText(choiceName:"QuestReject",onlyShowText:npc.GetQuestRejectMessage());
 					}
 					NpcCC.RemoveChoiceSelectText("QuestIntroduction",lastQuestIndex); //목록에서 삭제
+					if(NpcCC.GetChoice("QuestIntroduction").SelectText.Count == 1)
+					{
+						NpcCC.RemoveChoiceSelectText("GreetPhase",1);
+					}
 				}
 				if(currentChoice == "QuestReject"){
 					Quest tQuest = NpcQuestList.Find(q => q.QuestName.Equals(lastQuestName));
@@ -143,6 +168,9 @@ public static class TalkToNPC{
 						NpcCC.ChangeChoiceText(choiceName:"QuestReject",onlyShowText:npc.GetQuestRejectMessage());
 					}
 						
+				}
+				if(currentChoice == "QuestComplete"){
+					/////////////////////131234234234234342
 				}
 				
 				//AAAAAAA선택한 Choice Display전AAAAAAA//
