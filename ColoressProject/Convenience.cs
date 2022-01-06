@@ -10,6 +10,10 @@ public static class Convenience{
 	public static int y = 0;
 	public static Object alwaysDisplay;
 	
+	/*public static bool DictionaryContainsValue(Dictionary<int,Object> dictionary,Object value,out int key = null){
+		
+	}*/
+	
 	public static int GetKoreanCount(String text){
 			int count = 0;
 			for(int i = 0;i<text.Length;i++){

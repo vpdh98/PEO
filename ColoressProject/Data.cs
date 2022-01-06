@@ -447,9 +447,6 @@ public class Scenario{
 			choices.Add(new Choice(){
 				Name = "QuestReward",
 				ChoiceType = ChoiceType.QUICK,
-				QuickDelegate = ()=>{
-					PlayData.accessAbleChoice.EnemyList.Add(PlayData.CList.GetEnemy("야생의 경민이",100));
-				},
 				IndicateChoice = new Dictionary<int,Object>(){{0,"GreetPhase"}}
 			});
 			

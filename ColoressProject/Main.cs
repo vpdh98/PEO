@@ -53,7 +53,7 @@ public static class PlayData{
 	
 	public static Player player = CList.GetPlayer("용사");
 	
-	
+	public static TextAndPosition CurrentSelectedText; //DisplayTextGame에서 GetCurrentSelectValue()를 호출할때 초기화된다. 그 당시 선택된 Select를 저장
 }
 
 
@@ -1123,3 +1123,13 @@ QuickDelegate = ()=>{
 //완료 부분 중에 보상 지급 만 구현하면됨
 //QuestCompleteList 화면에서 완료한 퀘스트 선택지를 선택해서 QuestComplete 화면으로 들어갈때 해당 퀘스트의 이름을 가져와서 QuestReward의 delegate에 보상을 지급하는 기능을 구현해야한다.
 //시간이 없어서 내일
+
+//2022.01.06
+//보상 지급 구현에 성공했다.
+//PlayData에 DisplayTextGame.GetCurrentSelectValue()를 호출할때마다 선택한 선택지로 초기화되는 CurrentSelectedText를 추가했다.
+//QuestComplete초이스로 들어갔을때 TalkToNPC에 lastQuestName을 현재 선택한 선택지의 이름으로 초기화시키고(QuestComplete초이스로 진입하는 선택지의 이름은 퀘스트의 이름과 같다.)
+//QuestReward초이스의 delegate를 lastQuestName으로 불러온 Quest의 TakeRewardAll()을 호출 시키는 코드를 정의한다.
+//그리고 QuestReward로 들어갔을때 해당 Choice를 넣은 DTG의 QuickRun()을 실행시키고 QuickNext()로 다음 Choice의 이름을 받아와 Display시켰다. 
+
+//퀘스트를 수락,또는 완료한후 선택지와 해당 퀘스트 객체를 삭제하는 기능을 구현하는중 잘안된다.
+//시간이 없어 내일하기로 했다

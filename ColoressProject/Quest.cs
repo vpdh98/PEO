@@ -19,6 +19,8 @@ public static class QuestControler{ //퀘스트목록을 관리
 	public static List<Quest> AcceptQuestList{get;set;}//수락한 퀘스트 목록
 	public static List<Quest> CompleteQuestList{get;set;}//완료된 퀘스트 목록
 	
+	public static List<Quest> LastAccessedQuest{get;set;}
+	
 	public static Quest GetQuestByName(String name){
 		IsEmptyList<Quest>(AllQuestList); //////////////////////////12.29 객체 초기화가 안되있음
 		return AllQuestList.Find(q => q.QuestName.Equals(name));
@@ -69,6 +71,10 @@ public class Quest : ICloneable{ //퀘스트 객체, 이걸 NPC와 Player끼리 
 		return false;
 	}
 	
+	public virtual void TakeRewardAll(){
+		
+	}
+	
 	protected Quest(Quest that){
 		this.QuestReward = (List<Reward>)ListClone<Reward>(that.QuestReward);
 		this.QuestName = that.QuestName;
@@ -102,7 +108,6 @@ public class HuntQuest : Quest
 			}
 		}
 		isComplete = true;
-		testLog("QuestComplete");
 	}
 	
 	public override bool CheckTarget(Object info)
@@ -130,6 +135,12 @@ public class HuntQuest : Quest
 		else
 		{
 			return false;
+		}
+	}
+	
+	public override void TakeRewardAll(){
+		for(int i = 0;i<QuestReward.Count;i++){
+			QuestReward[i].TakeReward();
 		}
 	}
 	
@@ -355,7 +366,11 @@ public class QuestData{
 			{
 				new ItemReward()
 				{
-					Items = new List<Item>(){itemList.GetItem("전설의검")}
+					Items = new List<Item>(){
+					itemList.GetItem("전설의검"),
+					new Item(){Name = "금반지"},
+					new Item(){Name = "마을 공로 훈장"}
+					}
 				}
 			},
 			MonsterNameList = new List<String>(){

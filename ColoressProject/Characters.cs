@@ -925,11 +925,20 @@ namespace Characters
 			NPCList.Add(npc.Name,npc);
 		}
 		
+		public NPC GetNpcOriginal(String name){ //원본임. 복사할 필요가 없다고 판단 2021.12.31
+			try{
+				return NPCList[name];
+			}catch(Exception e){
+				//Console.WriteLine(e);
+				return null;
+			}
+		}
+		
 		public Enemy GetEnemyOriginal(String name){
 			try{
 				return EnemyList[name];
 			}catch(Exception e){
-				Console.WriteLine(e);
+				//Console.WriteLine(e);
 				return null;
 			}
 		}
@@ -938,16 +947,7 @@ namespace Characters
 			try{
 				return (Enemy)EnemyList[name].Clone();
 			}catch(Exception e){
-				Console.WriteLine(e);
-				return null;
-			}
-		}
-		
-		public NPC GetNpcOriginal(String name){ //원본임. 복사할 필요가 없다고 판단 2021.12.31
-			try{
-				return NPCList[name];
-			}catch(Exception e){
-				Console.WriteLine(e);
+				//Console.WriteLine(e);
 				return null;
 			}
 		}
@@ -958,7 +958,7 @@ namespace Characters
 				mons.SpawnChance = spawn;
 				return mons;
 			}catch(Exception e){
-				Console.WriteLine(e);
+				//Console.WriteLine(e);
 				return null;
 			}
 		}

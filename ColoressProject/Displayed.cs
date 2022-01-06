@@ -772,6 +772,7 @@ public class DisplayTextGame{
 		}
 	
 		public Object GetCurrentSelectValue(){
+			PlayData.CurrentSelectedText = (TextAndPosition)selectList[currentSelectNum].Clone();
 			return indicateList[currentSelectNum];
 		}
 	
