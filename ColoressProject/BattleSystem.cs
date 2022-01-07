@@ -371,7 +371,9 @@ public static class BattleSystem{
 				int ry = random.Next(2,13);
 				AlertWindow(i.Name+" 획득!",windowXPos:rx,windowYPos:ry, textXPos:0,textYPos:9,background:5,delay:10,color:ConsoleColor.DarkYellow);
 			}
-			Console.ReadKey();
+			if(drops.Count > 0)
+				Console.ReadKey();
+			
 			if(globerEnemy.IsSpawnOnce)
 				GameManager.DespawnEnemy(globerEnemy.Name,PlayData.WorldMap.GetChoice(backField));
 			

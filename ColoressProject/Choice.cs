@@ -385,6 +385,18 @@ public class ChoiceControler{
 		choice.TextArrangement();
 	}
 	
+	public void RemoveChoiceSelectTextByValue(String choiceName,String stringValue){
+		Choice choice = choiceDictionary[choiceName];
+		Object key = DictionaryFindKeyByValue(choice.IndicateChoice,stringValue);
+		if(key == null){
+			//testLog("key가 null입니다.:RemoveChoiceSelectTextByValue()");
+			return;
+		}
+		choice.SelectText.RemoveAt((int)key);
+		choice.IndicateChoice.Remove((int)key);
+		choice.TextArrangement();
+	}
+	
 	public void AddChoiceSelectText(String choiceName,TextAndPosition selectText,Object indicate){
 		Choice choice = choiceDictionary[choiceName];
 		choice.IndicateChoice = GameManager.DictionaryRearrangement(choice.IndicateChoice);

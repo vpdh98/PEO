@@ -15,9 +15,9 @@ using static PlayData;
 using static GameWindows;
 
 public static class QuestControler{ //퀘스트목록을 관리
-	public static List<Quest> AllQuestList{get;set;}//모든 퀘스트 목록
-	public static List<Quest> AcceptQuestList{get;set;}//수락한 퀘스트 목록
-	public static List<Quest> CompleteQuestList{get;set;}//완료된 퀘스트 목록
+	public static List<Quest> AllQuestList{get;set;} = new List<Quest>();//모든 퀘스트 목록
+	public static List<Quest> AcceptQuestList{get;set;} = new List<Quest>();//수락한 퀘스트 목록
+	public static List<Quest> CompleteQuestList{get;set;} = new List<Quest>();//완료된 퀘스트 목록
 	
 	public static List<Quest> LastAccessedQuest{get;set;}
 	
@@ -27,12 +27,17 @@ public static class QuestControler{ //퀘스트목록을 관리
 	}
 	
 	public static bool ContainsCompleteQuest(List<Quest> questList){
+		if(questList == null) return false;
 		foreach(Quest q in questList){
 			if(q.isComplete){
 				return true;
 			}
 		}
 		return false;
+	}
+	
+	public static Quest FindQuestByName(List<Quest> qList,String questName){
+		return qList.Find(q => q.QuestName.Equals(questName));
 	}
 	
 	public static List<Quest> SameQuestList(List<Quest> qList1,List<Quest> qList2){
@@ -401,10 +406,10 @@ public class QuestData{
 				}
 			},
 			MonsterNameList = new List<String>(){
-				"망자"
+				"뒤틀린 망자"
 			},
 			TargetNum = new List<int>(){
-				10
+				1
 			}
 		});
 	}

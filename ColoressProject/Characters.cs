@@ -902,7 +902,7 @@ namespace Characters
 					new TextAndPosition("이 늙은이를 놀리는겐가!",10){AlignH = true,Layout = TextLayout.ONLY_SHOW_DEFAULT}
 				},
 				PreQuestMessage = new List<TextAndPosition>(){
-					new TextAndPosition("제가 도울 일이 있습니까?",10)
+					new TextAndPosition("제가 도울 일이 있습니까?",40,13,true)
 				},
 				RevisitPreQuestMessage = new List<TextAndPosition>(){
 					new TextAndPosition("그 일 아직 있습니까?",10)
@@ -914,7 +914,7 @@ namespace Characters
 					new TextAndPosition("오. 해결했다고?",10){AlignH = true,Layout = TextLayout.ONLY_SHOW_DEFAULT}
 				},
 				PreCompleteQuestListMessage = new List<TextAndPosition>(){
-					new TextAndPosition("해결했습니다.",45,13,true){AlignH = true}
+					new TextAndPosition("해결했습니다.",40,13,true)
 				},
 				
 				QuestList = new List<Quest>(){

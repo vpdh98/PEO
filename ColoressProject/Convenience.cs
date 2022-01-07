@@ -10,19 +10,45 @@ public static class Convenience{
 	public static int y = 0;
 	public static Object alwaysDisplay;
 	
-	/*public static bool DictionaryContainsValue(Dictionary<int,Object> dictionary,Object value,out int key = null){
+	public static bool DictionaryContainsValue(Dictionary<int,Object> dictionary,Object dicValue)
+	{
+		Dictionary<int,Object> indicateList = dictionary;
+		foreach(int key in indicateList.Keys)
+		{
+			if(indicateList[key].Equals(dicValue))
+			{
+				return true;
+			}
+		}
 		
-	}*/
+		return false;
+	}
+	
+	public static Object DictionaryFindKeyByValue(Dictionary<int,Object> dictionary,Object dicValue){
+		Dictionary<int,Object> indicateList = dictionary;
+		foreach(int key in indicateList.Keys)
+		{
+			if(indicateList[key].Equals(dicValue))
+			{
+				return key;
+			}
+		}
+		foreach(var Value in indicateList.Values)
+		{
+			testLog(Value);
+		}
+		return null;
+	}
 	
 	public static int GetKoreanCount(String text){
-			int count = 0;
-			for(int i = 0;i<text.Length;i++){
-				if(char.GetUnicodeCategory(text[i])==System.Globalization.UnicodeCategory.OtherLetter){
-					count++;
-				}
+		int count = 0;
+		for(int i = 0;i<text.Length;i++){
+			if(char.GetUnicodeCategory(text[i])==System.Globalization.UnicodeCategory.OtherLetter){
+				count++;
 			}
-			return count;
 		}
+		return count;
+	}
 	
 	public static TextAndPosition TakeRandomMessage(List<TextAndPosition> messageList){
 		Random rand = new Random();
