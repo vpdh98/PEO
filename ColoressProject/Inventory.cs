@@ -57,6 +57,7 @@ public class Inventory {
 			else if(tItem.IsStackable){
 				tItem.Amount += 1;
 			}
+			PlayData.player.PlayerQuestCheck(null);
 			return true;
 		}
 		else

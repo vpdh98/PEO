@@ -106,7 +106,7 @@ namespace Game
 				if(keyInfo.Key == ConsoleKey.Enter) //Enter
 				{
 					currentChoice = (String)DTG.GetCurrentSelectValue();
-
+					player.PlayerQuestCheck(currentChoice);
 					if(CList.GetEnemy(currentChoice) != null){ currentChoice = BattlePhase(player,CList.GetEnemy(currentChoice),DTG.Cho.Name); } //currentChoice에 현제 선택된 몬스터 이름이 들어가 있음 //8.23
 					if(CList.GetNpcOriginal(currentChoice) != null){currentChoice = TalkToNPC.Accost(player,CList.GetNpcOriginal(currentChoice),DTG.Cho.Name);} //currentChoice에 NPC의 이름이 들어가면 실행
 					DTG.Cho.LeaveChoice();
@@ -1139,4 +1139,28 @@ QuickDelegate = ()=>{
 //하지만 중복코드와 불필요한 코드 비효율적인 코드들이 많아 조만간 한번 리펙토링을 해야할 것 같다.
 //대부분 발생한 오류들은 값을 잘못넣어서 발생한 NullReferenceException이였다.
 //값을 잘못 넣었을때 따로 알려주는 코드를 넣으면 좋을것 같다.
-//무기 공격 메세지가 제데로 출력되지 않는 버그가 있다. 수정요함
+//무기 공격 메세지가 제데로 출력되지 않는 버그가 있다. 수정요함(수정완료 2022.01.08)
+
+//2022.01.08
+//무기 공격 메세지가 출력되지 않는 원인은 역시 Clone함수였다.
+//Weapon의 Clone메소드에 AttackMessage가 포함되어 있지 않았다.
+
+//오늘은 다른 종류의 퀘스트들도 작동하도록 해보겠다.
+
+//VisitQuest
+//Main의 currentChoice를 받는 부분다음에 player.PlayerQuestCheck(currentChoice)를 호출해 방문한 장소를 체크했다.
+
+//CollectionQuest
+//Inventory의 AddItem()메소드안에 player.PlayerQuestCheck(null)을 넣어 아이템이 플레이어의 인벤토리에 추가될때마다 아이템을 체크했다.
+//그리고 퀘스트 완료후 보상을 받을때 부모클래스인 Quest의 TakeRewardAll()을 CollectionQuest에서 override해 보상이 인벤에 추가되기 직전에 ItemPayment()가 호출되어 
+//해당 퀘스트 목표였던 아이템을 지불하게 했다.
+
+//MeetingQuest
+//TalkToNPC.Accost() 첫줄에 player.PlayerQuestCheck(npc)를 넣어 해당 npc가 퀘스트 목표인지 체크했다.
+
+//이렇게 4종류의 퀘스트를 모두 구현했다.
+//내일은 퀘스트 내용을 재확인할 수 있는 창을 만들어보자
+
+//근데 생각을 해보니 퀘스트마다 완료했을때 반응을 다르게 해주어야 될것 같다.
+//Quest에 QuestCompleteMessage를 추가해 반응을 다르게 해주었다.
+//근데 퀘스트를 순서 무작위로 받다가 KeyNotFoundException이 발생했다 해결요함. 시간이 없어서 내일.

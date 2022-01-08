@@ -64,6 +64,8 @@ public class Quest : ICloneable{ //퀘스트 객체, 이걸 NPC와 Player끼리 
 	public bool isAccept = false; //퀘스트 수락 여부
 	public bool isReject = false; //퀘스트 한번이라도 거절했는지
 	
+	public TextAndPosition QuestCompleteMessage{get;set;} = new TextAndPosition("잘했네",10){AlignH = true};
+	
 	
 	public Quest(){
 		
@@ -77,13 +79,16 @@ public class Quest : ICloneable{ //퀘스트 객체, 이걸 NPC와 Player끼리 
 	}
 	
 	public virtual void TakeRewardAll(){
-		
+		for(int i = 0;i<QuestReward.Count;i++){
+			QuestReward[i].TakeReward();
+		}
 	}
 	
 	protected Quest(Quest that){
 		this.QuestReward = (List<Reward>)ListClone<Reward>(that.QuestReward);
 		this.QuestName = that.QuestName;
 		this.QuestContents = that.QuestContents;
+		this.QuestCompleteMessage = (TextAndPosition)that.QuestCompleteMessage.Clone();
 		this.isComplete = that.isComplete;
 		this.isAccept = that.isAccept;
 	}
@@ -143,11 +148,7 @@ public class HuntQuest : Quest
 		}
 	}
 	
-	public override void TakeRewardAll(){
-		for(int i = 0;i<QuestReward.Count;i++){
-			QuestReward[i].TakeReward();
-		}
-	}
+	
 	
 	protected HuntQuest(HuntQuest that) : base(that){
 		this.MonsterNameList = (List<String>)ListClone<String>(that.MonsterNameList);
@@ -161,8 +162,20 @@ public class HuntQuest : Quest
 }
 
 public class VisitQuest : Quest{
-	public List<bool> bClearTarget;
-	public List<String> TargetName{get;set;}
+	public List<bool> bClearTarget = new List<bool>();
+	private List<String> targetName;
+	public List<String> TargetName{
+		get{
+			return targetName;
+		}
+		set{
+			targetName = value;
+			bClearTarget = Enumerable.Repeat(false,targetName.Count).ToList();
+		}
+	}
+	
+	public VisitQuest(){
+	}
 	
 	public override void CheckComplete()
 	{
@@ -173,19 +186,24 @@ public class VisitQuest : Quest{
 	}
 	
 	public override bool CheckTarget(Object info){
-		Choice choice = null;
-		if(info is Choice)
+		
+		String choiceName = "";
+		if(info is String)
 		{
-			choice = (Choice)info;
+			choiceName = (String)info;
 		}
 		else
 		{
 			return false;
 		}
-		if(TargetName.Contains(choice.Name))
+		testLog(1);
+		if(TargetName.Contains(choiceName))
 		{
-			bClearTarget[TargetName.IndexOf(choice.Name)] = true;
+		testLog(2);
+			bClearTarget[TargetName.IndexOf(choiceName)] = true;
+			testLog(3);
 			CheckComplete();
+			testLog(4);
 			return true;
 		}
 		else
@@ -204,10 +222,30 @@ public class VisitQuest : Quest{
 	}
 }
 
-public class ConllectionQuest : Quest{
+public class CollectionQuest : Quest{
 	public List<Item> ItemList{get;set;}
 	public List<int> ItemAmount{get;set;}
-	public List<int> TargetAmount{get;set;}
+	private List<int> targetAmount;
+	public List<int> TargetAmount{
+		get{
+			return targetAmount;
+		}
+		set{
+			targetAmount = value;
+			ItemAmount = Enumerable.Repeat(0,targetAmount.Count).ToList();
+		}
+	}
+	
+	public CollectionQuest(){
+	
+	}
+	
+	public override void TakeRewardAll(){
+		ItemPayment();
+		for(int i = 0;i<QuestReward.Count;i++){
+			QuestReward[i].TakeReward();
+		}
+	}
 
 	public override void CheckComplete()
 	{
@@ -240,20 +278,55 @@ public class ConllectionQuest : Quest{
 		return false;
 	}
 	
-	protected ConllectionQuest(ConllectionQuest that){
+	public void ItemPayment(){
+		if(!isComplete){
+			testLog("이 CollectionQuest는 완료되지 않았습니다.");
+			return;
+		}
+		List<Item> playerInventoryList = player.inven.InventoryList;
+		
+		for(int i = 0;i<ItemList.Count;i++){
+			Item tItem = playerInventoryList.Find(x => x.Name == ItemList[i].Name);
+			if(tItem.IsStackable){
+				tItem.Amount -= TargetAmount[i];
+				if(tItem.Amount <= 0){
+					playerInventoryList.Remove(tItem);
+				}
+			}else{
+				playerInventoryList.Remove(tItem);
+			}
+		}
+		
+	}
+	
+	protected CollectionQuest(CollectionQuest that){
 		this.ItemList = (List<Item>)ListClone<Item>(that.ItemList);
 		this.ItemAmount = new List<int>(that.ItemAmount);
 		this.TargetAmount = new List<int>(that.ItemAmount);
 	}
 	
 	public Object Clone(){
-		return new ConllectionQuest(this);
+		return new CollectionQuest(this);
 	}
 }
 
 public class MeetingQuest:Quest{
-	public List<String> MeetingTarget{get;set;}
+	private List<String> meetingTarget;
 	public List<bool> HasMeet{get;set;}
+	
+	public List<String> MeetingTarget{
+		get{
+			return meetingTarget;
+		}
+		set{
+			meetingTarget = value;
+			HasMeet = Enumerable.Repeat(false,meetingTarget.Count).ToList();
+		}
+	}
+	
+	public MeetingQuest(){
+	
+	}
 	
 	public override void CheckComplete()
 	{
@@ -383,7 +456,8 @@ public class QuestData{
 			},
 			TargetNum = new List<int>(){
 				1
-			}
+			},
+			QuestCompleteMessage = new TextAndPosition("오! 역시 슬라임 정도는 아무것도 아닌건가? 고맙네.",10){AlignH = true,Layout = TextLayout.ONLY_SHOW_DEFAULT}
 		});
 		
 		QuestDatas.Add(new HuntQuest(){
@@ -410,7 +484,86 @@ public class QuestData{
 			},
 			TargetNum = new List<int>(){
 				1
-			}
+			},
+			QuestCompleteMessage = new TextAndPosition("망자를 이리 쉽게 처리하다니. 대단하군!",10){AlignH = true,Layout = TextLayout.ONLY_SHOW_DEFAULT}
+		});
+		
+		QuestDatas.Add(new VisitQuest(){
+			QuestName = "폐가 방문",
+			QuestContents = new Choice(){
+				Name = "VisitAbandonedHouse",
+				SelectText = new List<TextAndPosition>()         
+							{new TextAndPosition("수락한다.",16,13,true),
+							new TextAndPosition("거절한다.",40,13,true)},
+				OnlyShowText = new List<TextAndPosition>()
+							{new TextAndPosition("숲속 깊은 곳에 가보면\n버려져있는 집이 있다네\n그런데 요즘 거기서 누군가를\n봤다는 제보가 있어..\n 한번 조사해주지 않겠나?",15,3,10){AlignH = true}},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"QuestAccept"},{1,"QuestReject"}},
+				BackgroundText = backgrounds.GetBackground(1)
+			},
+			QuestReward = new List<Reward>
+			{
+				new ItemReward()
+				{
+					Items = new List<Item>(){new Item(){Name = "지하실열쇠"}}
+				}
+			},
+			TargetName = new List<String>(){
+				"gyeongminsHouse_Room"
+			},
+			QuestCompleteMessage = new TextAndPosition("날아다니는 냉장고가 습격했다고?\n도데체 무슨 소릴 하는건가?\n흐흠..아무튼 보상은 주겠네..",10){AlignH = true,Layout = TextLayout.ONLY_SHOW_DEFAULT}
+		});
+		
+		QuestDatas.Add(new CollectionQuest(){
+			QuestName = "피부에 좋은 슬라임 젤",
+			QuestContents = new Choice(){
+				Name = "GetSlimeJell",
+				SelectText = new List<TextAndPosition>()         
+							{new TextAndPosition("수락한다.",16,13,true),
+							new TextAndPosition("거절한다.",40,13,true)},
+				OnlyShowText = new List<TextAndPosition>()
+							{new TextAndPosition("슬라임 젤을 좀 구해다줄 수 있는가?\n곧 아내의 생일인데\n슬라임 젤에는 보습 효과가 있어\n아내에게 선물로 주려고 하네.\n부탁해도 되겠나?",15,3,10){AlignH = true}},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"QuestAccept"},{1,"QuestReject"}},
+				BackgroundText = backgrounds.GetBackground(1)
+			},
+			QuestReward = new List<Reward>
+			{
+				new ItemReward()
+				{
+					Items = new List<Item>(){itemList.GetItem("촌장의 일기")}
+				}
+			},
+			ItemList = new List<Item>(){
+				itemList.GetItem("슬라임 젤")
+			},
+			TargetAmount = new List<int>(){
+				3
+			},
+			QuestCompleteMessage = new TextAndPosition("그래 나일세.",10){AlignH = true,Layout = TextLayout.ONLY_SHOW_DEFAULT}
+		});
+		
+		QuestDatas.Add(new MeetingQuest(){
+			QuestName = "testMeeting",
+			QuestContents = new Choice(){
+				Name = "testMeeting",
+				SelectText = new List<TextAndPosition>()         
+							{new TextAndPosition("수락한다.",16,13,true),
+							new TextAndPosition("거절한다.",40,13,true)},
+				OnlyShowText = new List<TextAndPosition>()
+							{new TextAndPosition("촌장을 만나고 오게",15,3,10){AlignH = true}},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"QuestAccept"},{1,"QuestReject"}},
+				BackgroundText = backgrounds.GetBackground(1)
+			},
+			QuestReward = new List<Reward>
+			{
+				new ItemReward()
+				{
+					Items = new List<Item>(){new Item(){Name = "보상"}}
+				}
+			},
+			MeetingTarget = new List<String>(){
+				"촌장"
+			},
+			QuestCompleteMessage = new TextAndPosition("그래 나일세.",10){AlignH = true,Layout = TextLayout.ONLY_SHOW_DEFAULT}
 		});
 	}
 }

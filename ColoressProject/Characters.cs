@@ -919,7 +919,10 @@ namespace Characters
 				
 				QuestList = new List<Quest>(){
 					QuestControler.GetQuestByName("슬라임 사냥"),
-					QuestControler.GetQuestByName("망자 사냥")
+					QuestControler.GetQuestByName("망자 사냥"),
+					QuestControler.GetQuestByName("폐가 방문"),
+					QuestControler.GetQuestByName("피부에 좋은 슬라임 젤"),
+					QuestControler.GetQuestByName("testMeeting")
 				}
 			};
 			NPCList.Add(npc.Name,npc);

@@ -16,21 +16,22 @@ public enum NpcType{
 
 
 
-public static class TalkToNPC{
-	public static Player globalPlayer;
-	public static NPC globalNPC;
-	public static String backField;
-	public static DisplayTextGame NpcDTG = new DisplayTextGame();
-	public static ChoiceControler NpcCC = new ChoiceControler(new Scenario());
-	public static String currentChoice = "GreetPhase";
+public static class TalkToNPC
+{
+	public static Player globalPlayer; //player객체가 들어갈 변수
+	public static NPC globalNPC;		//NPC객체가 들어갈 변수
+	public static String backField;		//NPC화면에서 다시 돌아갈 장소를 저장
+	public static DisplayTextGame NpcDTG = new DisplayTextGame();		//TalkToNPC에서 쓸 DisplayTextGame객체
+	public static ChoiceControler NpcCC = new ChoiceControler(new Scenario());	//TalkToNPC에서 쓸 ChoiceControler객체
+	public static String currentChoice = "GreetPhase";		//현재 화면의 이름
 	
-	public static List<Quest> NpcQuestList;
-	public static Quest currentQuest;
+	public static List<Quest> NpcQuestList;		//NPC의 퀘스트 목록을 저장
+	public static Quest currentQuest;			//출력하는데에 사용할 퀘스트 객체를 담을 변수
 	
-	public static ConsoleKeyInfo keyInfo;
+	public static ConsoleKeyInfo keyInfo;		//Console.ReadKey()로 받아오는 입력 값을 저장할 변수
 	
-	public static String lastQuestName;
-	public static int lastQuestIndex;
+	public static String lastQuestName;			//마지막으로 접근한 퀘스트의 이름을 담을 변수
+	public static int lastQuestIndex;			//마지막으로 접근한 퀘스트의 선택지 인덱스를 담는 변수
 	
 	public static List<Quest> sameQuestList;
 	/*
@@ -58,65 +59,52 @@ public static class TalkToNPC{
 	
 	
 	
-	public static String Accost(Player player,NPC npc,String back){
-		sameQuestList = QuestControler.SameQuestList(player.QuestList,npc.QuestList);
+	public static String Accost(Player player,NPC npc,String back)
+	{ //NPC객체와의 소통,출력을 담당할 메소드. 플레이어와 NPC간의 모든 상호작용을 담당함
+		player.PlayerQuestCheck(npc); //MeetingQuest의 완료조건 확인
+		sameQuestList = QuestControler.SameQuestList(player.QuestList,npc.QuestList); //플레이어가 가지고 있는 퀘스트 목록과 NPC가 가지고 있는 퀘스트의 목록중 일치하는 퀘스트를 저장
 		
-		globalPlayer = player;
-		globalNPC = npc;
-		backField = back;
+		globalPlayer = player; //매개변수로 받아온 player의 객체를 저장
+		globalNPC = npc;		//NPC의 객체를 저장
+		backField = back;		//돌아갈 필드의 이름을 저장
 		
-		NpcQuestList = npc.QuestList;
+		NpcQuestList = npc.QuestList;	//NPC의 퀘스트 목록을 저장
 		
-		currentChoice = "GreetPhase";
+		currentChoice = "GreetPhase";	//첫 화면을 저장
 		
-		if(!NpcCC.GetChoice(currentChoice).IsVisit){
+		if(!NpcCC.GetChoice(currentChoice).IsVisit) //현재 초이스가 방문한적이 없다면 NPC관련 Choice의 텍스트들을 초기화
+		{
 			NpcTalkInit();
 		}
-		//testLog(QuestControler.ContainsCompleteQuest(sameQuestList));
-		if(QuestControler.ContainsCompleteQuest(sameQuestList)){
-			ReplaceQuestCompleteText();
-		}else{
-			ReplaceQuestIntroductionText();
+		
+		if(QuestControler.ContainsCompleteQuest(sameQuestList)) //일치하는 퀘스트중 완료한 퀘스트가 있다면 실행
+		{	
+			ReplaceQuestCompleteText(); //QuestComplete이라는 이름의 Choice의 선택지를 추가.동시에 GreetPhase에 CompleteQuestList로 가는 선택지를 추가
+		}
+		else
+		{
+			ReplaceQuestIntroductionText();	//QuestIntroduction이라는 이름의 Choice의 선택지를 추가, 동시에 GreetPhase에 QuestIntroduction으로 가는 선택지를 추가
 		}
 		
-		
 		NpcDTG.Display(NpcCC.GetChoiceClone(currentChoice));
-		/*while(true){
-			keyInfo = Console.ReadKey();
-			if(keyInfo.Key == ConsoleKey.Enter){
-				currentChoice = (String)NpcDTG.GetCurrentSelectValue();
-				if(currentChoice == "end") return backField;
-				currentQuest = NpcQuestList.Find(q => q.QuestName.Equals(currentChoice));
-				if(currentQuest != null && currentQuest.QuestName == currentChoice)
-				{
-					NpcDTG.Display(currentQuest.QuestContents);
-					lastQuestName = currentChoice;
-					lastQuestIndex = NpcDTG.currentSelectNum;
-				}
-				else{
-					NpcDTG.Display(NpcCC.GetChoice(currentChoice));
-				}
-				break;
-			}
-			NpcDTG.SelectingText(keyInfo);
-			NpcDTG.Display();
-		}*/
 		
 		while(currentChoice != "end")
 		{
 			
-			keyInfo = Console.ReadKey();
-			NpcDTG.SelectingText(keyInfo);
-			if(keyInfo.Key == ConsoleKey.Enter)
+			keyInfo = Console.ReadKey();																						//1.입력 받음
+			NpcDTG.SelectingText(keyInfo);																						//2.입력에 따라 내부적으로 선택지의 Index변경
+			if(keyInfo.Key == ConsoleKey.Enter)																					//3.그 입력이 Enter키 일 경우
 			{
-				currentChoice = (String)NpcDTG.GetCurrentSelectValue();
-				if(currentChoice == "end"){ 
-					NpcCC.GetChoice("ConversationPhase").LeaveChoice();
+				currentChoice = (String)NpcDTG.GetCurrentSelectValue();															//4.현재 선택지의 index에 있는 value를 가져옴
+				if(currentChoice == "end")
+				{//currentChoice가 end면 이전 장소로 돌아간다.
+					NpcCC.GetChoice("ConversationPhase").LeaveChoice(); //해당 Choice의 출력 문자를 변경(ex. 처음 보는구먼. 반갑네 -> 또 왔구먼. 잘 쉬다가게)
 					NpcCC.GetChoice("GreetPhase").LeaveChoice();
-					return backField;
+					return backField; //이전 필드의 이름을 return;
 				}
 				
-				if(currentChoice == "QuestAccept"){
+				if(currentChoice == "QuestAccept")
+				{//현재 Choice가 QuestAccept라면 실행
 					Quest tQuest = QuestControler.FindQuestByName(NpcQuestList,lastQuestName);
 					tQuest.isAccept = true;
 					globalPlayer.QuestList.Add(tQuest);//마지막에 수락한 Quest의 객체를 플레이어에게 넘김
@@ -132,6 +120,7 @@ public static class TalkToNPC{
 					{
 						NpcCC.RemoveChoiceSelectTextByValue("GreetPhase","QuestIntroduction");
 					}
+					//ReplaceQuestIntroductionText();
 				}
 				if(currentChoice == "QuestReject"){
 					Quest tQuest = QuestControler.FindQuestByName(NpcQuestList,lastQuestName);
@@ -151,10 +140,11 @@ public static class TalkToNPC{
 						Quest tQuest = QuestControler.FindQuestByName(NpcQuestList,lastQuestName);
 						tQuest.TakeRewardAll();
 					};
+					NpcCC.ChangeChoiceText(choiceName:"QuestComplete",onlyShowText:QuestControler.FindQuestByName(NpcQuestList,lastQuestName).QuestCompleteMessage);
 				}
 				
 				//AAAAAAA선택한 Choice Display전AAAAAAA//
-				currentQuest = NpcQuestList.Find(q => q.QuestName.Equals(currentChoice));
+				currentQuest = QuestControler.FindQuestByName(NpcQuestList,currentChoice);
 				if(currentQuest != null && currentQuest.QuestName == currentChoice)
 				{
 					lastQuestIndex = NpcDTG.currentSelectNum;

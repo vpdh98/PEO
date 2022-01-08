@@ -96,6 +96,9 @@ public class Weapon : Equipment{
 	protected Weapon(Weapon that) : base(that){
 		this.AttackPower = that.AttackPower;
 		this.AttackSpeed = that.AttackSpeed;
+		
+		if(that.AttackMessage != null)
+			this.AttackMessage = that.AttackMessage.ConvertAll(new Converter<TextAndPosition, TextAndPosition>(o => (TextAndPosition)o.Clone()));
 	}
 	
 	public override Object Clone(){
@@ -154,14 +157,13 @@ public class ItemList{
 			AttackMessage = new List<TextAndPosition>(){
 				 new TextAndPosition("전설의 검은 마치 유성우와 같은 궤적을 남겼다.",10),
 				 new TextAndPosition("산을 가를듯한 기세로 검을 휘둘렀다.",10),
-				 new TextAndPosition("일----------------------섬",10)
+				 new TextAndPosition("일섬",10)
 			}
 		};
 		itemList.Add(item.Name,item);
-		
 		item = new Item(){
 			Name = "슬라임 젤",
-			ItemExplan="슬라임의 일부이다.",
+			ItemExplan="슬라임의 일부이다.\n잘못 만지면 피부가 녹을 수 있다.",
 			IsStackable = true
 		};
 		itemList.Add(item.Name,item);
@@ -170,6 +172,12 @@ public class ItemList{
 			Name = "황금갑옷",
 			ItemExplan="전설의 황금갑옷\n전설적인 갑옷이다.\n전설적인 갑옷이여서 그런지\n순도 100%의 황금임에도\n꽤 높은 방어력을 자랑한다.",
 			Defense = 10
+		};
+		itemList.Add(item.Name,item);
+		
+		item = new Item(){
+			Name = "촌장의 일기",
+			ItemExplan="xxxx.xx.xx\n곧 있으면 아내의 생일이다.\n요즘 벌레가 많아져\n아내의 피부건강이 걱정된다.\n슬라임 젤이면 아내의 피부\n건강을 지킬 수 있을 것이다."
 		};
 		itemList.Add(item.Name,item);
 	}
