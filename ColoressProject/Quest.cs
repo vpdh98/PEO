@@ -196,14 +196,10 @@ public class VisitQuest : Quest{
 		{
 			return false;
 		}
-		testLog(1);
 		if(TargetName.Contains(choiceName))
 		{
-		testLog(2);
 			bClearTarget[TargetName.IndexOf(choiceName)] = true;
-			testLog(3);
 			CheckComplete();
-			testLog(4);
 			return true;
 		}
 		else

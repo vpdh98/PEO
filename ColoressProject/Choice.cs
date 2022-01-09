@@ -382,6 +382,16 @@ public class ChoiceControler{
 		Choice choice = choiceDictionary[choiceName];
 		choice.SelectText.RemoveAt(selectIndex);
 		choice.IndicateChoice.Remove(selectIndex);
+		choice.IndicateChoice = GameManager.DictionaryRearrangement(choice.IndicateChoice);
+		choice.TextArrangement();
+	}
+	
+	public void RemoveChoiceSelectTextByText(String choiceName,string text){
+		Choice choice = choiceDictionary[choiceName];
+		int index = choice.SelectText.IndexOf(choice.SelectText.Find(t => t.text == text));
+		choice.SelectText.RemoveAt(index);
+		choice.IndicateChoice.Remove(index);
+		choice.IndicateChoice = GameManager.DictionaryRearrangement(choice.IndicateChoice);
 		choice.TextArrangement();
 	}
 	
@@ -389,11 +399,12 @@ public class ChoiceControler{
 		Choice choice = choiceDictionary[choiceName];
 		Object key = DictionaryFindKeyByValue(choice.IndicateChoice,stringValue);
 		if(key == null){
-			//testLog("key가 null입니다.:RemoveChoiceSelectTextByValue()");
+			//testLog("key가 null입니다.:RemoveChoiceSelectTextByValue():"+stringValue);
 			return;
 		}
 		choice.SelectText.RemoveAt((int)key);
 		choice.IndicateChoice.Remove((int)key);
+		choice.IndicateChoice = GameManager.DictionaryRearrangement(choice.IndicateChoice);
 		choice.TextArrangement();
 	}
 	
@@ -401,7 +412,13 @@ public class ChoiceControler{
 		Choice choice = choiceDictionary[choiceName];
 		choice.IndicateChoice = GameManager.DictionaryRearrangement(choice.IndicateChoice);
 		//testLog(choice.IndicateChoice[choice.SelectText.Count]);
+		try{
 		choice.IndicateChoice.Add(choice.SelectText.Count,indicate);
+		}catch(Exception e){
+			testLog(e.ToString()+":"+choice.SelectText.Count+":"+indicate);
+			return;
+			//choice.IndicateChoice[choice.SelectText.Count]=indicate;
+		}
 		choice.SelectText.Add(selectText);
 		choice.TextArrangement();
 	}

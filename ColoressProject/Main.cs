@@ -273,15 +273,35 @@ namespace Game
 		{ //dictionary를 재정렬 한다. 1,2,3,5 키값이 이런식으로 되있을경우 0,1,2,3이런식으로 바꾼다.
 			Dictionary<int,Object> newDic = new Dictionary<int,Object>();
 			int count = 0;
-			for(int i = 0;i<dic.Count;i++){
+			
+			/*for(int i = 0;i<dic.Count;i++){
 				if(dic.ContainsKey(i)){
-					newDic.Add(i,dic[i]);
+					newDic.Add(i,dic[i+count]);
 				}
 				else{
 					count++;
+					try{
 					newDic.Add(i,dic[i+count]);
+					}catch(Exception e){
+						testLog(e.ToString()+":"+dic.Count);
+						for(int j = 0;j<dic.Count;j++){
+							testLog(dic[j]);
+						}
+					}
 				}
+			}*/
+			
+			int[] keys = new int[dic.Count];
+			
+			foreach(Object key in dic.Keys){
+				keys[count++] = (int)key;
 			}
+			Array.Sort(keys);
+			count = 0;
+			foreach(int k in keys){
+				newDic.Add(count++,dic[k]);
+			}
+			
 			return newDic;
 		}
 	}
@@ -1163,4 +1183,16 @@ QuickDelegate = ()=>{
 
 //근데 생각을 해보니 퀘스트마다 완료했을때 반응을 다르게 해주어야 될것 같다.
 //Quest에 QuestCompleteMessage를 추가해 반응을 다르게 해주었다.
-//근데 퀘스트를 순서 무작위로 받다가 KeyNotFoundException이 발생했다 해결요함. 시간이 없어서 내일.
+//근데 퀘스트를 순서 무작위로 받다가 KeyNotFoundException이 발생했다 해결요함. 시간이 없어서 내일. (수정완료 2022.01.09)
+
+//2022.01.09
+//오늘은 퀘스트 목록에 대한 추가,삭제 기능에서 뜨는 오류를 수정했다.
+//결론적으로는 퀘스트 목록의 정보를 가지고 있는 선택지의 Dictionary의 정렬이 제데로 되지 않아 일어난 일이였다.
+//Main의 DictionaryRearrangement에서 foreach를 사용해서 Dictionary를 재정렬 했었는데
+//Dictionary에서의 키값은 정렬되있는 것이 아니므로 순서가 꼬였었다.
+//그래서 Dictionary의 키값을 int배열로 받아 정렬후 그 배열의 값을 순서대로 받아와 Dictionary를 재정렬 시켰다.
+//그리고 AddChoiceSelectText()에서 같은 키값을 추가하는 경우가 있었는데 예외처리하려 같은 값이면 값이 추가되지 않고 바로 return;하게 하였다.
+//그리고 삭제할때는 Dictionary를 재정렬하는 메소드를 호출하지 않았었어서 발생한 문제였다.
+//DictionaryRearrangement는 나중에다시 리펙토링 할 필요가 있어보인다.
+
+//지금은 퀘스트나 몬스터 사냥으로 Item을 획득할때 인벤토리가 가득차면 Item획득 메세지만 뜨고 실제로는 획득 안된다. 수정요함

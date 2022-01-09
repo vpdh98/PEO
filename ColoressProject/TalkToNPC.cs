@@ -154,15 +154,17 @@ public static class TalkToNPC
 				else if(currentChoice == "QuestReward"){
 					NpcDTG.Cho = NpcCC.GetChoice("QuestReward");
 					NpcDTG.Cho.QuickRun();
+					NpcCC.RemoveChoiceSelectTextByText("CompleteQuestList",lastQuestName);
 					QuestControler.CompleteQuestList.Add(QuestControler.FindQuestByName(NpcQuestList,lastQuestName));
 					player.QuestList.Remove(QuestControler.FindQuestByName(NpcQuestList,lastQuestName));
 					sameQuestList.Remove(QuestControler.FindQuestByName(NpcQuestList,lastQuestName));
 					NpcQuestList.Remove(QuestControler.FindQuestByName(NpcQuestList,lastQuestName));
+					
 					if(!QuestControler.ContainsCompleteQuest(sameQuestList)){
 						NpcCC.RemoveChoiceSelectTextByValue("GreetPhase","CompleteQuestList");
 					}
 					
-					if(!QuestControler.ContainsCompleteQuest(sameQuestList)){
+					if(!QuestControler.ContainsCompleteQuest(sameQuestList) && NpcCC.GetChoice("QuestIntroduction").SelectText.Count > 1){
 						ReplaceQuestIntroductionText();
 					}
 					
@@ -239,7 +241,7 @@ public static class TalkToNPC
 				}
 				for(int i=0;i<NpcQuestList.Count;i++){
 					if(!NpcQuestList[i].isAccept && !Convenience.DictionaryContainsValue(NpcCC.GetChoice("QuestIntroduction").IndicateChoice,NpcQuestList[i].QuestName)){
-						NpcCC.AddChoiceSelectText("QuestIntroduction",new TextAndPosition(NpcQuestList[i].QuestName,firstX,lastY++ +1,true),NpcQuestList[i].QuestName);
+						NpcCC.AddChoiceSelectText("QuestIntroduction",new TextAndPosition(NpcQuestList[i].QuestName,firstX,lastY+1,true),NpcQuestList[i].QuestName);
 						firstX = GameManager.selectListFirststPositionX(NpcCC.GetChoice("QuestIntroduction").SelectText);
 						lastY = GameManager.selectListLastPositionY(NpcCC.GetChoice("QuestIntroduction").SelectText);
 					}

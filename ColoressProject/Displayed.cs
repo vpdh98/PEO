@@ -363,12 +363,6 @@ public class DisplayTextGame{
 			}
 			DisplayBackground();
 			if(integratedList != null){
-				/*for(int i = 0;i<onlyShowList.Count;i++){
-					Convenience.y = i;
-					//testLog(onlyShowList[i],delay:false);
-				}
-				Convenience.y = 0;
-				Console.ReadKey();*/
 					for(int i = 0;i<integratedList.Count;i++){
 						TextAndPosition TAndP = integratedList[i];
 						if(TAndP.color!=null){
@@ -409,38 +403,6 @@ public class DisplayTextGame{
 			}
 		}
 	
-		/*public void PrintWriteLine(){
-			ConsoleColor tempC;
-				if(integratedList != null){
-						for(int i = 0;i<integratedList.Count;i++){
-							TextAndPosition TAndP = integratedList[i];
-							if(TAndP.color!=null){
-								tempC = Console.ForegroundColor;
-								Console.ForegroundColor = TAndP.color;
-							}
-							 //stopPoint == 0조건 추가하면 순차적으로 출력된다음 다음 내용 출력. 없에면 한꺼번에 출력
-								FrontDelay(TAndP);//해당 텍스트를 딜레이시키고 딜레이 0으로 만듦
-								int y = 0;
-								int x = 0;
-								Console.SetCursorPosition(TAndP[0]+GlobalPositionX,TAndP[1]+GlobalPositionY);
-								String ts = "";
-								for(int j = 0;j<TAndP.text.Length;j++){
-									char c = TAndP.text[j];
-									if(c == '\n'){
-										y++;
-										ts="";
-									}else{
-										Console.SetCursorPosition(TAndP[0]+GlobalPositionX+x,TAndP[1]+GlobalPositionY+y);
-										ts+=c;
-										Console.Write(ts);
-									}
-								}
-								
-							
-						}
-					delay = 0;
-				}
-		}*/
 		
 		public void StreamPrint(TextAndPosition TAndP){
 			//FrontDelay(TAndP);
@@ -465,9 +427,6 @@ public class DisplayTextGame{
 			return temp;
 		}
 		
-		/*public void PiecesAndChoice(){ //타자기 효과 출력과 일반 선택지 출력 메소드
-			PrintAlgorithm();
-		}*/
 		
 		
 		public void PrintPieceOfText(TextAndPosition text){ //한글자씩 출력하게 하는 메소드
