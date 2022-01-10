@@ -93,6 +93,7 @@ public static class TalkToNPC
 			
 			keyInfo = Console.ReadKey();																						//1.입력 받음
 			NpcDTG.SelectingText(keyInfo);																						//2.입력에 따라 내부적으로 선택지의 Index변경
+			if(keyInfo.Key == ConsoleKey.I) { player.inven.OpenInventory(); }
 			if(keyInfo.Key == ConsoleKey.Enter)																					//3.그 입력이 Enter키 일 경우
 			{
 				currentChoice = (String)NpcDTG.GetCurrentSelectValue();															//4.현재 선택지의 index에 있는 value를 가져옴
@@ -152,6 +153,12 @@ public static class TalkToNPC
 					lastQuestName = currentChoice;
 				}
 				else if(currentChoice == "QuestReward"){
+					if(QuestControler.FindQuestByName(NpcQuestList,lastQuestName).QuestReward.Count+player.inven.InventoryList.Count > 20){//보상의 아이템 갯수와 플레이어 인벤의 아이템 갯수의 합이 20을 초과하면 보상지급 취
+						currentChoice = "GreetPhase";
+						AlertWindow("인벤토리 공간이 부족합니다!",textXPos:24,textYPos:9);
+						NpcDTG.Display(NpcCC.GetChoice(currentChoice));
+						continue;
+					}
 					NpcDTG.Cho = NpcCC.GetChoice("QuestReward");
 					NpcDTG.Cho.QuickRun();
 					NpcCC.RemoveChoiceSelectTextByText("CompleteQuestList",lastQuestName);

@@ -50,8 +50,9 @@ public class Inventory {
 	}
 	
 	public bool AddItem(Item item){
+		Item tItem;
 		if(item != null && InventoryList.Count<maximumCount){
-			Item tItem = InventoryList.Find(i => i.Name == item.Name);
+			tItem = InventoryList.Find(i => i.Name == item.Name);
 			if(tItem == null)
 				InventoryList.Add(item);
 			else if(tItem.IsStackable){
@@ -60,8 +61,14 @@ public class Inventory {
 			PlayData.player.PlayerQuestCheck(null);
 			return true;
 		}
-		else
+		else if(item != null && item.IsStackable && (InventoryList.Find(i => i.Name == item.Name) != null)){
+			tItem = InventoryList.Find(i => i.Name == item.Name);
+			tItem.Amount += 1;
+			return true;
+		}
+		else{
 			return false;
+		}
 	}
 	
 	public Item GetItemIndex(int index){

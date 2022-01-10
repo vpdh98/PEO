@@ -534,7 +534,7 @@ public class QuestData{
 			TargetAmount = new List<int>(){
 				3
 			},
-			QuestCompleteMessage = new TextAndPosition("그래 나일세.",10){AlignH = true,Layout = TextLayout.ONLY_SHOW_DEFAULT}
+			QuestCompleteMessage = new TextAndPosition("오오 고맙구먼. 아내가 좋아하겠어!",10){AlignH = true,Layout = TextLayout.ONLY_SHOW_DEFAULT}
 		});
 		
 		QuestDatas.Add(new MeetingQuest(){
