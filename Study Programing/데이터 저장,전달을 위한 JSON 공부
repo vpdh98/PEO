@@ -1,0 +1,58 @@
+JSON은 JavaScript Object Notation의 약자로
+자바 스크립트에서 좀더 쉽게 데이터를 저장,교환 하기 위해서 만들어진 텍스트 기반의 데이터 교환 표준 이다.
+
+{
+    "language": [
+        {
+            "name": "HTML",
+            "category": "web",
+            "developer": "W3C"
+        },
+        {
+            "name": "CSS",
+            "category": "web",
+            "developer": "W3C"
+        },
+        {
+            "name": "Java",
+            "category": "application",
+            "developer": "Oracle"
+        },
+        {
+            "name": "Python",
+            "category": "application",
+            "developer": "Python"
+        }
+    ]
+}
+
+이러한 형태로 데이터를 저장한다.
+JSON의 데이터는 Key, value 형식으로 이루어져 있으며
+[]는 배열을
+{}는 객체를
+ ,는 각각의 데이터를 구분한다.
+ 
+적법한 JSON 데이터의 형식을 기술한 문서를 JSON Schema 라고 한다.
+이 스키마 검증을 위해 다양한 검증 키워드를 지원한다.
+
+검증 데이터 예
+{
+
+    "title": "강아지 스키마",
+
+    "description": "이 스키마는 강아지에 관한 데이터를 검증하기 위해 작성된 스키마임.",
+    "type": "object",
+    "properties": {
+        "name": {"type": "string"},
+        "family": {"type": "string"},
+        "age": {"type": "integer"},
+        "weight": {"type": "number"},
+        "owner": {
+            "type": "object",
+            "properties": {
+                "ownerName": {"type": "string"},
+                "phone": {"type": "string"}
+            }
+        }
+    }
+}
