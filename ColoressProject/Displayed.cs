@@ -8,6 +8,7 @@ using static Convenience;
 using static Define;
 using static PlayData;
 using Characters;
+using MyJson;
 
 
 public enum TextLayout{
@@ -17,7 +18,7 @@ public enum TextLayout{
 	CROSSROADS_DEFAULT
 }
 
-public class TextAndPosition : ICloneable{
+public class TextAndPosition : ICloneable, ISaveToJson{
 		public String text{set;get;}	//나타낼 텍스트
 		public int x{set;get;}			//위치 좌표
 		public int y{set;get;}			
@@ -115,6 +116,10 @@ public class TextAndPosition : ICloneable{
 					default: throw new Exception();
 				}
 			}
+		}
+	
+		public String ToJsonString(){
+			return "";
 		}
 		
 }

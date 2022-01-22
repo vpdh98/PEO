@@ -12,6 +12,8 @@ using static BattleSystem;
 using static Convenience;
 using static ItemData;
 using static PlayData;
+using static DataManager;
+using MyJson;
 //using Item;
 //using Battle;
 
@@ -72,6 +74,39 @@ namespace Game
 		
 		public static void Main()
 		{
+			Json json = new Json();
+			json.OpenArray();
+			json.OpenObject("numbers");
+			json.AddItem("num1","1");
+			json.AddItem("num2","2");
+			json.CloseObject();
+			json.OpenObject("numbers2");
+			json.AddItem("num1","1");
+			json.AddItem("num2","2");
+			json.CloseObject();
+			json.CloseArray();
+			
+			String path = "test/a/a.txt";
+			CreateDirectoryAndFile(path);
+			WriteFile(path,json.JsonString);
+			Console.WriteLine(ReadFile(path));
+			
+			Console.ReadKey();
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
 			player = CList.GetPlayer("용사");
 			
 			player.inven.AddItem(new Item());
@@ -1200,3 +1235,11 @@ QuickDelegate = ()=>{
 //2022.01.10
 //인벤토리가 가득찼을때 가득찼다는 메세지를 띄우고 GreatPhase로 돌아가게했다.
 //하지만 그 아이템이 stackable이고 이미 인벤토리에 포함되어 있을때에는 해당 아이템의 Amount를 증가시키게 했다.
+
+
+//2022.01.22
+//저장 기능을 구현하기전 번아웃와서 잠시 그림에 매진함
+//저장기능을 구현하기 시작
+//DataManager에 파일 입출력 할 수 있는 메소드 추가하고
+//MyJson네임스페이스 안에 데이터를 Json형태로 가고할 수 있게 해주는 Json클래스 추가
+//생각보다 순조롭게 구현이 됨. Json의 형식이 간단명료해서 그런듯

@@ -24,7 +24,7 @@ public class Choice : ICloneable //선택지 부여 하는 클래스
 	public int onlyShowTextNum;		
 	public int streamTextNum;
 	public int backgroundTextNum;
-	public String Name {get;set;}
+	public String Name {get;set;}//J
 	public delegate void Quick();
 	public Quick QuickDelegate{get;set;} 
 	
