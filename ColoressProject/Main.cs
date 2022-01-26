@@ -63,6 +63,28 @@ public static class PlayData{
 
 namespace Game
 {
+	public class testJson{
+		public int num1 = 0;
+		public int num2 = 2;
+		
+		public String ToJson(){
+			Json json = new Json();
+			json.OpenObject("testJson");
+			json.AddItem("num1",num1.ToString());
+			json.AddItem("num2",num2.ToString());
+			json.CloseObject();
+			Console.WriteLine(json.JsonString);
+			return json.JsonString;
+		}
+		
+		public void ToObject(String jsonString){
+			Json json = new Json();
+			json.JsonString = jsonString;
+			num1 = int.Parse(json.GetItem("num1"));
+			num2 = int.Parse(json.GetItem("num2"));
+		}
+	}
+	
 	public class main
 	{
 		//public delegate void AttackMethod(Character Attacker,Character Defender);
@@ -88,8 +110,22 @@ namespace Game
 			
 			String path = "test/a/a.txt";
 			CreateDirectoryAndFile(path);
-			WriteFile(path,json.JsonString);
-			Console.WriteLine(ReadFile(path));
+			//WriteFile(path,json.JsonString);
+			//Console.WriteLine(ReadFile(path));
+			
+			//testJson tj = new testJson();
+			//tj.num1 = 5;
+			//tj.num2 = 10;
+			//json.JsonString = tj.ToJson();
+			//WriteFile(path,json.JsonString);
+			
+			String jString = ReadFile(path);
+			
+			testJson tj2 = new testJson();
+			tj2.ToObject(jString);
+			
+			Console.WriteLine(tj2.num2);
+			
 			
 			Console.ReadKey();
 			
@@ -1243,3 +1279,12 @@ QuickDelegate = ()=>{
 //DataManager에 파일 입출력 할 수 있는 메소드 추가하고
 //MyJson네임스페이스 안에 데이터를 Json형태로 가고할 수 있게 해주는 Json클래스 추가
 //생각보다 순조롭게 구현이 됨. Json의 형식이 간단명료해서 그런듯
+
+//2022.01.26
+//이번주부터 훈련해서 피곤하다..
+//왜 2소대만 훈련하는겅랴애널ㄴㅁ이ㅏㄹㅇ니;ㅏ롬ㅇ
+//오늘은 Json형식으로 파일에 저장하고
+//Json형식으로 저장된 텍스트파일을 불러와서 다시 오브젝트로 바꾸는 것을 해보았다.
+//결과는 성공적이였다.
+//비록 각 Object마다 ToJson과 ToObject를 구현해 주어야 한다는 점이 귀찮았지만
+//텍스트 파일에 직접 접근해서 값을 수정할 수 있다는 점이 마음에 든다.

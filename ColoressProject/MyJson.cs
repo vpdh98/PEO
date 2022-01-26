@@ -41,12 +41,34 @@ namespace MyJson{
 			return JsonString;
 		}
 		public String GetTap(int num){
-			Console.WriteLine(depth);
 			String taps = "";
 			for(int i = 0;i<num;i++){
 				taps+="    ";
 			}
 			return taps;
+		}
+		
+		public int JsonIndexOf(String str){
+			return JsonString.IndexOf(str);
+		}
+		
+		public int JsonIndexOf(String str, int startIndex){
+			return JsonString.IndexOf(str,startIndex);
+		}
+		
+		public String GetItem(String key){
+			int index = 0;
+			String temp = "";
+			index = JsonIndexOf(":",JsonIndexOf(key));
+			index = JsonIndexOf("\"",index);
+			for(int i=index+1;i<JsonString.Length;i++){
+				if(JsonString[i] == '\"'){
+					break;
+				}
+				temp+=JsonString[i];
+			}
+			temp = temp.Replace("\"","");
+			return temp;
 		}
 		
 	}
