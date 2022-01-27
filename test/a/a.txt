@@ -1,4 +1,13 @@
-"testJson":{
-    "num1":"5",
-    "num2":"22"
+"TextAndPosition":{
+    "text":"Start",
+    "x":"13",
+    "y":"5",
+    "textDelay":"0",
+    "color":"Black",
+    "PriorityLayer":"3",
+    "isStream":"False",
+    "AlignH":"False",
+    "Highlight":"null",
+    "HighlightColor":"Black",
+    "Layout":"NO_LAYOUT"
 }

@@ -110,6 +110,10 @@ namespace Game
 			
 			String path = "test/a/a.txt";
 			CreateDirectoryAndFile(path);
+			
+			//TextAndPosition tap1 = new TextAndPosition(200,"Start",13,5,true){PriorityLayer = 3};
+			//WriteFile(path,tap1.ToJsonString());
+			
 			//WriteFile(path,json.JsonString);
 			//Console.WriteLine(ReadFile(path));
 			
@@ -120,11 +124,14 @@ namespace Game
 			//WriteFile(path,json.JsonString);
 			
 			String jString = ReadFile(path);
+			TextAndPosition tap2 = new TextAndPosition();
+			tap2.JsonToObject(jString);
 			
-			testJson tj2 = new testJson();
-			tj2.ToObject(jString);
+			Console.WriteLine(tap2.Layout);
 			
-			Console.WriteLine(tj2.num2);
+			// testJson tj2 = new testJson();
+			// tj2.ToObject(jString);
+			// Console.WriteLine(tj2.num2);
 			
 			
 			Console.ReadKey();
@@ -1288,3 +1295,15 @@ QuickDelegate = ()=>{
 //결과는 성공적이였다.
 //비록 각 Object마다 ToJson과 ToObject를 구현해 주어야 한다는 점이 귀찮았지만
 //텍스트 파일에 직접 접근해서 값을 수정할 수 있다는 점이 마음에 든다.
+
+//2022.01.27
+//내일은 행군이다 된장
+//오늘은 TextAndPosition에 ISaveToJson을 구현해서
+//TextAndPosition 객체를 JsonString으로 저장했다가 다시 Object로 변환하는 것을 해보았다.
+//TextAndPosition의 각 맴버변수이름을 Json key값으로 저장하고 value는 String 형태로 변환해 저장하였다.
+//불러올때는 각 Type에 맞게 Parse하여 각 맴버를 채워넣었다.
+//int,bool같은 기본 자료형은 기본적으로 제공하는 Parse메소드가 있었지만.
+//ConsoleColor나 Layout같은 열거형은 없었다.
+//Enum.TryParse()를 사용해야 했다.
+//앞으로 변환해야하는 객체중에 내가 직접만든 객체가 많은 터이므로
+//Parse 클래스를 정의하여 각 객체의 String값을 변환해줄 수 있는 메소드를 만들어 쓰기로 했다.

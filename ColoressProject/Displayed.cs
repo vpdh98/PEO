@@ -7,6 +7,7 @@ using Game;
 using static Convenience;
 using static Define;
 using static PlayData;
+using static Parse;
 using Characters;
 using MyJson;
 
@@ -38,6 +39,18 @@ public class TextAndPosition : ICloneable, ISaveToJson{
 		
 		public TextAndPosition(){
 			text = "";
+			x = default(int);
+			y = default(int);
+			isStream = default(bool);
+			textDelay = default(int);
+			textFrontDelay = default(int);
+			color = default(ConsoleColor);
+			PriorityLayer = default(int);
+			isStream = default(bool);
+			AlignH = default(bool);
+			Highlight = default(String);
+			HighlightColor = default(ConsoleColor);
+			Layout = TextLayout.NO_LAYOUT;
 		}
 		
 		public TextAndPosition(String text,int x,int y):this(){
@@ -119,9 +132,41 @@ public class TextAndPosition : ICloneable, ISaveToJson{
 		}
 	
 		public String ToJsonString(){
-			return "";
+			Json json = new Json();
+			json.OpenObject("TextAndPosition");
+			json.AddItem("text",text);
+			json.AddItem("x",x);
+			json.AddItem("y",y);
+			json.AddItem("textDelay",textDelay);
+			json.AddItem("color",color);
+			json.AddItem("PriorityLayer",PriorityLayer);
+			json.AddItem("isStream",isStream);
+			json.AddItem("AlignH",AlignH);
+			json.AddItem("Highlight",Highlight);
+			json.AddItem("HighlightColor",HighlightColor);
+			json.AddItem("Layout",Layout);
+			json.CloseObject();
+			
+			return json.JsonString;
 		}
 		
+		public void JsonToObject(String jsonString){
+			Json json = new Json();
+			json.JsonString = jsonString;
+			text = json.GetItem("text");
+			x = int.Parse(json.GetItem("x"));
+			y = int.Parse(json.GetItem("y"));
+			textDelay = int.Parse(json.GetItem("textDelay"));
+			color = Parse.ParseConsoleColor(json.GetItem("color"));
+			PriorityLayer = int.Parse(json.GetItem("PriorityLayer"));
+			isStream = bool.Parse(json.GetItem("isStream"));
+			AlignH = bool.Parse(json.GetItem("AlignH"));
+			Highlight = json.GetItem("Highlight");
+			HighlightColor = Parse.ParseConsoleColor(json.GetItem("HighlightColor"));
+			Layout = ParseTextLayout(json.GetItem("Layout"));
+			
+			
+		}
 }
 
 public class DisplayTextGame{
