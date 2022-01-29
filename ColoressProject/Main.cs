@@ -85,14 +85,18 @@ namespace Game
 		}
 	}
 	
+	
+	
 	public class main
 	{
 		//public delegate void AttackMethod(Character Attacker,Character Defender);
 		//public static AttackMethod attack;
 		static ConsoleKeyInfo keyInfo;
 		static DisplayTextGame DTG = new DisplayTextGame();
-		
-		
+		delegate void Test(String s);
+		public static void testDelegate(String s){
+			Console.WriteLine("Test!");
+		}
 		
 		public static void Main()
 		{
@@ -111,6 +115,10 @@ namespace Game
 			String path = "test/a/a.txt";
 			CreateDirectoryAndFile(path);
 			
+			
+			Test tDel = testDelegate;
+			Console.WriteLine(tDel.ToString());
+			
 			//TextAndPosition tap1 = new TextAndPosition(200,"Start",13,5,true){PriorityLayer = 3};
 			//WriteFile(path,tap1.ToJsonString());
 			
@@ -127,7 +135,7 @@ namespace Game
 			TextAndPosition tap2 = new TextAndPosition();
 			tap2.JsonToObject(jString);
 			
-			Console.WriteLine(tap2.Layout);
+			Console.WriteLine(tap2.text);
 			
 			// testJson tj2 = new testJson();
 			// tj2.ToObject(jString);
@@ -1307,3 +1315,8 @@ QuickDelegate = ()=>{
 //Enum.TryParse()를 사용해야 했다.
 //앞으로 변환해야하는 객체중에 내가 직접만든 객체가 많은 터이므로
 //Parse 클래스를 정의하여 각 객체의 String값을 변환해줄 수 있는 메소드를 만들어 쓰기로 했다.
+
+//2022.01.29
+//행군끝 연휴시작! 이에엘ㅇ엘엘ㅇ에에~
+//TryParse를 사용해 만들었던 String을 열거형으로 변환하는 메소드를
+//ParseEnum 하나로 통합했다.

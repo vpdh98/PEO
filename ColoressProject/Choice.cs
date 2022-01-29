@@ -6,6 +6,7 @@ using static Convenience;
 using System.Linq;
 using System.IO;
 using Game;
+using MyJson;
 
 public enum ChoiceType{
 			NORMAL,		//선택지
@@ -18,7 +19,7 @@ public enum ChoiceType{
 			//EXPLAN
 }
 
-public class Choice : ICloneable //선택지 부여 하는 클래스
+public class Choice : ICloneable,ISaveToJson //선택지 부여 하는 클래스
 {
 	public int selectTextNum;      
 	public int onlyShowTextNum;		
@@ -299,6 +300,44 @@ public class Choice : ICloneable //선택지 부여 하는 클래스
 
 	public Object Clone(){
 		return new Choice(this);
+	}
+	
+	// public int selectTextNum;      
+	// public int onlyShowTextNum;		
+	// public int streamTextNum;
+	// public int backgroundTextNum;
+	// public String Name {get;set;}//J
+	// public delegate void Quick();
+	// public Quick QuickDelegate{get;set;} 
+	
+	// public bool IsSavePoint{get;set;} = false;
+	// public bool IsVisit{get;set;} = false;
+	// public bool IsShowStateWindow{get;set;} = true;
+
+	// private List<TextAndPosition> selectText;
+	// private List<TextAndPosition> onlyShowText;
+	// private List<TextAndPosition> streamText;
+	// private List<TextAndPosition> backgroundText;
+	// private List<TextAndPosition> returnText;
+	// private Dictionary<int,Object> indicateChoice;
+	// private List<Enemy> monsterList;
+	// private List<NPC> npcList;
+	// private ChoiceType choiceType;
+	
+	public String ToJsonString(){
+		Json json = new Json();
+		json.OpenObject(Name);
+		json.AddItem("selectTextNum",selectTextNum);
+		json.AddItem("onlyShowTextNum",onlyShowTextNum);
+		json.AddItem("streamTextNum",streamTextNum);
+		json.AddItem("backgroundTextNum",backgroundTextNum);
+		json.AddItem("Name",Name);
+		json.AddItem("selectTextNum",selectTextNum);
+		return "";
+	}
+	
+	public void JsonToObject(String jsonString){
+		
 	}
 }
 	

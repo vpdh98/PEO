@@ -157,15 +157,13 @@ public class TextAndPosition : ICloneable, ISaveToJson{
 			x = int.Parse(json.GetItem("x"));
 			y = int.Parse(json.GetItem("y"));
 			textDelay = int.Parse(json.GetItem("textDelay"));
-			color = Parse.ParseConsoleColor(json.GetItem("color"));
+			color = Parse.ParseEnum<ConsoleColor>(json.GetItem("color"));
 			PriorityLayer = int.Parse(json.GetItem("PriorityLayer"));
 			isStream = bool.Parse(json.GetItem("isStream"));
 			AlignH = bool.Parse(json.GetItem("AlignH"));
 			Highlight = json.GetItem("Highlight");
-			HighlightColor = Parse.ParseConsoleColor(json.GetItem("HighlightColor"));
-			Layout = ParseTextLayout(json.GetItem("Layout"));
-			
-			
+			HighlightColor = Parse.ParseEnum<ConsoleColor>(json.GetItem("HighlightColor"));
+			Layout = ParseEnum<TextLayout>(json.GetItem("Layout"));
 		}
 }
 
