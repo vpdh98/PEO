@@ -1,0 +1,19 @@
+delegate는 쉽게 말하면 메소드를 담는 변수의 자료형을 선언할 수 있는 키워드이다.
+예를들어
+
+delegate void MyPrint(String text);
+라고 선언을 하면
+MyPrint print = 메소드이름;
+이런식으로 메소드를 담을 수 있다.
+
+호출은 
+print("Hello World!"); 
+와같이 기존 메소드와 동일한 방식으로 작동한다.
+
+delegate말고도 event키워드도 있는데
+event MyPrint print; 
+이렇게 선언해 놓은 delegate 앞에 붙이는데
+일반 delegate와의 차이점은
+대입연산이 불가능하고 추가,삭제만 가능하며
+이벤트가 선언된 클래스 내부에서만 호출이 가능하다.
+외부에서도 해당 delegate가 쓰이지 않도록 하기위해 필요한 키워드 같다.
