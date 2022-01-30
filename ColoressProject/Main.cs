@@ -390,8 +390,9 @@ namespace Game
 			
 			return newDic;
 		}
+		
+		public static void InitAll
 	}
-	
 	/*class TextSerialization{
 		String TextSerialize(ShowInfo sif);
 		ShowInfo TextDeserialize(String);
@@ -1320,3 +1321,7 @@ QuickDelegate = ()=>{
 //행군끝 연휴시작! 이에엘ㅇ엘엘ㅇ에에~
 //TryParse를 사용해 만들었던 String을 열거형으로 변환하는 메소드를
 //ParseEnum 하나로 통합했다.
+
+//2022.01.30
+//오늘은 Data.cs 에 사용할 Delegate들을 저장하는 DelegateList클래스를 만들었다.
+//그리고 Main에 GameManager에 모든 값을 Init하는 메소드를 만드려고한다.

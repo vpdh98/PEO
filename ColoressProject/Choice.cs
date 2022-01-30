@@ -333,6 +333,8 @@ public class Choice : ICloneable,ISaveToJson //선택지 부여 하는 클래스
 		json.AddItem("backgroundTextNum",backgroundTextNum);
 		json.AddItem("Name",Name);
 		json.AddItem("selectTextNum",selectTextNum);
+		
+		
 		return "";
 	}
 	

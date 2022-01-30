@@ -6,6 +6,28 @@ using static PlayData;
 using System.IO;
 using static DataManager;
 
+public class DelegateList{
+	private Dictionary<String,Action> actionList = new Dictionary<String,Action>();
+	public Dictionary<String,Action> ActionList{
+		get{
+			return actionList;
+		}
+		set{
+			actionList = value;
+		}
+	}
+	
+	public void AddActionList(String name, Action action){
+		if(name != null && action != null)
+			ActionList.Add(name,action);
+		else{
+			Console.WriteLine("Data.DelegateList.AddActionList() 매개변수가 null값임");
+			Console.ReadKey();
+		}
+			
+	}
+}
+
 public class Scenario{
 		int clikX;
 		int clikY;
