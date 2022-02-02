@@ -6,6 +6,7 @@ using static Convenience;
 using System.Linq;
 using System.IO;
 using Game;
+using static PlayData;
 using MyJson;
 
 public enum ChoiceType{
@@ -21,13 +22,8 @@ public enum ChoiceType{
 
 public class Choice : ICloneable,ISaveToJson //선택지 부여 하는 클래스
 {
-	public int selectTextNum;      
-	public int onlyShowTextNum;		
-	public int streamTextNum;
-	public int backgroundTextNum;
 	public String Name {get;set;}//J
-	public delegate void Quick();
-	public Quick QuickDelegate{get;set;} 
+	public String QuickDelegate{get;set;}
 	
 	public bool IsSavePoint{get;set;} = false;
 	public bool IsVisit{get;set;} = false;
@@ -46,10 +42,6 @@ public class Choice : ICloneable,ISaveToJson //선택지 부여 하는 클래스
 	
 		
 	public Choice(){
-		selectTextNum = 0;
-		onlyShowTextNum = 0;
-		streamTextNum = 0;
-		backgroundTextNum = 0;
 		selectText = new List<TextAndPosition>();
 		onlyShowText = new List<TextAndPosition>();
 		streamText = new List<TextAndPosition>();
@@ -68,7 +60,6 @@ public class Choice : ICloneable,ISaveToJson //선택지 부여 하는 클래스
 
 		set{
 			selectText = value;
-			selectTextNum = SelectText.Count;
 		}
 	}
 	public List<TextAndPosition> OnlyShowText{
@@ -77,7 +68,6 @@ public class Choice : ICloneable,ISaveToJson //선택지 부여 하는 클래스
 		}
 		set{
 			onlyShowText = value;
-			onlyShowTextNum = OnlyShowText.Count;
 		}
 	}
 	public List<TextAndPosition> StreamText{
@@ -86,7 +76,6 @@ public class Choice : ICloneable,ISaveToJson //선택지 부여 하는 클래스
 		}
 		set{
 			streamText = value;
-			streamTextNum = streamText.Count;
 			foreach(TextAndPosition text in streamText){
 					text.isStream = true;
 			}
@@ -99,7 +88,6 @@ public class Choice : ICloneable,ISaveToJson //선택지 부여 하는 클래스
 		}
 		set{
 			backgroundText = value;
-			backgroundTextNum = backgroundText.Count;
 		}
 	}
 	public List<TextAndPosition> ReturnText{
@@ -142,9 +130,9 @@ public class Choice : ICloneable,ISaveToJson //선택지 부여 하는 클래스
 	public Object GetValueOn(int num){ //bool을 indicateChoice에서 찾아 반환
 		return indicateChoice[num];
 	}
-
+	//QuickDelegate에 델리게이트 이름만 저장하고 있다가 QuickRun이 호출될때 가져와서 실행
 	public void QuickRun(){
-		QuickDelegate();
+		delegateList.GetActionOnce(QuickDelegate)();
 	}
 
 	public Object QuickNext(){  //choiceType이 QUICKNEXT일때 빠르게 다음 선택지로 넘어갈때 DTG또는 Main에서 호출하는 함수
@@ -278,10 +266,6 @@ public class Choice : ICloneable,ISaveToJson //선택지 부여 하는 클래스
 
 		this.QuickDelegate = that.QuickDelegate;
 		
-		this.selectTextNum = that.selectTextNum;
-		this.onlyShowTextNum = that.onlyShowTextNum;
-		this.streamTextNum = that.streamTextNum;
-		this.backgroundTextNum = that.backgroundTextNum;
 		this.Name = that.Name;
 		this.ChoiceType = that.ChoiceType;
 		this.IsSavePoint = that.IsSavePoint;
@@ -302,13 +286,9 @@ public class Choice : ICloneable,ISaveToJson //선택지 부여 하는 클래스
 		return new Choice(this);
 	}
 	
-	// public int selectTextNum;      
-	// public int onlyShowTextNum;		
-	// public int streamTextNum;
-	// public int backgroundTextNum;
+	
 	// public String Name {get;set;}//J
-	// public delegate void Quick();
-	// public Quick QuickDelegate{get;set;} 
+	// public String QuickDelegate{get;set;} 
 	
 	// public bool IsSavePoint{get;set;} = false;
 	// public bool IsVisit{get;set;} = false;
@@ -327,15 +307,39 @@ public class Choice : ICloneable,ISaveToJson //선택지 부여 하는 클래스
 	public String ToJsonString(){
 		Json json = new Json();
 		json.OpenObject(Name);
-		json.AddItem("selectTextNum",selectTextNum);
-		json.AddItem("onlyShowTextNum",onlyShowTextNum);
-		json.AddItem("streamTextNum",streamTextNum);
-		json.AddItem("backgroundTextNum",backgroundTextNum);
 		json.AddItem("Name",Name);
-		json.AddItem("selectTextNum",selectTextNum);
+		json.AddItem("QuickDelegate",QuickDelegate);
+		json.AddItem("IsSavePoint",IsSavePoint);
+		json.AddItem("IsVisit",IsVisit);
+		json.AddItem("IsShowStateWindow",IsShowStateWindow);
+		json.OpenArray("selectText");
+		foreach(TextAndPosition tap in selectText){
+			json.AddJsonAbleObject(tap);
+		}
+		json.CloseArray(true);
+		json.OpenArray("onlyShowText");
+		foreach(TextAndPosition tap in onlyShowText){
+			json.AddJsonAbleObject(tap);
+		}
+		json.CloseArray(true);
+		json.OpenArray("streamText");
+		foreach(TextAndPosition tap in streamText){
+			json.AddJsonAbleObject(tap);
+		}
+		json.CloseArray(true);
+		json.OpenArray("backgroundText");
+		foreach(TextAndPosition tap in backgroundText){
+			json.AddJsonAbleObject(tap);
+		}
+		json.CloseArray(true);
+		json.OpenArray("returnText");
+		foreach(TextAndPosition tap in returnText){
+			json.AddJsonAbleObject(tap);
+		}
+		json.CloseArray(true);
+		json.CloseObject();
 		
-		
-		return "";
+		return json.JsonString;
 	}
 	
 	public void JsonToObject(String jsonString){

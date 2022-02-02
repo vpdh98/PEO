@@ -137,7 +137,9 @@ public static class TalkToNPC
 				if(currentChoice == "QuestComplete"){
 					Choice tChoice = NpcCC.GetChoice("QuestReward");
 					lastQuestName = PlayData.CurrentSelectedText.text;
-					tChoice.QuickDelegate = ()=>{
+					tChoice.QuickDelegate = "QuestReward";
+					//ActionList안에 정의되어있는 QuestReward 델리게이트를 현재 퀘스트 값들로 다시 초기화
+					PlayData.delegateList.ActionList["QuickReward"] = ()=>{
 						Quest tQuest = QuestControler.FindQuestByName(NpcQuestList,lastQuestName);
 						tQuest.TakeRewardAll();
 					};

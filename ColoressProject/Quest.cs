@@ -404,7 +404,7 @@ public class ItemReward : Reward{
 }
 
 public class EventReward : Reward{
-	public Define.Event ChangeWorld{get;set;}
+	public Action ChangeWorld{get;set;}
 	
 	public EventReward(){
 	

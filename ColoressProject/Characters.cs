@@ -299,7 +299,7 @@ namespace Characters
 		public bool IsSpawnOnce{get;set;} = false;		//이 몬스터가 한번만 스폰되는 몬스터인지를 나타내는 변수
 		
 		
-		public Define.Event DeathEvent{get;set;} = null;
+		public Action DeathEvent{get;set;} = null;
 		
 		
 		public List<TextAndPosition> SelectMessage{get;set;}

@@ -35,7 +35,7 @@ public static class Define
 		public const int SCREEN_HEIGHT = 20;
 		public const int SCREEN_POS_X = 60;
 		public const int SCREEN_POS_Y = 8;
-		public delegate void Event();
+		//public delegate void Event();
 }
 
 public static class ItemData{
@@ -49,6 +49,8 @@ public static class PlayData{
 	public static Choice currentOpenChoice; //현재 Display되고 있는 Choice를 담는변수. 접근에 주의!!
 	public static Choice accessAbleChoice; //접근할 Choice를 담는다
 	
+	public static DelegateList delegateList = new DelegateList();
+	
 	public static List<String> alreadySpawnedEnemyList = new List<String>();
 	
 	public static ChoiceControler WorldMap = new ChoiceControler(new Scenario());
@@ -56,6 +58,9 @@ public static class PlayData{
 	public static Player player = CList.GetPlayer("용사");
 	
 	public static TextAndPosition CurrentSelectedText; //DisplayTextGame에서 GetCurrentSelectValue()를 호출할때 초기화된다. 그 당시 선택된 Select를 저장
+	
+	
+	
 }
 
 
@@ -93,10 +98,6 @@ namespace Game
 		//public static AttackMethod attack;
 		static ConsoleKeyInfo keyInfo;
 		static DisplayTextGame DTG = new DisplayTextGame();
-		delegate void Test(String s);
-		public static void testDelegate(String s){
-			Console.WriteLine("Test!");
-		}
 		
 		public static void Main()
 		{
@@ -116,11 +117,12 @@ namespace Game
 			CreateDirectoryAndFile(path);
 			
 			
-			Test tDel = testDelegate;
-			Console.WriteLine(tDel.ToString());
 			
 			//TextAndPosition tap1 = new TextAndPosition(200,"Start",13,5,true){PriorityLayer = 3};
 			//WriteFile(path,tap1.ToJsonString());
+			
+			Choice choice1 = WorldMap.GetChoice("c2");
+			WriteFile(path,choice1.ToJsonString());
 			
 			//WriteFile(path,json.JsonString);
 			//Console.WriteLine(ReadFile(path));
@@ -131,11 +133,11 @@ namespace Game
 			//json.JsonString = tj.ToJson();
 			//WriteFile(path,json.JsonString);
 			
-			String jString = ReadFile(path);
-			TextAndPosition tap2 = new TextAndPosition();
-			tap2.JsonToObject(jString);
+			// String jString = ReadFile(path);
+			// TextAndPosition tap2 = new TextAndPosition();
+			// tap2.JsonToObject(jString);
 			
-			Console.WriteLine(tap2.text);
+			// Console.WriteLine(tap2.text);
 			
 			// testJson tj2 = new testJson();
 			// tj2.ToObject(jString);
@@ -228,7 +230,7 @@ namespace Game
 			Choice tcho = WorldMap.GetChoice(currentChoice);
 			accessAbleChoice = tcho;
 			DTG.Cho.QuickRun(); //delegate실행
-			DTG.Cho.QuickDelegate = ()=>{}; //한번만 실행되도록 비움
+			//DTG.Cho.QuickDelegate = ()=>{}; //한번만 실행되도록 비움
 			DTG.Display(GameManager.SpawnUniqueEnemy_Stay(tcho));
 		}
 		
@@ -250,7 +252,7 @@ namespace Game
 			
 			List<Enemy> monsterList = choice.EnemyList;
 			List<TextAndPosition> selectList = choice.SelectText;
-			int selectListCount = choice.selectTextNum;
+			int selectListCount = selectList.Count;
 			int monsterListCount = monsterList.Count;
 			int spawnChance;
 			int firstX = selectListFirststPositionX(selectList);
@@ -391,7 +393,14 @@ namespace Game
 			return newDic;
 		}
 		
-		public static void InitAll
+		public static void InitAll(){
+			
+		}
+		
+		public static void InitDelegate(){
+			
+		}
+		
 	}
 	/*class TextSerialization{
 		String TextSerialize(ShowInfo sif);
@@ -1325,3 +1334,16 @@ QuickDelegate = ()=>{
 //2022.01.30
 //오늘은 Data.cs 에 사용할 Delegate들을 저장하는 DelegateList클래스를 만들었다.
 //그리고 Main에 GameManager에 모든 값을 Init하는 메소드를 만드려고한다.
+
+//2022.02.02
+//오늘은 설날연휴의 마지막날이다
+//하지만 난 내일 백신을 맞아서 목금쉬고 토일 까지 연휴다 ㄱㅇㄷ
+//Json형식으로 Delegate를 저장할 수 없어
+//Choice에는 Delegate이름을 String형식으로 만들고
+//호출이 필요할때 Main에 DelegateList의 객체인 PlayData.delegateList에서 불러와서 호출하기로 했다.
+//실행 순서: Choice.QuickDelegate에 Delegate이름 저장 -> Choice.QuickRun() -> PlayData.delegateList.GetActionOnce(QuickDelegate)() 
+
+//List<TextAndPosition>까지 Json화에 성공함
+//그냥 Object 내부에 저장되는 배열을 AddItem에 Item과 동일하게 취급함
+//다차원배열을 구현하려면 더 세분화한 깊이가 필요할듯
+//NPC,Monster,Quest의 json화와 Dictionary의 json화 만 구현하면됨

@@ -5,9 +5,25 @@ using static Define;
 using static PlayData;
 using System.IO;
 using static DataManager;
+using static PlayData;
+using static TalkToNPC;
 
 public class DelegateList{
 	private Dictionary<String,Action> actionList = new Dictionary<String,Action>();
+	
+	public DelegateList(){
+		actionList.Add("spawnGyeonmin",()=>{
+					PlayData.accessAbleChoice.EnemyList.Add(PlayData.CList.GetEnemy("야생의 경민이",100));
+				});
+		
+		actionList.Add("Exit",()=>{Environment.Exit(0);});
+		
+		actionList.Add("QuestReward",()=>{
+						Quest tQuest = QuestControler.FindQuestByName(NpcQuestList,lastQuestName);
+						tQuest.TakeRewardAll();
+					});
+	}
+	
 	public Dictionary<String,Action> ActionList{
 		get{
 			return actionList;
@@ -17,7 +33,8 @@ public class DelegateList{
 		}
 	}
 	
-	public void AddActionList(String name, Action action){
+	
+	public void AddAction(String name, Action action){
 		if(name != null && action != null)
 			ActionList.Add(name,action);
 		else{
@@ -25,6 +42,17 @@ public class DelegateList{
 			Console.ReadKey();
 		}
 			
+	}
+	//델리게이트 반환하고 삭제함
+	public Action GetActionOnce(String name){
+		Action temp;
+		try{
+			temp = ActionList[name];
+		}catch(Exception e){
+			return ()=>{};
+		}
+		ActionList.Remove(name);
+		return temp;
 	}
 }
 
@@ -92,7 +120,7 @@ public class Scenario{
 			choices.Add(new Choice(){
 				Name = "exit",
 				ChoiceType = ChoiceType.QUICK,
-				QuickDelegate = ()=>{Environment.Exit(0);}
+				QuickDelegate = "Exit"
 			});
 			
 			choices.Add(new Choice(){
@@ -179,9 +207,7 @@ public class Scenario{
 			choices.Add(new Choice(){
 				Name = "spawnGyeonmin",
 				ChoiceType = ChoiceType.QUICK,
-				QuickDelegate = ()=>{
-					PlayData.accessAbleChoice.EnemyList.Add(PlayData.CList.GetEnemy("야생의 경민이",100));
-				},
+				QuickDelegate = "spawnGyeonmin",
 				IndicateChoice = new Dictionary<int,Object>(){{0,"gyeongminsHouse"}}
 			});
 			

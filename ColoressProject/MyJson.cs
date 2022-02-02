@@ -12,7 +12,10 @@ namespace MyJson{
 		private String errorMessage;
 		private int itemCount = 0;
 		private int objectCount = 0;
+		//private int arrayDepth = 0;
+		private int arrayCount = 0;
 		private int depth = 0;
+		//private bool isItem = false;
 		
 		public String ErrorMessage{
 			get{
@@ -27,8 +30,9 @@ namespace MyJson{
 			return JsonString;
 		}
 		public String OpenArray(String name=null){
-			JsonString += GetTap(depth)+(name!=null?"\""+name+"\":":"")+"["+"\n";
+			JsonString += ((itemCount > 0)?",\n":"")+GetTap(depth)+(name!=null?"\""+name+"\":":"")+"["+"\n";
 			depth++;
+			//arrayDepth++;
 			return JsonString;
 		}
 		public String CloseObject(){
@@ -38,11 +42,14 @@ namespace MyJson{
 			itemCount = 0;
 			return JsonString;
 		}
-		public String CloseArray(){
+		public String CloseArray(bool isItem = false){
 			depth--;
 			JsonString += "\n"+GetTap(depth)+"]";
 			objectCount = 0;
-			itemCount = 0;
+			if(!isItem)
+				itemCount = 0;
+			//arrayDepth--;
+			//arrayCount++;
 			return JsonString;
 		}
 		public String AddItem(String name,Object val){
@@ -51,6 +58,21 @@ namespace MyJson{
 			else temp = val.ToString();
 			JsonString += ((itemCount > 0)?",\n":"")+GetTap(depth)+"\""+name+"\""+":"+"\""+temp+"\"";
 			itemCount++;
+			return JsonString;
+		}
+		public String AddJsonAbleObject(ISaveToJson obj){
+			String objJsonString = obj.ToJsonString();
+			String[] temp = objJsonString.Split('\n');
+			JsonString += ((objectCount > 0)?",\n":"");
+			for(int i = 0;i<temp.Length;i++){
+				if(i == temp.Length-1){
+					JsonString += GetTap(depth)+temp[i];	
+				}
+				else{
+					JsonString += GetTap(depth)+temp[i]+"\n";
+				}
+			}
+			objectCount++;
 			return JsonString;
 		}
 		public String GetTap(int num){
