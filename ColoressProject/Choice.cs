@@ -28,15 +28,16 @@ public class Choice : ICloneable,ISaveToJson //선택지 부여 하는 클래스
 	public bool IsSavePoint{get;set;} = false;
 	public bool IsVisit{get;set;} = false;
 	public bool IsShowStateWindow{get;set;} = true;
+	
+	public String BackgroundTextName{get;set;}
 
 	private List<TextAndPosition> selectText;
 	private List<TextAndPosition> onlyShowText;
 	private List<TextAndPosition> streamText;
-	private List<TextAndPosition> backgroundText;
 	private List<TextAndPosition> returnText;
 	private Dictionary<int,Object> indicateChoice;
 	private List<Enemy> monsterList;
-	private List<NPC> npcList;
+	//private List<NPC> npcList;
 	private ChoiceType choiceType;
 	
 	
@@ -45,10 +46,9 @@ public class Choice : ICloneable,ISaveToJson //선택지 부여 하는 클래스
 		selectText = new List<TextAndPosition>();
 		onlyShowText = new List<TextAndPosition>();
 		streamText = new List<TextAndPosition>();
-		backgroundText = new List<TextAndPosition>();
 		indicateChoice = new Dictionary<int,Object>();
 		monsterList = new List<Enemy>();
-		npcList = new List<NPC>();
+		//npcList = new List<NPC>();
 		choiceType = ChoiceType.NORMAL;
 	}
 
@@ -82,14 +82,6 @@ public class Choice : ICloneable,ISaveToJson //선택지 부여 하는 클래스
 			
 		}
 	}	
-	public List<TextAndPosition> BackgroundText{
-		get{
-			return backgroundText;
-		}
-		set{
-			backgroundText = value;
-		}
-	}
 	public List<TextAndPosition> ReturnText{
 		get{
 			return returnText;
@@ -114,14 +106,14 @@ public class Choice : ICloneable,ISaveToJson //선택지 부여 하는 클래스
 			monsterList = value;
 		}
 	}
-	public List<NPC> NPCList{
-		get{
-			return npcList;
-		}
-		set{
-			npcList = value;
-		}
-	}
+	// public List<NPC> NPCList{
+	// 	get{
+	// 		return npcList;
+	// 	}
+	// 	set{
+	// 		npcList = value;
+	// 	}
+	// }
 	public ChoiceType ChoiceType{
 		get;
 		set;
@@ -257,8 +249,6 @@ public class Choice : ICloneable,ISaveToJson //선택지 부여 하는 클래스
 			this.OnlyShowText = that.OnlyShowText.ConvertAll(new Converter<TextAndPosition, TextAndPosition>(o => (TextAndPosition)o.Clone()));
 		if(that.StreamText != null)
 			this.StreamText = that.StreamText.ConvertAll(new Converter<TextAndPosition, TextAndPosition>(o => (TextAndPosition)o.Clone()));
-		if(that.BackgroundText != null)
-			this.BackgroundText = that.BackgroundText.ConvertAll(new Converter<TextAndPosition, TextAndPosition>(o => (TextAndPosition)o.Clone()));
 		if(that.ReturnText != null)
 			this.ReturnText = that.ReturnText.ConvertAll(new Converter<TextAndPosition, TextAndPosition>(o => (TextAndPosition)o.Clone()));
 		
@@ -270,16 +260,16 @@ public class Choice : ICloneable,ISaveToJson //선택지 부여 하는 클래스
 		this.ChoiceType = that.ChoiceType;
 		this.IsSavePoint = that.IsSavePoint;
 		this.IsShowStateWindow = that.IsShowStateWindow;
+		
+		this.BackgroundTextName = that.BackgroundTextName;
 
 		if(!IsEmptyList(that.EnemyList)){
-			//try{
 			if(that.EnemyList[0] != null){
 				this.EnemyList = that.EnemyList.ConvertAll(new Converter<Enemy, Enemy>(o => (Enemy)o.Clone()));
 			}
-			//}catch(Exception e){}
 		}
-		if(that.NPCList != null)
-			this.NPCList = that.NPCList.ConvertAll(new Converter<NPC, NPC>(o => (NPC)o.Clone()));
+		// if(that.NPCList != null)
+		// 	this.NPCList = that.NPCList.ConvertAll(new Converter<NPC, NPC>(o => (NPC)o.Clone()));
 	}
 
 	public Object Clone(){
@@ -293,12 +283,14 @@ public class Choice : ICloneable,ISaveToJson //선택지 부여 하는 클래스
 	// public bool IsSavePoint{get;set;} = false;
 	// public bool IsVisit{get;set;} = false;
 	// public bool IsShowStateWindow{get;set;} = true;
+	
+	//public String BackgroundTextName{get;set;}
 
 	// private List<TextAndPosition> selectText;
 	// private List<TextAndPosition> onlyShowText;
 	// private List<TextAndPosition> streamText;
-	// private List<TextAndPosition> backgroundText;
 	// private List<TextAndPosition> returnText;
+	
 	// private Dictionary<int,Object> indicateChoice;
 	// private List<Enemy> monsterList;
 	// private List<NPC> npcList;
@@ -312,31 +304,18 @@ public class Choice : ICloneable,ISaveToJson //선택지 부여 하는 클래스
 		json.AddItem("IsSavePoint",IsSavePoint);
 		json.AddItem("IsVisit",IsVisit);
 		json.AddItem("IsShowStateWindow",IsShowStateWindow);
-		json.OpenArray("selectText");
-		foreach(TextAndPosition tap in selectText){
-			json.AddJsonAbleObject(tap);
-		}
-		json.CloseArray(true);
-		json.OpenArray("onlyShowText");
-		foreach(TextAndPosition tap in onlyShowText){
-			json.AddJsonAbleObject(tap);
-		}
-		json.CloseArray(true);
-		json.OpenArray("streamText");
-		foreach(TextAndPosition tap in streamText){
-			json.AddJsonAbleObject(tap);
-		}
-		json.CloseArray(true);
-		json.OpenArray("backgroundText");
-		foreach(TextAndPosition tap in backgroundText){
-			json.AddJsonAbleObject(tap);
-		}
-		json.CloseArray(true);
-		json.OpenArray("returnText");
-		foreach(TextAndPosition tap in returnText){
-			json.AddJsonAbleObject(tap);
-		}
-		json.CloseArray(true);
+		json.AddItem("BackgroundTextName",BackgroundTextName);
+		json.AddJsonAbleList<TextAndPosition>("selectText",selectText,true);
+		json.AddJsonAbleList<TextAndPosition>("onlyShowText",onlyShowText,true);
+		json.AddJsonAbleList<TextAndPosition>("streamText",streamText,true);
+		json.AddJsonAbleList<TextAndPosition>("returnText",returnText,true);
+		
+		json.AddDictionary("indicateChoice",indicateChoice,true);
+		json.AddJsonAbleList<Enemy>("monsterList",monsterList,true);
+		//json.AddJsonAbleList<NPC>("npcList",npcList,true);
+		
+		json.AddItem("choiceType",choiceType);
+		
 		json.CloseObject();
 		
 		return json.JsonString;

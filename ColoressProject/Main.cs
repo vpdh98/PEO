@@ -49,6 +49,8 @@ public static class PlayData{
 	public static Choice currentOpenChoice; //현재 Display되고 있는 Choice를 담는변수. 접근에 주의!!
 	public static Choice accessAbleChoice; //접근할 Choice를 담는다
 	
+	public static Backgrounds backgrounds = new Backgrounds();
+	
 	public static DelegateList delegateList = new DelegateList();
 	
 	public static List<String> alreadySpawnedEnemyList = new List<String>();
@@ -1347,3 +1349,17 @@ QuickDelegate = ()=>{
 //그냥 Object 내부에 저장되는 배열을 AddItem에 Item과 동일하게 취급함
 //다차원배열을 구현하려면 더 세분화한 깊이가 필요할듯
 //NPC,Monster,Quest의 json화와 Dictionary의 json화 만 구현하면됨
+
+//2022.02.03
+//오늘은 Background를 손봤다.
+//원래는 Choice에 BackgroundText로 배경 전체 텍스트가 들어가 있었는데
+//BackgroundText를 BackgroundTextName으로 바꾸고 배경의 이름만 저장하게 하였다.
+//그렇게 하기위해 List<List<TextAndPosition>>이였던 BackgroundList를 Dictionary<String,List<TextAndPosition>>으로 바꾸어 String으로 값을 가져올 수 있게 하였다.
+//Choice에 이름만 저장해 놓다가 DisplayTextGame에 Choice를 초기화하면 DisplayTextGame안에 BackgroundList에 미리 불러온 배경화면의 Data를 넣는다.
+
+//Choice Json화를 계속 진행했다.
+//Choice에 monsterList하고 NpcList가 있는데 자세히 보니 npcList는 사용하지 않았다. NPC의 이름을 IndicateChoice에 넣어놓고 그때그때 호출하는 방식으로 했기 때문이다.
+//그래도 Enemy와 NPC의 ISaveToJson구현이 필요했다.
+//Enemy의 ToJsonString()구현은 Delegate인 DeathEvent빼고 구현완료했고
+//NPC의 ToJsonString()은 Quest의 ISaveToJson구현이 필요했다.
+//내일 해보는 걸로

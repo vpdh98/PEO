@@ -42,7 +42,7 @@ public class Inventory {
 							{new TextAndPosition("인벤토리",28,1),
 							new TextAndPosition("버리기: D",52,1)},
 				IndicateChoice = invenListName,
-				BackgroundText = backgrounds.GetBackground(2)
+				BackgroundTextName = "inven"
 			};
 		IDTG.Init();
 		IDTG.Cho = invenCho; //초기 화면

@@ -18,7 +18,7 @@ public static class GameWindows{
 				OnlyShowText = new List<TextAndPosition>()
 							{new TextAndPosition(text,xPos,yPos){PriorityLayer = 1,AlignH = true}},
 				IndicateChoice = new Dictionary<int,Object>(){{0,true},{1,false}},
-				BackgroundText = backgrounds.GetBackground(3)
+				BackgroundTextName = "confirm"
 		};
 		
 		CDTG.Cho = ConfirmCho; //화면 할당
@@ -42,14 +42,14 @@ public static class GameWindows{
 		return confirm;
 	}
 	
-	public static void AlertWindow(String text,int windowXPos = SCREEN_POS_X,int windowYPos = SCREEN_POS_Y,int textXPos = SCREEN_POS_X+4,int textYPos = SCREEN_POS_Y,int background = 3,int delay = 0,ConsoleColor color = ConsoleColor.Black){
+	public static void AlertWindow(String text,int windowXPos = SCREEN_POS_X,int windowYPos = SCREEN_POS_Y,int textXPos = SCREEN_POS_X+4,int textYPos = SCREEN_POS_Y,String background = "confirm",int delay = 0,ConsoleColor color = ConsoleColor.Black){
 		DisplayTextGame CDTG = new DisplayTextGame(false){GlobalPositionX=windowXPos,GlobalPositionY=windowYPos};
 		Choice AlertCho = new Choice(){
 				Name = "AlertWindow",
 				SelectText = new List<TextAndPosition>(),
 				OnlyShowText = new List<TextAndPosition>()
 							{new TextAndPosition(20,text,textXPos,textYPos,20,color:color){PriorityLayer = 1,AlignH = true}},
-				BackgroundText = backgrounds.GetBackground(background)
+				BackgroundTextName = background
 		};
 		
 		CDTG.Cho = AlertCho; //화면 할당
@@ -91,7 +91,7 @@ public static class GameWindows{
 		Choice ConfirmCho = new Choice(){
 					Name = "ExplanWindow",
 					OnlyShowText = tap,
-					BackgroundText = backgrounds.GetBackground(4)
+					BackgroundTextName = "itemExplan"
 			};
 		
 		CDTG.Cho = ConfirmCho; //화면 할당
@@ -113,7 +113,7 @@ public static class GameWindows{
 					new TextAndPosition("상태이상:",1,7),
 					new TextAndPosition("--진행중인 퀘스트 목록--",0,8){AlignH = true}
 				},
-				BackgroundText = backgrounds.GetBackground(8)
+				BackgroundTextName = "state"
 		};
 		for(int i = 0;i<player.QuestList.Count;i++){
 			Quest tQuest = player.QuestList[i];

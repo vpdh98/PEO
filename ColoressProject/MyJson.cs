@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace MyJson{
 	public interface ISaveToJson{
@@ -75,6 +76,28 @@ namespace MyJson{
 			objectCount++;
 			return JsonString;
 		}
+		//isItem이 true이면 해당 Array를 닫을때 아이템으로 인식해서 다음 Array를 쓰기할때 앞에 \n과 ,가 들어감
+		public String AddJsonAbleList<T>(String name,List<T> list,bool isItem = false) where T : ISaveToJson
+		{
+			OpenArray(name);
+			foreach(T tap in list){
+				AddJsonAbleObject(tap);
+			}
+			CloseArray(isItem);
+			return JsonString;
+		}
+		
+		public String AddDictionary<T,G>(String name,Dictionary<T,G> dic,bool isItem = false)
+		{
+			OpenArray(name);
+			itemCount = 0;
+			foreach(KeyValuePair<T,G> keyAndValue in dic){
+				AddItem(keyAndValue.Key.ToString(),keyAndValue.Value);
+			}
+			CloseArray(isItem);
+			return JsonString;
+		}
+		
 		public String GetTap(int num){
 			String taps = "";
 			for(int i = 0;i<num;i++){

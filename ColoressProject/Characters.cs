@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Game;
 using System.IO;
+using MyJson;
 using static Convenience;
 using static GameWindows;
 using static ItemData;
@@ -292,7 +293,7 @@ namespace Characters
 	//Message류의 필드를 추가할때는 
 	//1.getter,setter 만들기 2.복사생성자 안에서 초기화해준후 copy구문 추가시키기
 	//를 반드시 해준다.
-	public class Enemy : Character,IDamageable,ICharacterState
+	public class Enemy : Character,IDamageable,ICharacterState,ISaveToJson
 	{
 		public int SpawnChance{get;set;}
 		public bool IsSpawn{get;set;} = false; 			//필드에 몬스터가 이미 있는지 확인하기 위한 변수
@@ -478,13 +479,73 @@ namespace Characters
 				Console.WriteLine(m.text);
 			}
 		}
+		// public string Name{get;set;}
+		// public int Hp{get;set;}
+		// public int Mp{get;set;}
+		// public int MaxHp{get;set;}
+		// public int MaxMp{get;set;}
+		// public int AttackPower{get;set;}
+		// public int Defense{get;set;}
+		// public int AttackSpeed{get;set;}
+		// public int SpawnChance{get;set;}
+		// public bool IsSpawn{get;set;} = false; 			//필드에 몬스터가 이미 있는지 확인하기 위한 변수
+		// public bool IsSpawnOnce{get;set;} = false;		//이 몬스터가 한번만 스폰되는 몬스터인지를 나타내는 변수
+		
+		
+		// public Action DeathEvent{get;set;} = null;
+		
+		
+		// public List<TextAndPosition> SelectMessage{get;set;}
+		// public List<TextAndPosition> SpawnMessage{get;set;}
+		// public List<TextAndPosition> StateMessage{get;set;}
+		// public List<TextAndPosition> BlockMessage{get;set;}
+		// public List<TextAndPosition> DodgeMessage{get;set;}
+		// public List<TextAndPosition> ReactionMessage{get;set;}
+		// public List<TextAndPosition> PlayerReactionMessage{get;set;}
+		// public List<TextAndPosition> PreAttackMessage{get;set;}
+		// public List<TextAndPosition> AttackMessage{get;set;}
+		
+		public String ToJsonString(){
+			Json json = new Json();
+			json.OpenObject(Name);
+			json.AddItem("Name",Name);
+			json.AddItem("Hp",Hp);
+			json.AddItem("Mp",Mp);
+			json.AddItem("MaxHp",MaxHp);
+			json.AddItem("MaxMp",MaxMp);
+			json.AddItem("AttackPower",AttackPower);
+			json.AddItem("Defense",Defense);
+			json.AddItem("AttackSpeed",AttackSpeed);
+			json.AddItem("SpawnChance",SpawnChance);
+			json.AddItem("IsSpawn",IsSpawn);
+			json.AddItem("IsSpawnOnce",IsSpawnOnce);
+			
+			//json.AddItem("DeathEvent",)
+			
+			json.AddJsonAbleList<TextAndPosition>("SelectMessage",SelectMessage,true);
+			json.AddJsonAbleList<TextAndPosition>("SpawnMessage",SpawnMessage,true);
+			json.AddJsonAbleList<TextAndPosition>("StateMessage",StateMessage,true);
+			json.AddJsonAbleList<TextAndPosition>("BlockMessage",BlockMessage,true);
+			json.AddJsonAbleList<TextAndPosition>("DodgeMessage",DodgeMessage,true);
+			json.AddJsonAbleList<TextAndPosition>("ReactionMessage",ReactionMessage,true);
+			json.AddJsonAbleList<TextAndPosition>("PlayerReactionMessage",PlayerReactionMessage,true);
+			json.AddJsonAbleList<TextAndPosition>("PreAttackMessage",PreAttackMessage,true);
+			json.AddJsonAbleList<TextAndPosition>("AttackMessage",AttackMessage,true);
+
+			json.CloseObject();
+			return json.JsonString;
+		}
+		
+		public void JsonToObject(String jsonString){
+		
+		}
 		
 		public override string ToString(){
 			return Name;
 		}
 	}
 	
-	public class NPC : Enemy,IDamageable,ICharacterState,ICloneable
+	public class NPC : Enemy,IDamageable,ICharacterState,ICloneable,ISaveToJson
 	{
 		public List<Quest> QuestList{get;set;}
 		public List<TextAndPosition> GreetMessage{get;set;}
@@ -563,6 +624,72 @@ namespace Characters
 		
 		public Object Clone(){
 			return new NPC(this);
+		}
+		
+		// public List<Quest> QuestList{get;set;}
+		// public List<TextAndPosition> GreetMessage{get;set;}
+		// public List<TextAndPosition> ConversationMessage{get;set;}
+		// public List<TextAndPosition> QuestAcceptMessage{get;set;}
+		// public List<TextAndPosition> QuestRejectMessage{get;set;}
+		// public List<TextAndPosition> QuestCompleteMassage{get;set;}
+		// public List<TextAndPosition> RevisitGreetMessage{get;set;}
+		// public List<TextAndPosition> RevisitConversationMessage{get;set;}
+		// public List<TextAndPosition> RevisitQuestAcceptMessage{get;set;}
+		// public List<TextAndPosition> RevisitQuestRejectMessage{get;set;}
+		// public List<TextAndPosition> PreQuestMessage{get;set;}
+		// public List<TextAndPosition> RevisitPreQuestMessage{get;set;}
+		// public List<TextAndPosition> QuestIntroductionMessage{get;set;}
+		// public List<TextAndPosition> CompleteQuestListMessage{get;set;}
+		// public List<TextAndPosition> PreCompleteQuestListMessage{get;set;}
+		
+		public String ToJsonString(){
+			Json json = new Json();
+			json.OpenObject(Name);
+			json.AddItem("Name",Name);
+			json.AddItem("Hp",Hp);
+			json.AddItem("Mp",Mp);
+			json.AddItem("MaxHp",MaxHp);
+			json.AddItem("MaxMp",MaxMp);
+			json.AddItem("AttackPower",AttackPower);
+			json.AddItem("Defense",Defense);
+			json.AddItem("AttackSpeed",AttackSpeed);
+			json.AddItem("SpawnChance",SpawnChance);
+			json.AddItem("IsSpawn",IsSpawn);
+			json.AddItem("IsSpawnOnce",IsSpawnOnce);
+			
+			//json.AddItem("DeathEvent",)
+			
+			json.AddJsonAbleList<TextAndPosition>("SelectMessage",SelectMessage,true);
+			json.AddJsonAbleList<TextAndPosition>("SpawnMessage",SpawnMessage,true);
+			json.AddJsonAbleList<TextAndPosition>("StateMessage",StateMessage,true);
+			json.AddJsonAbleList<TextAndPosition>("BlockMessage",BlockMessage,true);
+			json.AddJsonAbleList<TextAndPosition>("DodgeMessage",DodgeMessage,true);
+			json.AddJsonAbleList<TextAndPosition>("ReactionMessage",ReactionMessage,true);
+			json.AddJsonAbleList<TextAndPosition>("PlayerReactionMessage",PlayerReactionMessage,true);
+			json.AddJsonAbleList<TextAndPosition>("PreAttackMessage",PreAttackMessage,true);
+			json.AddJsonAbleList<TextAndPosition>("AttackMessage",AttackMessage,true);
+			
+			json.AddJsonAbleList<TextAndPosition>("GreetMessage",GreetMessage,true);
+			json.AddJsonAbleList<TextAndPosition>("ConversationMessage",ConversationMessage,true);
+			json.AddJsonAbleList<TextAndPosition>("QuestAcceptMessage",QuestAcceptMessage,true);
+			json.AddJsonAbleList<TextAndPosition>("QuestRejectMessage",QuestRejectMessage,true);
+			json.AddJsonAbleList<TextAndPosition>("QuestCompleteMassage",QuestCompleteMassage,true);
+			json.AddJsonAbleList<TextAndPosition>("RevisitGreetMessage",RevisitGreetMessage,true);
+			json.AddJsonAbleList<TextAndPosition>("RevisitConversationMessage",RevisitConversationMessage,true);
+			json.AddJsonAbleList<TextAndPosition>("RevisitQuestAcceptMessage",RevisitQuestAcceptMessage,true);
+			json.AddJsonAbleList<TextAndPosition>("RevisitQuestRejectMessage",RevisitQuestRejectMessage,true);
+			json.AddJsonAbleList<TextAndPosition>("PreQuestMessage",PreQuestMessage,true);
+			json.AddJsonAbleList<TextAndPosition>("RevisitPreQuestMessage",RevisitPreQuestMessage,true);
+			json.AddJsonAbleList<TextAndPosition>("QuestIntroductionMessage",QuestIntroductionMessage,true);
+			json.AddJsonAbleList<TextAndPosition>("CompleteQuestListMessage",CompleteQuestListMessage,true);
+			json.AddJsonAbleList<TextAndPosition>("PreCompleteQuestListMessage",PreCompleteQuestListMessage,true);
+
+			json.CloseObject();
+			return json.JsonString;
+		}
+		
+		public void JsonToObject(String jsonString){
+		
 		}
 	
 	}

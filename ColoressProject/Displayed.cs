@@ -285,7 +285,7 @@ public class DisplayTextGame{
 		public void InputLists(){
 			selectList = cho.SelectText.ConvertAll(new Converter<TextAndPosition, TextAndPosition>(o => (TextAndPosition)o.Clone()));//복사
 			onlyShowList = cho.OnlyShowText;
-			backgroundList = cho.BackgroundText;
+			backgroundList = PlayData.backgrounds.GetBackground(cho.BackgroundTextName);
 			streamList = cho.StreamText;
 			indicateList = new Dictionary<int,Object>(cho.IndicateChoice);//복사
 			indicateList = GameManager.DictionaryRearrangement(indicateList);//indicateList재정렬 

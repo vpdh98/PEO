@@ -69,7 +69,6 @@ public class Scenario{
 		public int Count{get;set;}
 		
 		public Scenario(){ //지금은 choice생성할때 SelectText,OnlyShowText중 하나라도 없으면 실행 불가
-			Backgrounds backgrounds = new Backgrounds();
 			CharacterList characterList = new CharacterList();
 			
 			clikX = 15;
@@ -84,7 +83,7 @@ public class Scenario{
 							{new TextAndPosition("The Colorless",10+clikX,3+clikY,10,ConsoleColor.Green){PriorityLayer = 1},
 							new TextAndPosition("개발:Peo",1,1,100){PriorityLayer = 2}},
 				IndicateChoice = new Dictionary<int,Object>(){{0,"c2"},{1,"test"},{2,"option"}},
-				BackgroundText = backgrounds.GetBackground(0),
+				BackgroundTextName = "base",
 				IsSavePoint = true,
 				IsShowStateWindow = false
 			});
@@ -103,7 +102,7 @@ public class Scenario{
 							{new TextAndPosition("한 용사가 있었다.",5+clikX,3+clikY,30){PriorityLayer = 1},
 							new TextAndPosition(1000,"하지만 그는 죽었다.",5+clikX,3+clikY,30,ConsoleColor.Red){PriorityLayer = 2}},
 				IndicateChoice = new Dictionary<int,Object>(){{0,"c2"},{1,"test"},{2,"option"}},
-				BackgroundText = backgrounds.GetBackground(0)
+				BackgroundTextName = "base"
 			});
 			
 			choices.Add(new Choice(){
@@ -114,7 +113,7 @@ public class Scenario{
 				OnlyShowText = new List<TextAndPosition>()
 							{new TextAndPosition("옵션은 없다.",5,3,30){PriorityLayer = 1}},
 				IndicateChoice = new Dictionary<int,Object>(){{0,"c2"},{1,"exit"}},
-				BackgroundText = backgrounds.GetBackground(0)
+				BackgroundTextName = "base"
 			});
 			
 			choices.Add(new Choice(){
@@ -129,7 +128,7 @@ public class Scenario{
 				OnlyShowText = new List<TextAndPosition>()
 							{new TextAndPosition("나 갈 수 없 다",24,10,100,ConsoleColor.Red){PriorityLayer = 1}},
 				IndicateChoice = new Dictionary<int,Object>(){{0,"c2"}},
-				BackgroundText = backgrounds.GetBackground(0)
+				BackgroundTextName = "base"
 			});
 			
 			clikX = 15;
@@ -152,7 +151,7 @@ public class Scenario{
 							{characterList.GetEnemy("슬라임"),
 							characterList.GetEnemy("뒤틀린 망자"),
 							characterList.GetEnemy("헐크")},
-				BackgroundText = backgrounds.GetBackground(6)
+				BackgroundTextName = "forest2"
 			});
 			
 			clikX = 15;
@@ -168,7 +167,7 @@ public class Scenario{
 				ReturnText = new List<TextAndPosition>()
 							{new TextAndPosition("서늘한 공기에 햇살이 따스한 마을.",7+clikX,2+clikY,1)},
 				IndicateChoice = new Dictionary<int,Object>(){{0,"촌장"},{1,"c2"}},
-				BackgroundText = backgrounds.GetBackground(0)
+				BackgroundTextName = "base"
 			});
 			
 			
@@ -186,7 +185,7 @@ public class Scenario{
 				ReturnText = new List<TextAndPosition>()
 							{new TextAndPosition("무엇인가 근처를 흟고 다닌 흔적이 있다.",7+clikX,3+clikY,1){AlignH = true}},
 				IndicateChoice = new Dictionary<int,Object>(){{0,"gyeongminsHouse_Room"}},
-				BackgroundText = backgrounds.GetBackground(7)
+				BackgroundTextName = "background9"
 			});
 			
 			clikX = 23;
@@ -201,7 +200,7 @@ public class Scenario{
 				ReturnText = new List<TextAndPosition>()
 							{new TextAndPosition("방안에는 차가운 냉기만이 흐른다.",5+clikX,3+clikY,10){PriorityLayer = 1,AlignH = true}},
 				IndicateChoice = new Dictionary<int,Object>(){{0,"spawnGyeonmin"}},
-				BackgroundText = backgrounds.GetBackground(0)
+				BackgroundTextName = "base"
 			});
 			
 			choices.Add(new Choice(){
@@ -221,7 +220,7 @@ public class Scenario{
 							{new TextAndPosition("함정이였다.",5+clikX,3+clikY,10){PriorityLayer = 1},
 							new TextAndPosition(1000,"You Died",5+clikX,3+clikY,10,ConsoleColor.Red){PriorityLayer = 1}},
 				IndicateChoice = new Dictionary<int,Object>(){{0,"testStream"}},
-				BackgroundText = backgrounds.GetBackground(0)
+				BackgroundTextName = "base"
 			});
 			
 			/*
@@ -256,7 +255,7 @@ public class Scenario{
 				EnemyList = new List<Enemy>()
 							{characterList.GetEnemy("슬라임"),
 							characterList.GetEnemy("뒤틀린 망자")},
-				BackgroundText = backgrounds.GetBackground(0)
+				BackgroundTextName = "base"
 			});
 			
 			clikX = 15;
@@ -277,7 +276,7 @@ public class Scenario{
 				EnemyList = new List<Enemy>()
 							{characterList.GetEnemy("슬라임"),
 							characterList.GetEnemy("뒤틀린 망자")},
-				BackgroundText = backgrounds.GetBackground(0)
+				BackgroundTextName = "base"
 			});
 			
 			clikX = 15;
@@ -298,7 +297,7 @@ public class Scenario{
 				EnemyList = new List<Enemy>()
 							{characterList.GetEnemy("슬라임"),
 							characterList.GetEnemy("뒤틀린 망자")},
-				BackgroundText = backgrounds.GetBackground(0)
+				BackgroundTextName = "base"
 			});
 			
 			choices.Add(new Choice(){
@@ -309,7 +308,7 @@ public class Scenario{
 				OnlyShowText = new List<TextAndPosition>()
 							{new TextAndPosition("globerEnemy.GetRandomSpawnMessage().text",15,3+5,1){AlignH = true}},
 				IndicateChoice = new Dictionary<int,Object>(){{0,"movePhase"},{1,"end"}},
-				BackgroundText = backgrounds.GetBackground(1)
+				BackgroundTextName = "battle"
 			});
 			choices.Add(new Choice(){
 				Name = "movePhase",
@@ -320,7 +319,7 @@ public class Scenario{
 				OnlyShowText = new List<TextAndPosition>()
 							{new TextAndPosition("globerEnemy.CurrentState()",15,3+5,1){AlignH = true}},
 				IndicateChoice = new Dictionary<int,Object>(){{0,"attackPhase"},{1,"block"},{2,"dodge"}},
-				BackgroundText = backgrounds.GetBackground(1)
+				BackgroundTextName = "battle"
 			});
 			choices.Add(new Choice(){
 				Name = "attackPhase",
@@ -328,7 +327,7 @@ public class Scenario{
 				OnlyShowText = new List<TextAndPosition>()
 							{new TextAndPosition("globerEnemy.Name"+"베기!",5,10,10,ConsoleColor.Red){AlignH = true,PriorityLayer=1}},
 				IndicateChoice = new Dictionary<int,Object>(){{0,"reactionPhase"}},
-				BackgroundText = backgrounds.GetBackground(1)
+				BackgroundTextName = "battle"
 			});
 			choices.Add(new Choice(){
 				Name = "reactionPhase",
@@ -336,7 +335,7 @@ public class Scenario{
 				OnlyShowText = new List<TextAndPosition>()
 							{new TextAndPosition("(몬스터 피해 메세지)",5,10,10){AlignH = true,PriorityLayer=1}},
 				IndicateChoice = new Dictionary<int,Object>(){{0,"movePhase"}},
-				BackgroundText = backgrounds.GetBackground(1)
+				BackgroundTextName = "battle"
 			});
 			choices.Add(new Choice(){
 				Name = "andPhase",
@@ -345,7 +344,7 @@ public class Scenario{
 				OnlyShowText = new List<TextAndPosition>()
 							{new TextAndPosition("globerEnemy.CurrentState()",15,3+5,1){AlignH = true}},
 				IndicateChoice = new Dictionary<int,Object>(){{0,"backField"}},
-				BackgroundText = backgrounds.GetBackground(1)
+				BackgroundTextName = "battle"
 			});
 			choices.Add(new Choice(){
 				Name = "failBlock",
@@ -353,7 +352,7 @@ public class Scenario{
 				OnlyShowText = new List<TextAndPosition>()
 							{new TextAndPosition("막기 실패",15,3+5,1){AlignH = true}},
 				IndicateChoice = new Dictionary<int,Object>(){{0,"monsterReactionPhase"}},
-				BackgroundText = backgrounds.GetBackground(1)
+				BackgroundTextName = "battle"
 			});
 			choices.Add(new Choice(){
 				Name = "successBlock",
@@ -361,7 +360,7 @@ public class Scenario{
 				OnlyShowText = new List<TextAndPosition>()
 							{new TextAndPosition("막기 성공",15,3+5,1){AlignH = true}},
 				IndicateChoice = new Dictionary<int,Object>(){{0,"movePhase"}},
-				BackgroundText = backgrounds.GetBackground(1)
+				BackgroundTextName = "battle"
 			});
 			choices.Add(new Choice(){
 				Name = "failDodge",
@@ -369,7 +368,7 @@ public class Scenario{
 				OnlyShowText = new List<TextAndPosition>()
 							{new TextAndPosition("회피 실패",15,3+5,1){AlignH = true}},
 				IndicateChoice = new Dictionary<int,Object>(){{0,"monsterReactionPhase"}},
-				BackgroundText = backgrounds.GetBackground(1)
+				BackgroundTextName = "battle"
 			});
 			choices.Add(new Choice(){
 				Name = "successDodge",
@@ -377,7 +376,7 @@ public class Scenario{
 				OnlyShowText = new List<TextAndPosition>()
 							{new TextAndPosition("회피 성공",15,3+5,1){AlignH = true}},
 				IndicateChoice = new Dictionary<int,Object>(){{0,"movePhase"}},
-				BackgroundText = backgrounds.GetBackground(1)
+				BackgroundTextName = "battle"
 			});
 			choices.Add(new Choice(){
 					Name = "monsterPreAttack",
@@ -385,7 +384,7 @@ public class Scenario{
 					OnlyShowText = new List<TextAndPosition>()
 								{new TextAndPosition("globerEnemy.PreAttackCry()",15,3+5,1){AlignH = true}},
 					IndicateChoice = new Dictionary<int,Object>(){{0,"monsterAttack"}},
-					BackgroundText = backgrounds.GetBackground(1)
+					BackgroundTextName = "battle"
 			});
 			
 			choices.Add(new Choice(){
@@ -394,7 +393,7 @@ public class Scenario{
 					OnlyShowText = new List<TextAndPosition>()
 								{new TextAndPosition("globerEnemy.AttackCry()",15,3+5,1){AlignH = true}},
 					IndicateChoice = new Dictionary<int,Object>(){{0,"monsterReactionPhase"}},
-					BackgroundText = backgrounds.GetBackground(1)
+					BackgroundTextName = "battle"
 			});
 			choices.Add(new Choice(){
 					Name = "monsterReactionPhase",
@@ -402,12 +401,12 @@ public class Scenario{
 					OnlyShowText = new List<TextAndPosition>()
 								{new TextAndPosition("globerPlayer.Reaction()",5,10,10){AlignH = true,PriorityLayer=1}},
 					IndicateChoice = new Dictionary<int,Object>(){{0,"movePhase"}},
-					BackgroundText = backgrounds.GetBackground(1)
+					BackgroundTextName = "battle"
 			});
 			
 			choices.Add(new Choice(){
 					Name = "background",
-					BackgroundText = backgrounds.GetBackground(5)
+					BackgroundTextName = "getItem"
 			});
 			
 			choices.Add(new Choice(){
@@ -419,7 +418,7 @@ public class Scenario{
 				OnlyShowText = new List<TextAndPosition>()
 							{new TextAndPosition("GreetMessage",15,3+5,1){AlignH = true}},
 				IndicateChoice = new Dictionary<int,Object>(){{0,"ConversationPhase"},{1,"QuestIntroduction"},{2,"end"}},
-				BackgroundText = backgrounds.GetBackground(1)
+				BackgroundTextName = "battle"
 			});
 			
 			choices.Add(new Choice(){
@@ -429,7 +428,7 @@ public class Scenario{
 				OnlyShowText = new List<TextAndPosition>()
 							{new TextAndPosition("QuestIntroduction",15,3+5,1){AlignH = true}},
 				IndicateChoice = new Dictionary<int,Object>(){{0,"GreetPhase"}},
-				BackgroundText = backgrounds.GetBackground(1)
+				BackgroundTextName = "battle"
 			});
 			
 			choices.Add(new Choice(){ //Choice 전체가 다른 Choice로 대체 됨
@@ -439,7 +438,7 @@ public class Scenario{
 				OnlyShowText = new List<TextAndPosition>()
 							{new TextAndPosition("QuestExplan",15,3+5,1){AlignH = true}},
 				IndicateChoice = new Dictionary<int,Object>(){{0,"GreetPhase"}},
-				BackgroundText = backgrounds.GetBackground(1)
+				BackgroundTextName = "battle"
 			});
 			
 			
@@ -452,7 +451,7 @@ public class Scenario{
 							{new TextAndPosition("Conversation1",5+clikX,3+clikY,10){PriorityLayer = 1},
 							new TextAndPosition(1000,"Conversation2",5+clikX,3+clikY,10,ConsoleColor.Red){PriorityLayer = 1,AlignH = true}},
 				IndicateChoice = new Dictionary<int,Object>(){{0,"GreetPhase"}},
-				BackgroundText = backgrounds.GetBackground(0)
+				BackgroundTextName = "base"
 			});
 			
 			
@@ -463,7 +462,7 @@ public class Scenario{
 				OnlyShowText = new List<TextAndPosition>()
 							{new TextAndPosition("QuestAcceptMessage",5,10,10){AlignH = true}},
 				IndicateChoice = new Dictionary<int,Object>(){{0,"GreetPhase"}},
-				BackgroundText = backgrounds.GetBackground(1)
+				BackgroundTextName = "battle"
 			});
 			
 			choices.Add(new Choice(){
@@ -472,14 +471,14 @@ public class Scenario{
 				OnlyShowText = new List<TextAndPosition>()
 							{new TextAndPosition("QuestRejectMessage",5,10,10){AlignH = true}},
 				IndicateChoice = new Dictionary<int,Object>(){{0,"GreetPhase"}},
-				BackgroundText = backgrounds.GetBackground(1)
+				BackgroundTextName = "battle"
 			});
 			
 			choices.Add(new Choice(){
 				Name = "CompleteQuestList",
 				OnlyShowText = new List<TextAndPosition>()
 							{new TextAndPosition("CompleteQuestListMessage",15,3+5,1){AlignH = true}},
-				BackgroundText = backgrounds.GetBackground(1)
+				BackgroundTextName = "battle"
 			});
 			
 			choices.Add(new Choice(){
@@ -489,7 +488,7 @@ public class Scenario{
 				OnlyShowText = new List<TextAndPosition>()
 							{new TextAndPosition("QuestComplete",15,3+5,1){AlignH = true}},
 				IndicateChoice = new Dictionary<int,Object>(){{0,"QuestReward"}},
-				BackgroundText = backgrounds.GetBackground(1)
+				BackgroundTextName = "battle"
 			});
 			
 			choices.Add(new Choice(){
@@ -506,7 +505,7 @@ public class Scenario{
 	
 	//┏ ┓ ━  ┛┗ ┃┣ ┳ ┫┻
 public class Backgrounds{
-	public List<List<TextAndPosition>> background;
+	public Dictionary<String,List<TextAndPosition>> background;
 	public ConsoleColor color;
 	public int width = Define.SCREEN_WIDTH;
 	public int height = Define.SCREEN_HEIGHT;
@@ -514,47 +513,52 @@ public class Backgrounds{
 	
 	
 	public Backgrounds(){
-		background = new List<List<TextAndPosition>>();
+		background = new Dictionary<String,List<TextAndPosition>>();
 		
-		background.Add(new List<TextAndPosition>(new TextAndPosition[]{new TextAndPosition(LoadBackground("base"),0,0)}));
-		background.Add(new List<TextAndPosition>(new TextAndPosition[]{new TextAndPosition(LoadBackground("battle"),0,0)}));
-		background.Add(new List<TextAndPosition>(new TextAndPosition[]{new TextAndPosition(LoadBackground("inven"),12,0)}));
-		background.Add(new List<TextAndPosition>(new TextAndPosition[]{new TextAndPosition(LoadBackground("confirm"),17,2)}));
-		background.Add(new List<TextAndPosition>(new TextAndPosition[]{new TextAndPosition(LoadBackground("itemExplan"),16,2)}));
-		background.Add(new List<TextAndPosition>(new TextAndPosition[]{new TextAndPosition(LoadBackground("getItem"),15,7)}));
-		background.Add(new List<TextAndPosition>(new TextAndPosition[]{new TextAndPosition(LoadBackground("forest2"),-50,-8),new TextAndPosition(LoadBackground("space1"),0,0)}));
-		background.Add(new List<TextAndPosition>(new TextAndPosition[]{new TextAndPosition(LoadBackground("background9"),-20,-5),new TextAndPosition(LoadBackground("space3"),7,6)}));
-		background.Add(new List<TextAndPosition>(new TextAndPosition[]{new TextAndPosition(LoadBackground("state"),0,0)}));
+		background.Add("base",new List<TextAndPosition>(){new TextAndPosition(LoadBackground("base"),0,0)});
+		background.Add("battle",new List<TextAndPosition>(){new TextAndPosition(LoadBackground("battle"),0,0)});
+		background.Add("inven",new List<TextAndPosition>(){new TextAndPosition(LoadBackground("inven"),12,0)});
+		background.Add("confirm",new List<TextAndPosition>(){new TextAndPosition(LoadBackground("confirm"),17,2)});
+		background.Add("itemExplan",new List<TextAndPosition>(){new TextAndPosition(LoadBackground("itemExplan"),16,2)});
+		background.Add("getItem",new List<TextAndPosition>(){new TextAndPosition(LoadBackground("getItem"),15,7)});
+		
+		background.Add("forest2",new List<TextAndPosition>(){new TextAndPosition(LoadBackground("forest2"),-50,-8),
+												   new TextAndPosition(LoadBackground("space1"),0,0)});
+		
+		background.Add("background9",new List<TextAndPosition>(){new TextAndPosition(LoadBackground("background9"),-20,-5),
+												   new TextAndPosition(LoadBackground("space3"),7,6)});
+		
+		background.Add("state",new List<TextAndPosition>(){new TextAndPosition(LoadBackground("state"),0,0)});
 
 		Coloring();
 	}
 
-	public List<TextAndPosition> this[int index]{
+	public List<TextAndPosition> this[String name]{
 		get{
-			return background[index];
+			return background[name];
 		}
 		set{
-			background[index] = value;
+			background[name] = value;
 		}
 	}
-
-	public List<TextAndPosition> GetBackground(int index){
-		return background[index];
+	
+	public List<TextAndPosition> GetBackground(String name){
+		return background[name];
 	}
 
 	public void Backgrounding(){
-		foreach(List<TextAndPosition> list in background){
-			for(int i = 0;i<list.Count;i++){
-				list[i].PriorityLayer = 0;
+		foreach(KeyValuePair<String,List<TextAndPosition>> list in background){
+			for(int i = 0;i<list.Value.Count;i++){
+				list.Value[i].PriorityLayer = 0;
 			}
 		}
 	}
 
 	public void Coloring(){
 		if(color != null)
-		foreach(List<TextAndPosition> list in background){
-			for(int i = 0;i<list.Count;i++){
-				list[i].color = color;
+		foreach(KeyValuePair<String,List<TextAndPosition>> list in background){
+			for(int i = 0;i<list.Value.Count;i++){
+				list.Value[i].color = color;
 			}
 		}
 	}
