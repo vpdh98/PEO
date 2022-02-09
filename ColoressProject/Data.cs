@@ -497,6 +497,57 @@ public class Scenario{
 				IndicateChoice = new Dictionary<int,Object>(){{0,"GreetPhase"}}
 			});
 			
+			choices.Add(new Choice(){
+				Name = "SlimeHuntQuest",
+				SelectText = new List<TextAndPosition>()         
+							{new TextAndPosition("수락한다.",16,13,true),
+							new TextAndPosition("거절한다.",40,13,true)},
+				OnlyShowText = new List<TextAndPosition>()
+							{new TextAndPosition("우리 마을에 요즘 슬라임이 많아져\n 골치를 앓고 있네..\n자네가 좀 도와줄 수 있나?\n 슬라임 10마리만 잡아주면 되네.",15,3,10){AlignH = true}},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"QuestAccept"},{1,"QuestReject"}},
+				BackgroundTextName = "battle"
+			});
+			choices.Add(new Choice(){
+				Name = "DeadManHuntQuest",
+				SelectText = new List<TextAndPosition>()         
+							{new TextAndPosition("수락한다.",16,13,true),
+							new TextAndPosition("거절한다.",40,13,true)},
+				OnlyShowText = new List<TextAndPosition>()
+							{new TextAndPosition("망자들이 마을 주변에 몰려들고 있다네.\n이유는 모르겠지만..\n 망자의 수를 조금 줄여줄 수 있겠나?",15,3,10){AlignH = true}},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"QuestAccept"},{1,"QuestReject"}},
+				BackgroundTextName = "battle"
+			});
+			choices.Add(new Choice(){
+				Name = "VisitAbandonedHouse",
+				SelectText = new List<TextAndPosition>()         
+							{new TextAndPosition("수락한다.",16,13,true),
+							new TextAndPosition("거절한다.",40,13,true)},
+				OnlyShowText = new List<TextAndPosition>()
+							{new TextAndPosition("숲속 깊은 곳에 가보면\n버려져있는 집이 있다네\n그런데 요즘 거기서 누군가를\n봤다는 제보가 있어..\n 한번 조사해주지 않겠나?",15,3,10){AlignH = true}},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"QuestAccept"},{1,"QuestReject"}},
+				BackgroundTextName = "battle"
+			});
+			choices.Add(new Choice(){
+				Name = "GetSlimeJell",
+				SelectText = new List<TextAndPosition>()         
+							{new TextAndPosition("수락한다.",16,13,true),
+							new TextAndPosition("거절한다.",40,13,true)},
+				OnlyShowText = new List<TextAndPosition>()
+							{new TextAndPosition("슬라임 젤을 좀 구해다줄 수 있는가?\n곧 아내의 생일인데\n슬라임 젤에는 보습 효과가 있어\n아내에게 선물로 주려고 하네.\n부탁해도 되겠나?",15,3,10){AlignH = true}},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"QuestAccept"},{1,"QuestReject"}},
+				BackgroundTextName = "battle"
+			});
+			choices.Add(new Choice(){
+				Name = "testMeeting",
+				SelectText = new List<TextAndPosition>()         
+							{new TextAndPosition("수락한다.",16,13,true),
+							new TextAndPosition("거절한다.",40,13,true)},
+				OnlyShowText = new List<TextAndPosition>()
+							{new TextAndPosition("촌장을 만나고 오게",15,3,10){AlignH = true}},
+				IndicateChoice = new Dictionary<int,Object>(){{0,"QuestAccept"},{1,"QuestReject"}},
+				BackgroundTextName = "battle"
+			});
+			
 			
 			
 			Count = choices.Count;

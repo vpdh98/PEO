@@ -2,15 +2,21 @@ using System;
 using System.Collections.Generic;
 using static Convenience;
 using Game;
+using MyJson;
 
 
-public class Item : IEquatable<Item>,ICloneable{
+public class Item : IEquatable<Item>,ICloneable,ISaveToJson{
 	public String Name{get;set;}
 	
-	bool useable = false;
+	private bool useable = false;
 	public bool IsStackable{get;set;} = false;
 	
-	int amount = 1; //stackable이 true일때 사용
+	private int amount = 1; //stackable이 true일때 사용
+	
+	public String ItemExplan{get;set;} = "아이템 설명";
+	
+	public double DropChance{get;set;} = 0;
+	
 	public int Amount{
 		get{
 			return amount;
@@ -19,10 +25,6 @@ public class Item : IEquatable<Item>,ICloneable{
 			amount = value;
 		}
 	}
-	
-	public String ItemExplan{get;set;} = "아이템 설명";
-	
-	public double DropChance{get;set;} = 0;
 	
 	public Item(){
 		Name = "unknown";
@@ -61,6 +63,34 @@ public class Item : IEquatable<Item>,ICloneable{
 	public virtual Object Clone(){
 		return new Item(this);
 	}
+	// public String Name{get;set;}
+	
+	// bool useable = false;
+	// public bool IsStackable{get;set;} = false;
+	
+	// int amount = 1; //stackable이 true일때 사용
+	
+	// public String ItemExplan{get;set;} = "아이템 설명";
+	
+	// public double DropChance{get;set;} = 0;
+	public virtual String ToJsonString(){
+		Json json = new Json();
+		json.OpenObject("Item");
+		json.AddItem("Name",Name);
+		json.AddItem("IsStackable",IsStackable);
+		json.AddItem("ItemExplan",ItemExplan);
+		json.AddItem("DropChance",DropChance);
+		json.CloseObject();
+		return json.JsonString;
+	}
+	public virtual void JsonToObject(String jsonString){
+		Json json = new Json();
+		json.JsonString = jsonString;
+		this.Name = json.GetItem("Name");
+		this.IsStackable = bool.Parse(json.GetItem("IsStackable"));
+		this.ItemExplan = json.GetItem("ItemExplan");
+		this.DropChance = double.Parse(json.GetItem("DropChance"));
+	}
 }
 
 public class Equipment : Item{
@@ -76,6 +106,27 @@ public class Equipment : Item{
 	
 	public override Object Clone(){
 		return new Equipment(this);
+	}
+	
+	public override String ToJsonString(){
+		Json json = new Json();
+		json.OpenObject("Item");
+		json.AddItem("Name",Name);
+		json.AddItem("IsStackable",IsStackable);
+		json.AddItem("ItemExplan",ItemExplan);
+		json.AddItem("DropChance",DropChance);
+		json.AddItem("IsEquip",IsEquip);
+		json.CloseObject();
+		return json.JsonString;
+	}
+	public override void JsonToObject(String jsonString){
+		Json json = new Json();
+		json.JsonString = jsonString;
+		this.Name = json.GetItem("Name");
+		this.IsStackable = bool.Parse(json.GetItem("IsStackable"));
+		this.ItemExplan = json.GetItem("ItemExplan");
+		this.DropChance = double.Parse(json.GetItem("DropChance"));
+		this.IsEquip = bool.Parse(json.GetItem("IsEquip"));
 	}
 }
 
@@ -104,6 +155,33 @@ public class Weapon : Equipment{
 	public override Object Clone(){
 		return new Weapon(this);
 	}
+	
+	public override String ToJsonString(){
+		Json json = new Json();
+		json.OpenObject("Item");
+		json.AddItem("Name",Name);
+		json.AddItem("IsStackable",IsStackable);
+		json.AddItem("ItemExplan",ItemExplan);
+		json.AddItem("DropChance",DropChance);
+		json.AddItem("IsEquip",IsEquip);
+		json.AddItem("AttackPower",AttackPower);
+		json.AddItem("AttackSpeed",AttackSpeed);
+		json.AddItem("AttackMessage",AttackMessage);
+		json.CloseObject();
+		return json.JsonString;
+	}
+	public override void JsonToObject(String jsonString){
+		Json json = new Json();
+		json.JsonString = jsonString;
+		this.Name = json.GetItem("Name");
+		this.IsStackable = bool.Parse(json.GetItem("IsStackable"));
+		this.ItemExplan = json.GetItem("ItemExplan");
+		this.DropChance = double.Parse(json.GetItem("DropChance"));
+		this.IsEquip = bool.Parse(json.GetItem("IsEquip"));
+		this.AttackPower = int.Parse(json.GetItem("AttackPower"));
+		this.AttackSpeed = int.Parse(json.GetItem("AttackSpeed"));
+		this.AttackMessage = json.GetJsonAbleList<TextAndPosition>("AttackMessage");
+	}
 }
 
 public class Armor : Equipment{
@@ -125,6 +203,28 @@ public class Armor : Equipment{
 		return new Armor(this);
 	}
 	
+	public override String ToJsonString(){
+		Json json = new Json();
+		json.OpenObject("Item");
+		json.AddItem("Name",Name);
+		json.AddItem("IsStackable",IsStackable);
+		json.AddItem("ItemExplan",ItemExplan);
+		json.AddItem("DropChance",DropChance);
+		json.AddItem("IsEquip",IsEquip);
+		json.AddItem("Defense",Defense);
+		json.CloseObject();
+		return json.JsonString;
+	}
+	public override void JsonToObject(String jsonString){
+		Json json = new Json();
+		json.JsonString = jsonString;
+		this.Name = json.GetItem("Name");
+		this.IsStackable = bool.Parse(json.GetItem("IsStackable"));
+		this.ItemExplan = json.GetItem("ItemExplan");
+		this.DropChance = double.Parse(json.GetItem("DropChance"));
+		this.IsEquip = bool.Parse(json.GetItem("IsEquip"));
+		this.Defense = int.Parse(json.GetItem("Defense"));
+	}
 }
 
 public class Potion : Item{

@@ -298,7 +298,7 @@ public class Choice : ICloneable,ISaveToJson //선택지 부여 하는 클래스
 	
 	public String ToJsonString(){
 		Json json = new Json();
-		json.OpenObject(Name);
+		json.OpenObject("Choice");
 		json.AddItem("Name",Name);
 		json.AddItem("QuickDelegate",QuickDelegate);
 		json.AddItem("IsSavePoint",IsSavePoint);
@@ -322,7 +322,21 @@ public class Choice : ICloneable,ISaveToJson //선택지 부여 하는 클래스
 	}
 	
 	public void JsonToObject(String jsonString){
-		
+		Json json = new Json();
+		json.JsonString = jsonString;
+		this.Name = json.GetItem("Name");
+		this.QuickDelegate = json.GetItem("QuickDelegate");
+		this.IsSavePoint = bool.Parse(json.GetItem("IsSavePoint"));
+		this.IsVisit = bool.Parse(json.GetItem("IsVisit"));
+		this.IsShowStateWindow = bool.Parse(json.GetItem("IsShowStateWindow"));
+		this.BackgroundTextName = json.GetItem("BackgroundTextName");
+		this.selectText = json.GetJsonAbleList<TextAndPosition>("selectText");
+		this.onlyShowText = json.GetJsonAbleList<TextAndPosition>("onlyShowText");
+		this.streamText = json.GetJsonAbleList<TextAndPosition>("streamText");
+		this.returnText = json.GetJsonAbleList<TextAndPosition>("returnText");
+		this.indicateChoice = json.GetDictionary("indicateChoice");
+		this.monsterList = json.GetJsonAbleList<Enemy>("monsterList");
+		this.choiceType = Parse.ParseEnum<ChoiceType>(json.GetItem("choiceType"));
 	}
 }
 	

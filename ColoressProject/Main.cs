@@ -123,23 +123,19 @@ namespace Game
 			//TextAndPosition tap1 = new TextAndPosition(200,"Start",13,5,true){PriorityLayer = 3};
 			//WriteFile(path,tap1.ToJsonString());
 			
-			Choice choice1 = WorldMap.GetChoice("c2");
-			WriteFile(path,choice1.ToJsonString());
+			//Choice choice1 = WorldMap.GetChoice("c2");
+			//WriteFile(path,choice1.ToJsonString());
 			
 			//WriteFile(path,json.JsonString);
 			//Console.WriteLine(ReadFile(path));
 			
-			//testJson tj = new testJson();
-			//tj.num1 = 5;
-			//tj.num2 = 10;
-			//json.JsonString = tj.ToJson();
-			//WriteFile(path,json.JsonString);
+			String jString = ReadFile(path);
+			Choice choice1 = new Choice();
+			choice1.JsonToObject(jString);
 			
-			// String jString = ReadFile(path);
-			// TextAndPosition tap2 = new TextAndPosition();
-			// tap2.JsonToObject(jString);
+			DTG.Display(choice1);
 			
-			// Console.WriteLine(tap2.text);
+			//Console.WriteLine(tap2.text);
 			
 			// testJson tj2 = new testJson();
 			// tj2.ToObject(jString);
@@ -401,6 +397,9 @@ namespace Game
 		
 		public static void InitDelegate(){
 			
+		}
+		
+		public static void InitQuest(){
 		}
 		
 	}
@@ -1021,7 +1020,7 @@ QuickDelegate = ()=>{
 //1.Choice.SelectList(List<TextAndPosition>)
 //2.Choice.indicateList(List<Object>)
 //위 두 리스트 이다.
-//Choice를 SpawnUniqueMonster_Stayd에 넣으면 Choice.MonsterList에서 몬스터 목록을 가져와
+//Choice를 SpawnUniqueMonster_Stayed에 넣으면 Choice.MonsterList에서 몬스터 목록을 가져와
 //SelectList와 indicateList에 추가 시킨다.
 //그럼 몬스터를 없에기 위해서는 위 두 리스트에서 해당 몬스터를 제거 시켜야한다.
 //indicateList에 몬스터 이름이 값으로 들어가므로 indicateList의 이름과 battlePhase에 있는 몬스터의 이름이 일치하는 index를 구해서 없에면 될것 같다.
@@ -1363,3 +1362,35 @@ QuickDelegate = ()=>{
 //Enemy의 ToJsonString()구현은 Delegate인 DeathEvent빼고 구현완료했고
 //NPC의 ToJsonString()은 Quest의 ISaveToJson구현이 필요했다.
 //내일 해보는 걸로
+
+//2022.02.04
+//오늘은 Json화를 마저 진행하려고 했다.
+//하지만 굉장히 수정하기 까다로운 문제가 발생했다.
+//Json화 도중 Quest에 QuestContents 맴버를 Json화 하려고 했는데
+//QuestContents는 Choice클래스 타입으로 Json으로 저장될때 객체명이 Choice로 저장된다.
+
+//여기서 이게 문제인 이유는 그렇게 저장된다면 해당 Choice가 QuestContents에 들어가는 Choice인지
+//다른데 들어가는 Choice인지 구분할 방법이 없다는 것이다.
+//이를 해결할 방법은 Quest에는 Choice의 Name만 넣어놓고
+//필요한 시점에 해당 Choice를 Quest에 집어넣는 것이다.
+//모든 Choice를 일괄적으로 메모리로 불러와 관리하면서 말이다.
+//MyJson에 GetJsonAbleObject()메소드가 있는데 잘 손봐야 할것 같다.
+
+//2022.02.06
+//내일은 훈련이다.. 9일 연휴가 벌써 끝나다니...
+//저장 기능 구현이 생각보다 쉽지 않다.
+//저장구현을 데이터를 컨트롤하는 기능 이후에 넣으려 하니 꼬이는 부분이 많다.
+//저장기능은 훈련끝나고 어느정도 설계를 짜고 나서 해봐야 할 것 같다.
+//어느정도 데이터를 어떻게 저장할지 나누고
+//먼저 Choice가 제데로 Json화 되고 Object화 되는지 실험해 보았다.
+//MyJson안에 List를 객체화 시키는 GetJsonAbleList()를 만들고
+//서치하는데에 에러가 있어 서치 조건을 "을 찾는 것에서 [을 찾은후 거기서 뒤로 두번째에 있는"를 찾는걸로 바꿧다. 아직 길이멀다.
+
+//2022.02.09
+//혹한기 훈련이 끝났다.
+//이제 내게 남은 훈련은 없다. ㄴ;ㅇ리먼앨ㄴㅇㄹㄴㅇ레엥
+//오늘은 서치에 계속 에러가 발생해 다시 수정해보려고한다.
+//그 도중 바보같은 사실을 발견했다.
+//위에 보면 [에서 뒤로 두번가서 ""사이에있는 문자열을 다 가져와서 key값과 비교하게 해놨는데,
+//그럴 필요 없이 배열을 검색하면 "이름":[ == "key":[ 이런식으로 비교하면 중복될 일이 없는 것이였다. 난 바보다.
+//내일 당직이니 잘 설계해보고 다음날 코딩해 보면 될 것같다.

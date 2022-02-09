@@ -153,17 +153,26 @@ public class TextAndPosition : ICloneable, ISaveToJson{
 		public void JsonToObject(String jsonString){
 			Json json = new Json();
 			json.JsonString = jsonString;
-			text = json.GetItem("text");
-			x = int.Parse(json.GetItem("x"));
-			y = int.Parse(json.GetItem("y"));
-			textDelay = int.Parse(json.GetItem("textDelay"));
-			color = Parse.ParseEnum<ConsoleColor>(json.GetItem("color"));
-			PriorityLayer = int.Parse(json.GetItem("PriorityLayer"));
-			isStream = bool.Parse(json.GetItem("isStream"));
-			AlignH = bool.Parse(json.GetItem("AlignH"));
-			Highlight = json.GetItem("Highlight");
-			HighlightColor = Parse.ParseEnum<ConsoleColor>(json.GetItem("HighlightColor"));
-			Layout = ParseEnum<TextLayout>(json.GetItem("Layout"));
+			try{
+				text = json.GetItem("text");
+				//testLog("erro?");
+				x = int.Parse(json.GetItem("x"));
+				y = int.Parse(json.GetItem("y"));
+				textDelay = int.Parse(json.GetItem("textDelay"));
+				color = Parse.ParseEnum<ConsoleColor>(json.GetItem("color"));
+				PriorityLayer = int.Parse(json.GetItem("PriorityLayer"));
+				isStream = bool.Parse(json.GetItem("isStream"));
+				AlignH = bool.Parse(json.GetItem("AlignH"));
+				Highlight = json.GetItem("Highlight");
+				HighlightColor = Parse.ParseEnum<ConsoleColor>(json.GetItem("HighlightColor"));
+				Layout = ParseEnum<TextLayout>(json.GetItem("Layout"));
+			}catch(Exception e){
+				Console.WriteLine(e.ToString());
+				Console.WriteLine("=====================================");
+				Console.WriteLine(jsonString);
+				Console.WriteLine("=====================================");
+				return;
+			}
 		}
 }
 
