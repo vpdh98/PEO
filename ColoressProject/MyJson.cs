@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 
 namespace MyJson{
+	
+	
+	
 	public interface ISaveToJson{
 		String ToJsonString();
 		void JsonToObject(String jsonString);
@@ -17,6 +20,11 @@ namespace MyJson{
 		private int arrayCount = 0;
 		private int depth = 0;
 		//private bool isItem = false;
+		
+		const String ARRAY_TAG = ":[";
+		const String OBJECT_TAG = ":{";
+		const String DICTIONARY_TAG = ":[";
+		const String ITEM_TAG = ":\"";
 		
 		public String ErrorMessage{
 			get{
@@ -80,6 +88,7 @@ namespace MyJson{
 		//isItem이 true이면 해당 Array를 닫을때 아이템으로 인식해서 다음 Array를 쓰기할때 앞에 \n과 ,가 들어감
 		public String AddJsonAbleList<T>(String name,List<T> list,bool isItem = false) where T : ISaveToJson
 		{
+			if(list == null) return "Error";
 			OpenArray(name);
 			foreach(T tap in list){
 				AddJsonAbleObject(tap);
@@ -116,55 +125,80 @@ namespace MyJson{
 			return JsonString.IndexOf(str,startIndex);
 		}
 		
-		public int JsonListIndexOf(String key, int startIndex){
+		public int JsonListIndexOf(String tagedKey, int startIndex){
 			if(startIndex < 0) return -1;
 			String temp = "";
 			int index = startIndex;
-			while(index != -1){ //key에 해당하는 부분에 "을 찾아 key값 전체를 가져와 매개변수로 받은 key값과 비교후 해당하는 key가 있으면 그 줄에 :의 index를 넣음
+			index = JsonIndexOf(tagedKey,index);
+			if(index >= 0){
 				index = JsonIndexOf("[",index);
-				index = JsonString.LastIndexOf("\"",index)-1;
-				//[에서 부터 뒤로 두번째에 있는 "의 위치 인덱스 찾기
-				index = JsonString.LastIndexOf("\"",index);
-				for(int i=index+1;i<JsonString.Length;i++){
-					if(JsonString[i] == '\"'){
-						//Convenience.testLog(temp);
-						//Convenience.testLog("key:"+key);
-						break;
-					}
-					temp+=JsonString[i];
-				}
-				if(temp == key){
-					index = JsonIndexOf("[",index);
-					break;
-				}else{
-					temp = "";
-					index = JsonIndexOf("]",index);
-				}
 			}
 			return index;
 		}
 		
-		public String GetItem(String key){
-			int index = 0;
-			String temp = "";
-			index = JsonIndexOf("{");//{ 로 시작하는 Json 객체부터 시작
-			
-			while(index != -1){ //key에 해당하는 부분에 "을 찾아 key값 전체를 가져와 매개변수로 받은 key값과 비교후 해당하는 key가 있으면 그 줄에 :의 index를 넣음
-				index = JsonIndexOf("\"",index);
-				for(int i=index+1;i<JsonString.Length;i++){
-					if(JsonString[i] == '\"'){
-						break;
-					}
-					temp+=JsonString[i];
+		public int DepthCounting(int index){
+			int count = 0;
+			for(int i = 0;i<JsonString.Length;i++){
+				if(index-i < 0){ 
+					return count;
 				}
-				if(temp == key){
-					index = JsonIndexOf(":",index);
-					break;
-				}else{
-					temp = "";
-					index = JsonIndexOf("\n",index);
+				if(JsonString[index-i]==' '){ 
+					count++;
+				}	  
+				else if(JsonString[index-i]=='\n'){ 
+					return count;
 				}
 			}
+			return -1;
+		}
+		
+		public int DepthCountingOtherString(String str,int index){
+			int count = 0;
+			if(str == null) return count;
+			
+			if(index == -1) throw new Exception("index 값이 -1임");
+			Convenience.testLog("here:"+str.Length);
+			for(int i = 0;i<str.Length;i++){
+				if(index-i < 0){ 
+					return count;
+				}
+				if(str[index-i]==' '){ 
+					count++;
+				}	  
+				else if(str[index-i]=='\n'){ 
+					return count;
+				}
+			}
+			return -1;
+		}
+		
+		public String GetItem(String key){
+			int index = 0;
+			int endIndex = 0;
+			String temp = "";
+			int depthCount = 0;
+			index = JsonIndexOf("{");//{ 로 시작하는 Json 객체부터 시작
+			depthCount = DepthCounting(index);
+			endIndex = index;
+			//해당 객체의 끝의 인덱스를 저장, 찾은 아이템이 그 endIndex보다 큰 index위치에 있으면 검색 종료
+			do{
+				endIndex++;
+				endIndex = JsonIndexOf("}",endIndex);
+				if(endIndex == -1) throw new Exception("올바른 객체 형태가 아님 key->"+key+"<-key\n");
+			}while(depthCount != DepthCounting(endIndex));
+			
+			
+			
+			index = JsonIndexOf(KeyTaging(key,ITEM_TAG),index);
+			if(index > endIndex || index == -1){
+				Convenience.testLog(endIndex);
+				throw new Exception("찾는 아이템이 해당 객체에 없습니다.key->"+KeyTaging(key,ITEM_TAG)+"<-key\n");
+			}
+			
+			if(index >= 0){
+				index = JsonIndexOf(":",index);
+			}
+			
 			index = JsonIndexOf("\"",index);//위에서 받은 :의 위치부터 시작해 value를 받아옴
 	
 			temp = "";
@@ -175,6 +209,7 @@ namespace MyJson{
 				temp+=JsonString[i];
 			}
 			temp = temp.Replace("\"","");//밸류 양옆에 "제거
+			
 			return temp;
 		}
 		
@@ -182,63 +217,56 @@ namespace MyJson{
 			int index = 0;
 			String temp = "";
 			T obj = new T();
+			int endIndex = 0;
+			int depthCount = 0;
 			
-			while(index != -1){ //key에 해당하는 부분에 "을 찾아 key값 전체를 가져와 매개변수로 받은 key값과 비교후 해당하는 key가 있으면 그 줄에 :의 index를 넣음
-				index = JsonIndexOf("\"",index);
-				for(int i=index+1;i<JsonString.Length;i++){
-					if(JsonString[i] == '\"'){
-						break;
-					}
-					temp+=JsonString[i];
-				}
-				if(temp == key){
-					index = JsonIndexOf("{",index);
-					break;
-				}else{
-					temp = "";
-					index = JsonIndexOf("}",index);
-				}
+			
+			index = JsonIndexOf(KeyTaging(key,OBJECT_TAG),index);
+
+			if(index >= 0){
+				index = JsonIndexOf("{",index);
+			}else{
+				throw new Exception("해당 객체가 없습니다.");
 			}
-			index = JsonIndexOf("\"",index);//위에서 받은 [의 위치부터 시작해 value를 받아옴
+			
+			depthCount = DepthCounting(index);
+			endIndex = index;
+			//해당 객체의 끝의 인덱스를 저장, 찾은 아이템이 그 endIndex보다 큰 index위치에 있으면 검색 종료
+			do{
+				endIndex++;
+				endIndex = JsonIndexOf("}",endIndex);
+				if(endIndex == -1) throw new Exception("올바른 객체 형태가 아님 key->"+key+"<-key\n");
+			}while(depthCount != DepthCounting(endIndex));
 			
 			//Key값의 위치에 있는 객체 text전체를 temp에 넣음
 			temp = "";
-			for(int i=index+1;i<JsonString.Length;i++){
-				if(JsonString[i] == '}'){
-					break;
-				}
+			for(int i=index;i<endIndex;i++){
 				temp+=JsonString[i];
 			}
 			obj.JsonToObject(temp);
+			
 			return obj;
 		}
 		
-		public T GetJsonAbleObject<T>(String type,String key) where T : ISaveToJson,new(){
+		/*public T GetJsonAbleObject<T>(String type,String key) where T : ISaveToJson,new(){
 			int index = 0;
 			int indexTemp = 0;
 			String temp = "";
 			T obj = new T();
 			//해당하는 type의 index찾기
-			while(index != -1){ //key에 해당하는 부분에 "을 찾아 key값 전체를 가져와 매개변수로 받은 key값과 비교후 해당하는 key가 있으면 그 줄에 :의 index를 넣음
-				index = JsonIndexOf("\"",index);
-				for(int i=index+1;i<JsonString.Length;i++){
-					if(JsonString[i] == '\"'){
-						break;
-					}
-					temp+=JsonString[i];
-				}
-				if(temp == type){
-					index = JsonIndexOf("{",index);
-					temp = "";
-					break;
-				}else{
-					temp = "";
-					index = JsonIndexOf("}",index);
-				}
+			index = JsonIndexOf(KeyTaging(type,""),index);
+
+			if(index >= 0){
+				index = JsonIndexOf("{",index);
+				temp = "";
+			}else{
+				return new Exception("해당하는 타입이 없습니다.");
 			}
+			
 			//해당하는 type에서 key의 index찾기
 			indexTemp = index;
 			while(indexTemp != -1){ //key에 해당하는 부분에 "을 찾아 key값 전체를 가져와 매개변수로 받은 key값과 비교후 해당하는 key가 있으면 그 줄에 :의 index를 넣음
+				
 				for(int i=indexTemp+1;i<JsonString.Length;i++){
 					if(JsonString[i] == '\"'){
 						break;
@@ -264,49 +292,66 @@ namespace MyJson{
 			}
 			obj.JsonToObject(temp);
 			return obj;
-		}
+		}*/
 		
 		public List<T> GetJsonAbleList<T>(String key) where T : ISaveToJson,new(){
 			int index = 0;
 			String temp = "";
 			List<T> list = new List<T>();
+			int depthCount = 0;
+			int endIndex = 0;
 			
-			index = JsonListIndexOf(key,index);
-			index = JsonIndexOf("\"",index);//위에서 받은 [의 위치부터 시작해 value를 받아옴
+			index = JsonListIndexOf(KeyTaging(key,ARRAY_TAG),index);
+			if(index == -1) throw new Exception("해당하는 Array가 없습니다.key->"+KeyTaging(key,ARRAY_TAG)+"<-key\n");
+			
+			index = JsonIndexOf("[",index);//위에서 받은 [의 위치부터 시작해 value를 받아옴
+			
+			depthCount = DepthCounting(index);
+			endIndex = index;
+			//해당 객체의 끝의 인덱스를 저장, 찾은 아이템이 그 endIndex보다 큰 index위치에 있으면 검색 종료
+			do{
+				endIndex++;
+				endIndex = JsonIndexOf("]",endIndex);
+				if(endIndex == -1) throw new Exception("올바른 객체 형태가 아님 key->"+key+"<-key\n");
+			}while(depthCount != DepthCounting(endIndex));
 			
 			//Key값의 위치에 있는 배열 text 전체를 temp에 넣음
 			temp = "";
-			for(int i=index+1;i<JsonString.Length;i++){
-				if(JsonString[i] == ']'){
-					break;
-				}
+			for(int i=index+1;i<endIndex;i++){
 				temp+=JsonString[i];
 			}
 			
+			Convenience.testLog(temp);
+			
+			
 			//배열에서 하나의 Object단위로 분리하여 Object화 시켜 List에 추가
 			index = 0;
+			Convenience.testLog(depthCount);
+			///!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 이 아래 DepthCountingOtherString에서부터 에러발생
 			String objectString = "";
-			while(index < temp.Length){
+			depthCount = DepthCountingOtherString(temp,index);
+			endIndex = index;
+			//해당 객체의 끝의 인덱스를 저장, 찾은 아이템이 그 endIndex보다 큰 index위치에 있으면 검색 종료
+			do{
+				endIndex++;
+				endIndex = JsonIndexOf("}",endIndex);
+				if(endIndex == -1) throw new Exception("올바른 객체 형태가 아님 key->"+key+"<-key\n");
+			}while(depthCount != DepthCountingOtherString(temp,endIndex));
+			
+			while(index < endIndex){
 				for(int i=index;i<temp.Length;i++){
-					if(temp[i] == '}'){
-						objectString+=temp[i];
-						index=i+1; //\n 건너뜀
-						break;
-					}
 					objectString+=temp[i];
 				}
 				if(!IsCompleteObjectString(objectString)){
+					//Convenience.testLog("obobjectString:"+objectString);
 					if(list.Count == 0){
-						Convenience.testLog("safsdf:"+key);
-						return null;
-					}
-					else{
 						return list;
+						//throw new Exception("해당 배열에 요소가 없거나 해당 배열이 존재하지 않습니다");
+					}else{
+						break;
 					}
 				}
 				T listItem = new T();
-				Console.WriteLine(objectString);
-				Console.ReadKey();
 				listItem.JsonToObject(objectString);
 				list.Add(listItem);
 				objectString = "";
@@ -394,23 +439,15 @@ namespace MyJson{
 			String temp = "";
 			Dictionary<int,Object> dic = new Dictionary<int,Object>();
 			
-			while(index != -1){ //key에 해당하는 부분에 "을 찾아 key값 전체를 가져와 매개변수로 받은 key값과 비교후 해당하는 key가 있으면 그 줄에 :의 index를 넣음
-				index = JsonIndexOf("\"",index);
-				for(int i=index+1;i<JsonString.Length;i++){
-					if(JsonString[i] == '\"'){
-						break;
-					}
-					temp+=JsonString[i];
-				}
-				if(temp == key){
-					index = JsonIndexOf("[",index);
-					break;
-				}else{
-					temp = "";
-					index = JsonIndexOf("]",index);
-				}
+			index = JsonIndexOf(KeyTaging(key,DICTIONARY_TAG),index);
+
+			if(index >= 0){
+				index = JsonIndexOf("[",index);
+			}else{
+				throw new Exception("해당하는 Dictionary가 없습니다.key->"+KeyTaging(key,DICTIONARY_TAG)+"<-key\n");
 			}
-			index = JsonIndexOf("\"",index);//위에서 받은 [의 위치부터 시작해 value를 받아옴
+			
+			//index = JsonIndexOf("\"",index);//위에서 받은 [의 위치부터 시작해 value를 받아옴
 			
 			//Key값의 위치에 있는 배열 text 전체를 temp에 넣음
 			temp = "";
@@ -427,31 +464,37 @@ namespace MyJson{
 			String K = "";
 			String V = "";
 			while(index >= 0){
-				index = temp.IndexOf("\"",index);
-				for(int i=index+1;i<temp.Length;i++){
-					if(temp[i] == '\"'){
-						break;
-					}
-					if(swich){
-						K+=temp[i];
-					}else{
-						V+=temp[i];
-					}
-				}
+				index = temp.IndexOf(":",index);
+				K = GetKeyFrontColon(index);
+				V = GetValueBackColon(index);
 				K = K.Replace("\"","");//밸류 양옆에 "제거
 				V = V.Replace("\"","");
-				if(swich){
-					dic.Add(int.Parse(K),"");
-					swich = false;
-				}else{
+				try{
 					dic.Add(int.Parse(K),V.ToString());
-					K = "";
-					V = "";
-					swich = true;
+				}catch(System.FormatException e){
+					return dic;
 				}
 			}
 			
 			return dic;
+		}
+		
+		public String GetKeyFrontColon(int colonIndex){
+			String key = "";
+			int endIndex = JsonString.LastIndexOf("\"",colonIndex);
+			int startIndex = JsonString.LastIndexOf("\"",endIndex-1);
+			return JsonString.Substring(startIndex,endIndex);
+		}
+		
+		public String GetValueBackColon(int colonIndex){
+			String key = "";
+			int startIndex = JsonString.IndexOf("\"",colonIndex);
+			int endIndex = JsonString.IndexOf("\"",startIndex+1);
+			return JsonString.Substring(startIndex,endIndex);
+		}
+		
+		public String KeyTaging(String key,String tag){
+			return "\""+key+"\""+tag;
 		}
 		
 		public void ErrorAt(String errorMessage){

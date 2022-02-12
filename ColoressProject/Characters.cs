@@ -537,7 +537,30 @@ namespace Characters
 		}
 		
 		public void JsonToObject(String jsonString){
-		
+			Json json = new Json();
+			json.JsonString = jsonString;
+			Console.WriteLine(jsonString);
+			this.Name = json.GetItem("Name");
+			this.Hp = int.Parse(json.GetItem("Hp"));
+			this.Mp = int.Parse(json.GetItem("Mp"));
+			this.MaxHp = int.Parse(json.GetItem("MaxHp"));
+			this.MaxMp = int.Parse(json.GetItem("MaxMp"));
+			this.AttackPower = int.Parse(json.GetItem("AttackPower"));
+			this.Defense = int.Parse(json.GetItem("Defense"));
+			this.AttackSpeed = int.Parse(json.GetItem("AttackSpeed"));
+			this.SpawnChance = int.Parse(json.GetItem("SpawnChance"));
+			this.IsSpawn = bool.Parse(json.GetItem("IsSpawn"));
+			this.IsSpawnOnce = bool.Parse(json.GetItem("IsSpawnOnce"));
+			
+			this.SelectMessage = json.GetJsonAbleList<TextAndPosition>("SelectMessage");
+			this.SpawnMessage = json.GetJsonAbleList<TextAndPosition>("SpawnMessage");
+			this.StateMessage = json.GetJsonAbleList<TextAndPosition>("StateMessage");
+			this.BlockMessage = json.GetJsonAbleList<TextAndPosition>("BlockMessage");
+			this.DodgeMessage = json.GetJsonAbleList<TextAndPosition>("DodgeMessage");
+			this.ReactionMessage = json.GetJsonAbleList<TextAndPosition>("ReactionMessage");
+			this.PlayerReactionMessage = json.GetJsonAbleList<TextAndPosition>("PlayerReactionMessage");
+			this.PreAttackMessage = json.GetJsonAbleList<TextAndPosition>("PreAttackMessage");
+			this.AttackMessage = json.GetJsonAbleList<TextAndPosition>("AttackMessage");
 		}
 		
 		public override string ToString(){

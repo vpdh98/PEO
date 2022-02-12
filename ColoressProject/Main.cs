@@ -133,7 +133,14 @@ namespace Game
 			Choice choice1 = new Choice();
 			choice1.JsonToObject(jString);
 			
-			DTG.Display(choice1);
+			//testLog(choice1.SelectText[0].text);
+			
+			String path2 = "test/a/b.txt";
+			Choice choice2 = choice1;
+			CreateDirectoryAndFile(path2);
+			WriteFile(path2,choice2.ToJsonString());
+			
+			//DTG.Display(GameManager.SpawnUniqueEnemy_Stay(choice1));
 			
 			//Console.WriteLine(tap2.text);
 			
@@ -141,6 +148,7 @@ namespace Game
 			// tj2.ToObject(jString);
 			// Console.WriteLine(tj2.num2);
 			
+			//DTG.SelectingText(keyInfo);
 			
 			Console.ReadKey();
 			
@@ -1394,3 +1402,7 @@ QuickDelegate = ()=>{
 //위에 보면 [에서 뒤로 두번가서 ""사이에있는 문자열을 다 가져와서 key값과 비교하게 해놨는데,
 //그럴 필요 없이 배열을 검색하면 "이름":[ == "key":[ 이런식으로 비교하면 중복될 일이 없는 것이였다. 난 바보다.
 //내일 당직이니 잘 설계해보고 다음날 코딩해 보면 될 것같다.
+
+//2022.02.12
+//대부분의 서치는 위에 방식으로 바꿧다.
+//MyJson에 GetJsonAbleList메소드가 문제다 해결하자
