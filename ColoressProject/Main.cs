@@ -70,34 +70,8 @@ public static class PlayData{
 
 namespace Game
 {
-	public class testJson{
-		public int num1 = 0;
-		public int num2 = 2;
-		
-		public String ToJson(){
-			Json json = new Json();
-			json.OpenObject("testJson");
-			json.AddItem("num1",num1.ToString());
-			json.AddItem("num2",num2.ToString());
-			json.CloseObject();
-			Console.WriteLine(json.JsonString);
-			return json.JsonString;
-		}
-		
-		public void ToObject(String jsonString){
-			Json json = new Json();
-			json.JsonString = jsonString;
-			num1 = int.Parse(json.GetItem("num1"));
-			num2 = int.Parse(json.GetItem("num2"));
-		}
-	}
-	
-	
-	
 	public class main
 	{
-		//public delegate void AttackMethod(Character Attacker,Character Defender);
-		//public static AttackMethod attack;
 		static ConsoleKeyInfo keyInfo;
 		static DisplayTextGame DTG = new DisplayTextGame();
 		
@@ -129,16 +103,20 @@ namespace Game
 			//WriteFile(path,json.JsonString);
 			//Console.WriteLine(ReadFile(path));
 			
-			String jString = ReadFile(path);
-			Choice choice1 = new Choice();
-			choice1.JsonToObject(jString);
+			//Json화 된 Choice 불러오기와서 객체화 시키는 Test
+			// String jString = ReadFile(path);
+			// Choice choice1 = new Choice();
+			// choice1.JsonToObject(jString);
+			
+			String jString2 = CList.ToJsonString();
+			WriteFile(DataPath.ENEMY_PATH,jString2);
 			
 			//testLog(choice1.SelectText[0].text);
 			
-			String path2 = "test/a/b.txt";
-			Choice choice2 = choice1;
-			CreateDirectoryAndFile(path2);
-			WriteFile(path2,choice2.ToJsonString());
+			// String path2 = "test/a/b.txt";
+			// Choice choice2 = choice1;
+			// CreateDirectoryAndFile(path2);
+			// WriteFile(path2,choice2.ToJsonString());
 			
 			//DTG.Display(GameManager.SpawnUniqueEnemy_Stay(choice1));
 			

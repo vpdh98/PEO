@@ -717,18 +717,23 @@ namespace Characters
 	
 	}
 	
-	public class CharacterList{
-		Dictionary<String,Player> PlayerList{get;set;}
-		Dictionary<String,Enemy> EnemyList{get;set;}
-		Dictionary<String,NPC> NPCList{get;set;}
+	public class CharacterList : ISaveToJson{
+		Dictionary<String,Player> PlayerDictionary{get;set;}
+		Dictionary<String,Enemy> EnemyDictionary{get;set;}
+		Dictionary<String,NPC> NpcDictionary{get;set;}
+		
+		List<Player> PlayerList{get;set;}
+		List<Enemy> EnemyList{get;set;}
+		List<NPC> NpcList{get;set;}
+		
 		Player player;
 		Enemy enemy;
 		NPC npc;
 		
 		public CharacterList(){
-			PlayerList = new Dictionary<String,Player>();
-			EnemyList = new Dictionary<String,Enemy>();
-			NPCList = new Dictionary<String,NPC>();
+			PlayerDictionary = new Dictionary<String,Player>();
+			EnemyDictionary = new Dictionary<String,Enemy>();
+			NpcDictionary = new Dictionary<String,NPC>();
 			///////////////////Player/////////////////////////////
 			player = new Player(){
 				Name = "용사",
@@ -740,7 +745,7 @@ namespace Characters
 				AttackSpeed = 2,
 				ReactionMessage = null
 			};
-			PlayerList.Add(player.Name,player);
+			PlayerDictionary.Add(player.Name,player);
 			
 			
 			///////////////////Enemy/////////////////////////////
@@ -819,7 +824,7 @@ namespace Characters
 					itemList.GetItem("전설의검",100)
 				}
 			};
-			EnemyList.Add(enemy.Name,enemy);
+			EnemyDictionary.Add(enemy.Name,enemy);
 			
 			enemy = new Enemy(){
 				Name = "뒤틀린 망자",
@@ -876,7 +881,7 @@ namespace Characters
 					new TextAndPosition("망자의 손톱 할퀴기!",10)
 				}
 			};
-			EnemyList.Add(enemy.Name,enemy);
+			EnemyDictionary.Add(enemy.Name,enemy);
 			
 			enemy = new Enemy(){
 				Name = "헐크",
@@ -932,7 +937,7 @@ namespace Characters
 					new TextAndPosition("헐크의 주먹 내려치기!",10)
 				}
 			};
-			EnemyList.Add(enemy.Name,enemy);
+			EnemyDictionary.Add(enemy.Name,enemy);
 			
 			enemy = new Enemy(){
 				Name = "야생의 경민이",
@@ -994,7 +999,7 @@ namespace Characters
 					PlayData.WorldMap.RemoveChoiceSelectText("c2",3);
 				}
 			};
-			EnemyList.Add(enemy.Name,enemy);
+			EnemyDictionary.Add(enemy.Name,enemy);
 			
 			
 			///////////////////NPC/////////////////////////////
@@ -1075,12 +1080,16 @@ namespace Characters
 					QuestControler.GetQuestByName("testMeeting")
 				}
 			};
-			NPCList.Add(npc.Name,npc);
+			NpcDictionary.Add(npc.Name,npc);
+			
+			PlayerList = new List<Player>(PlayerDictionary.Values);
+			EnemyList = new List<Enemy>(EnemyDictionary.Values);
+			NpcList = new List<NPC>(NpcDictionary.Values);
 		}
 		
 		public NPC GetNpcOriginal(String name){ //원본임. 복사할 필요가 없다고 판단 2021.12.31
 			try{
-				return NPCList[name];
+				return NpcDictionary[name];
 			}catch(Exception e){
 				//Console.WriteLine(e);
 				return null;
@@ -1089,7 +1098,7 @@ namespace Characters
 		
 		public Enemy GetEnemyOriginal(String name){
 			try{
-				return EnemyList[name];
+				return EnemyDictionary[name];
 			}catch(Exception e){
 				//Console.WriteLine(e);
 				return null;
@@ -1098,7 +1107,7 @@ namespace Characters
 		
 		public Enemy GetEnemy(String name){
 			try{
-				return (Enemy)EnemyList[name].Clone();
+				return (Enemy)EnemyDictionary[name].Clone();
 			}catch(Exception e){
 				//Console.WriteLine(e);
 				return null;
@@ -1107,7 +1116,7 @@ namespace Characters
 		
 		public Enemy GetEnemy(String name,int spawn){
 			try{
-				Enemy mons = (Enemy)EnemyList[name].Clone();
+				Enemy mons = (Enemy)EnemyDictionary[name].Clone();
 				mons.SpawnChance = spawn;
 				return mons;
 			}catch(Exception e){
@@ -1117,7 +1126,19 @@ namespace Characters
 		}
 		
 		public Player GetPlayer(String name){
-			return PlayerList[name];
+			return PlayerDictionary[name];
+		}
+		
+		public String ToJsonString()
+		{
+			Json json = new Json();
+			json.AddJsonAbleList<Enemy>("Enemys",EnemyList);
+			return json.JsonString;
+		}
+		
+		public void JsonToObject(String jsonString)
+		{
+			
 		}
 		
 		/*public Character GetCharacter(String Name){

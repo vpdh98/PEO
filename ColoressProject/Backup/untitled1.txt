@@ -1,0 +1,96 @@
+public List<T> GetJsonAbleList<T>(String key) where T : ISaveToJson,new(){
+			int index = 0;
+			String temp = "";
+			List<T> list = new List<T>();
+			int depthCount = 0;
+			int endIndex = 0;
+			
+			index = JsonListIndexOf(KeyTaging(key,ARRAY_TAG),index);
+			if(index == -1) throw new Exception("해당하는 Array가 없습니다.key->"+KeyTaging(key,ARRAY_TAG)+"<-key\n");
+			
+			index = JsonIndexOf("[",index);//위에서 받은 [의 위치부터 시작해 value를 받아옴
+			
+			depthCount = DepthCounting(index);
+			endIndex = index;
+			//해당 객체의 끝의 인덱스를 저장, 찾은 아이템이 그 endIndex보다 큰 index위치에 있으면 검색 종료
+			do{
+				endIndex = JsonIndexOf("]",endIndex+1);
+				if(endIndex == -1) throw new Exception("올바른 객체 형태가 아님 key->"+key+"<-key\n"+"-contents-\n"+JsonString+"\n-contents-\n");
+			}while(depthCount != DepthCounting(endIndex));
+			
+			//Key값의 위치에 있는 배열 text 전체를 temp에 넣음
+			temp = "";
+			for(int i=index+1;i<endIndex;i++){
+				temp+=JsonString[i];
+			}
+			
+			//testLog(key+"\n"+temp);
+			
+			//배열에서 하나의 Object단위로 분리하여 Object화 시켜 List에 추가
+			index = 0;
+			///!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 이 아래 DepthCountingOtherString에서부터 에러발생
+			String objectString = "";
+			index = temp.IndexOf("{");
+			depthCount = DepthCountingOtherString(temp,index);
+			endIndex = index;
+			do{
+				endIndex = temp.IndexOf("}",endIndex+1);
+				if(endIndex == -1){ 
+					//Convenience.testLog("hele:"+temp);
+					return null;//throw new Exception("올바른 객체 형태가 아님 key->"+key+"<-key\n"+"-contents-\n"+temp+"\n-contents-\n");
+				}
+			}while(depthCount != DepthCountingOtherString(temp,endIndex));
+			
+			
+			testLog("key:"+key+"\ndepthCount1:"+depthCount+"\ndepthCount2:"+DepthCountingOtherString(temp,endIndex)+"\nindex1:"+index+"\nindex1:"+endIndex);
+			
+			while(index!=-1){
+				
+				for(int i=index;i<endIndex+1;i++){
+					objectString+=temp[i];
+				}
+				objectString = GetLineFrontBracket(temp,index)+objectString;
+				Convenience.testLog("obobjectString:"+objectString);
+				if(!IsCompleteObjectString(objectString)){
+					
+					if(list.Count == 0){
+						return list;
+						//throw new Exception("해당 배열에 요소가 없거나 해당 배열이 존재하지 않습니다");
+					}else{
+						break;
+					}
+				}
+				T listItem = new T();
+				
+				/*int tempIndex = 0;
+				String tempString = "";
+				tempIndex = objectString.LastIndexOf("}",objectString.Length) - 1;
+				for(int i = 0;i<objectString.Length;i++){
+					if(tempIndex == -1) break;
+					if(objectString[tempIndex-i] !=' '){
+						Convenience.testLog(tempIndex);
+						Convenience.testLog(objectString.Length);
+						tempString = objectString.Substring(0,tempIndex-i);
+						tempString+="\n}";
+						//tempString+= objectString.Substring(tempIndex+1,objectString.Length);
+						objectString = tempString;
+						break;
+					}
+				}*/
+				
+				//Convenience.testLog(objectString);
+				listItem.JsonToObject(objectString);
+				list.Add(listItem);
+				objectString = "";
+				
+				index = temp.IndexOf("{",endIndex+1);
+				endIndex = index;
+				do{
+				endIndex = temp.IndexOf("}",endIndex+1);
+				if(endIndex == -1) throw new Exception("올바른 객체 형태가 아님 key->"+key+"<-key\n"+"-contents-\n"+objectString+"\n-contents-\n");
+				}while(depthCount != DepthCountingOtherString(temp,endIndex));
+				
+			}
+			
+			return list;
+		}

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using static Convenience;
 
 namespace MyJson{
 	
@@ -156,8 +157,8 @@ namespace MyJson{
 			int count = 0;
 			if(str == null) return count;
 			
-			if(index == -1) throw new Exception("index 값이 -1임");
-			Convenience.testLog("here:"+str.Length);
+			if(index == -1) return -1;//throw new Exception("index 값이 -1임");
+			//Convenience.testLog("here:"+index);
 			for(int i = 0;i<str.Length;i++){
 				if(index-i < 0){ 
 					return count;
@@ -165,7 +166,7 @@ namespace MyJson{
 				if(str[index-i]==' '){ 
 					count++;
 				}	  
-				else if(str[index-i]=='\n'){ 
+				else if(str[index-i]!=' '){ 
 					return count;
 				}
 			}
@@ -178,20 +179,14 @@ namespace MyJson{
 			String temp = "";
 			int depthCount = 0;
 			index = JsonIndexOf("{");//{ 로 시작하는 Json 객체부터 시작
-			depthCount = DepthCounting(index);
-			endIndex = index;
 			//해당 객체의 끝의 인덱스를 저장, 찾은 아이템이 그 endIndex보다 큰 index위치에 있으면 검색 종료
-			do{
-				endIndex++;
-				endIndex = JsonIndexOf("}",endIndex);
-				if(endIndex == -1) throw new Exception("올바른 객체 형태가 아님 key->"+key+"<-key\n");
-			}while(depthCount != DepthCounting(endIndex));
+			
+			endIndex = IndexOfCompleteBracket(JsonString,index,'{','}');
 			
 			
 			
 			index = JsonIndexOf(KeyTaging(key,ITEM_TAG),index);
 			if(index > endIndex || index == -1){
-				Convenience.testLog(endIndex);
 				throw new Exception("찾는 아이템이 해당 객체에 없습니다.key->"+KeyTaging(key,ITEM_TAG)+"<-key\n");
 			}
 			
@@ -305,57 +300,42 @@ namespace MyJson{
 			if(index == -1) throw new Exception("해당하는 Array가 없습니다.key->"+KeyTaging(key,ARRAY_TAG)+"<-key\n");
 			
 			index = JsonIndexOf("[",index);//위에서 받은 [의 위치부터 시작해 value를 받아옴
+			endIndex = IndexOfCompleteBracket(JsonString,index,'[',']');
 			
-			depthCount = DepthCounting(index);
-			endIndex = index;
-			//해당 객체의 끝의 인덱스를 저장, 찾은 아이템이 그 endIndex보다 큰 index위치에 있으면 검색 종료
-			do{
-				endIndex++;
-				endIndex = JsonIndexOf("]",endIndex);
-				if(endIndex == -1) throw new Exception("올바른 객체 형태가 아님 key->"+key+"<-key\n");
-			}while(depthCount != DepthCounting(endIndex));
 			
 			//Key값의 위치에 있는 배열 text 전체를 temp에 넣음
 			temp = "";
-			for(int i=index+1;i<endIndex;i++){
+			for(int i=index;i<endIndex+1;i++){
 				temp+=JsonString[i];
 			}
 			
-			Convenience.testLog(temp);
-			
-			
 			//배열에서 하나의 Object단위로 분리하여 Object화 시켜 List에 추가
 			index = 0;
-			Convenience.testLog(depthCount);
-			///!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 이 아래 DepthCountingOtherString에서부터 에러발생
 			String objectString = "";
-			depthCount = DepthCountingOtherString(temp,index);
-			endIndex = index;
-			//해당 객체의 끝의 인덱스를 저장, 찾은 아이템이 그 endIndex보다 큰 index위치에 있으면 검색 종료
-			do{
-				endIndex++;
-				endIndex = JsonIndexOf("}",endIndex);
-				if(endIndex == -1) throw new Exception("올바른 객체 형태가 아님 key->"+key+"<-key\n");
-			}while(depthCount != DepthCountingOtherString(temp,endIndex));
-			
-			while(index < endIndex){
-				for(int i=index;i<temp.Length;i++){
+			index = temp.IndexOf("{");
+			while(index != -1)
+			{
+				endIndex = IndexOfCompleteBracket(temp,index,'{','}');
+				//객체의 시작점({)을 찾지못해 index값이 -1이 나올경우 list를 반환
+				if(index == -1)
+				{
+					return list;
+				}
+				for(int i=index;i<endIndex+1;i++)
+				{
 					objectString+=temp[i];
 				}
-				if(!IsCompleteObjectString(objectString)){
-					//Convenience.testLog("obobjectString:"+objectString);
-					if(list.Count == 0){
-						return list;
-						//throw new Exception("해당 배열에 요소가 없거나 해당 배열이 존재하지 않습니다");
-					}else{
-						break;
-					}
-				}
-				T listItem = new T();
-				listItem.JsonToObject(objectString);
-				list.Add(listItem);
+				T obj = new T();
+				obj.JsonToObject(objectString);
+				list.Add(obj);
+				
 				objectString = "";
+				index = temp.IndexOf("{",endIndex);
 			}
+			
+			//testLog("key:"+key+"\ndepthCount1:"+depthCount+"\ndepthCount2:"+DepthCountingOtherString(temp,endIndex)+"\nindex1:"+index+"\nindex1:"+endIndex);
+			
+			
 			
 			return list;
 		}
@@ -369,70 +349,6 @@ namespace MyJson{
 			}
 		}
 		
-		/*public Dictionary<T,G> GetDictionary<T,G>(String key){
-			int index = 0;
-			String temp = "";
-			Dictionary<T,G> dic = new Dictionary<T,G>();
-			
-			while(index != -1){ //key에 해당하는 부분에 "을 찾아 key값 전체를 가져와 매개변수로 받은 key값과 비교후 해당하는 key가 있으면 그 줄에 :의 index를 넣음
-				index = JsonIndexOf("\"",index);
-				for(int i=index+1;i<JsonString.Length;i++){
-					if(JsonString[i] == '\"'){
-						break;
-					}
-					temp+=JsonString[i];
-				}
-				if(temp == key){
-					index = JsonIndexOf("[",index);
-					break;
-				}else{
-					temp = "";
-					index = JsonIndexOf("]",index);
-				}
-			}
-			index = JsonIndexOf("\"",index);//위에서 받은 [의 위치부터 시작해 value를 받아옴
-			
-			//Key값의 위치에 있는 배열 text 전체를 temp에 넣음
-			temp = "";
-			for(int i=index+1;i<JsonString.Length;i++){
-				if(JsonString[i] == ']'){
-					break;
-				}
-				temp+=JsonString[i];
-			}
-			
-			//위에서 분리해낸 temp에서 key값과 value값을 찾아 넣어줌
-			index = 0;
-			bool swich = true;
-			String K = "";
-			String V = "";
-			while(index >= 0){
-				index = temp.IndexOf("\"",index);
-				for(int i=index+1;i<temp.Length;i++){
-					if(temp[i] == '\"'){
-						break;
-					}
-					if(swich){
-						K+=temp[i];
-					}else{
-						V+=temp[i];
-					}
-				}
-				K = K.Replace("\"","");//밸류 양옆에 "제거
-				V = V.Replace("\"","");
-				if(swich){
-					dic.Add(T.Parse(K),default(G));
-					swich = false;
-				}else{
-					dic.Add(T.Parse(K),G.Parse(V));
-					K = "";
-					V = "";
-					swich = true;
-				}
-			}
-			
-			return dic;
-		}*/
 		
 		public Dictionary<int,Object> GetDictionary(String key){
 			int index = 0;
@@ -465,32 +381,80 @@ namespace MyJson{
 			String V = "";
 			while(index >= 0){
 				index = temp.IndexOf(":",index);
-				K = GetKeyFrontColon(index);
-				V = GetValueBackColon(index);
+				if(index == -1)
+				{
+					break;
+				}
+				K = GetKeyFrontColon(temp,index);
+				V = GetValueBackColon(temp,index);
 				K = K.Replace("\"","");//밸류 양옆에 "제거
 				V = V.Replace("\"","");
 				try{
 					dic.Add(int.Parse(K),V.ToString());
 				}catch(System.FormatException e){
+					testLog(e.ToString()+"\nK:"+K+"\nV:"+V+"\n"+temp);
 					return dic;
 				}
+				catch(System.ArgumentException e){
+					testLog(e.ToString()+"\nK:"+K+"\nV:"+V+"\n"+temp);
+					return dic;
+				}
+				index++;
 			}
 			
 			return dic;
 		}
 		
-		public String GetKeyFrontColon(int colonIndex){
-			String key = "";
-			int endIndex = JsonString.LastIndexOf("\"",colonIndex);
-			int startIndex = JsonString.LastIndexOf("\"",endIndex-1);
-			return JsonString.Substring(startIndex,endIndex);
+		public int IndexOfCompleteBracket(String str,int startIndex,Char firstBracket,Char lastBracket){
+			Stack<Char> bStack = new Stack<Char>();
+			if(startIndex == -1)
+			{
+				return -1;
+			}
+			for(int i = startIndex;i<str.Length;i++){
+				if(str[i] == firstBracket)
+				{
+					bStack.Push(str[i]);
+				}
+				else if(str[i] == lastBracket){
+					bStack.Pop();
+					if(bStack.Count == 0){
+						return i;
+					}
+				}
+			}
+			return -1;
 		}
 		
-		public String GetValueBackColon(int colonIndex){
+		public String GetLineFrontBracket(String str, int index){
 			String key = "";
-			int startIndex = JsonString.IndexOf("\"",colonIndex);
-			int endIndex = JsonString.IndexOf("\"",startIndex+1);
-			return JsonString.Substring(startIndex,endIndex);
+			int endIndex = 0;
+			int startIndex = 0;
+			endIndex = str.LastIndexOf("\"",index);
+			startIndex = str.LastIndexOf("\n",endIndex-1);
+			return str.Substring(startIndex,endIndex-startIndex+2);
+		}
+		
+		public String GetKeyFrontColon(String str,int colonIndex){
+			String key = "";
+			if(colonIndex == -1)
+			{
+				return "";
+			}
+			int endIndex = str.LastIndexOf("\"",colonIndex);
+			int startIndex = str.LastIndexOf("\"",endIndex-1);
+			return str.Substring(startIndex,endIndex-startIndex);
+		}
+		
+		public String GetValueBackColon(String str,int colonIndex){
+			String key = "";
+			if(colonIndex == -1)
+			{
+				return "";
+			}
+			int startIndex = str.IndexOf("\"",colonIndex);
+			int endIndex = str.IndexOf("\"",startIndex+1);
+			return str.Substring(startIndex,endIndex-startIndex);
 		}
 		
 		public String KeyTaging(String key,String tag){

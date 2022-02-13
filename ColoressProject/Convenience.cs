@@ -101,6 +101,7 @@ public static class Convenience{
 			//DisplayLog();
 		}
 		if(delay){
+			Console.Clear();
 			Console.SetCursorPosition(0,y);
 			Console.WriteLine("                       ");
 			Console.SetCursorPosition(0,y);

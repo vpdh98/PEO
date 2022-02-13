@@ -5,6 +5,7 @@ using static DataPath;
 
 static class DataPath{
 	public const String BACKGROUND_PATH = "Save/Backgrounds/";
+	public const String ENEMY_PATH = "Save/Characters/Enemys.txt";
 }
 
 public static class DataManager{
@@ -18,6 +19,22 @@ public static class DataManager{
 		}
 		sr.Close();
 		return temp;
+	}
+	
+	public static Characters LoadCharacters(){
+		
+	}
+	
+	public static List<Enemy> LoadEnemy(){
+		
+	}
+	
+	public static List<NPC> LoadNPC(){
+		
+	}
+	
+	public static List<Player> LoadPlayer(){
+		
 	}
 	
 	///<summary>
