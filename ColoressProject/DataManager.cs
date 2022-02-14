@@ -1,11 +1,16 @@
 using System;
 using System.IO;
 using static DataPath;
+using Characters;
+using System.Collections.Generic;
+using MyJson;
 
 
 static class DataPath{
 	public const String BACKGROUND_PATH = "Save/Backgrounds/";
 	public const String ENEMY_PATH = "Save/Characters/Enemys.txt";
+	public const String NPC_PATH = "Save/Characters/NPCs.txt";
+	public const String PLAYER_PATH = "Save/Characters/Players.txt";
 }
 
 public static class DataManager{
@@ -21,20 +26,39 @@ public static class DataManager{
 		return temp;
 	}
 	
-	public static Characters LoadCharacters(){
-		
+	public static CharacterListControler LoadCharacters(){
+		CharacterListControler characters = new CharacterListControler();
+		characters.SetEnemyDictionaryAsList(LoadEnemy());
+		characters.SetNpcDictionaryAsList(LoadNPC());
+		characters.SetPlayerDictionaryAsList(LoadPlayer());
+		return characters;
 	}
 	
 	public static List<Enemy> LoadEnemy(){
-		
+		List<Enemy> list = new List<Enemy>();
+		String jsonString = ReadFile(DataPath.ENEMY_PATH);
+		Json json = new Json();
+		json.JsonString = jsonString;
+		list = json.GetJsonAbleList<Enemy>("Enemys");
+		return list;
 	}
 	
 	public static List<NPC> LoadNPC(){
-		
+		List<NPC> list = new List<NPC>();
+		String jsonString = ReadFile(DataPath.NPC_PATH);
+		Json json = new Json();
+		json.JsonString = jsonString;
+		list = json.GetJsonAbleList<NPC>("NPCs");
+		return list;
 	}
 	
 	public static List<Player> LoadPlayer(){
-		
+		List<Player> list = new List<Player>();
+		String jsonString = ReadFile(DataPath.PLAYER_PATH);
+		Json json = new Json();
+		json.JsonString = jsonString;
+		list = json.GetJsonAbleList<Player>("Players");
+		return list;
 	}
 	
 	///<summary>
@@ -68,9 +92,15 @@ public static class DataManager{
 	
 	public static void WriteFile(String filePath,String data,FileMode mode = FileMode.Append)
 	{
-		using(StreamWriter sw = new StreamWriter(new FileStream(filePath,mode)))
-		{
-			sw.Write(data);
+		try{
+			using(StreamWriter sw = new StreamWriter(new FileStream(filePath,mode)))
+			{
+
+				sw.Write(data);
+
+			}
+		}catch(IOException e){
+			//이미 있는 파일이면 아무것도 안함
 		}
 	}
 	/*void DeleteAll()

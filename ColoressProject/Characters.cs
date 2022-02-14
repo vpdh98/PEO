@@ -103,7 +103,7 @@ namespace Characters
 		
 	}
 	
-	public class Player : Character,IDamageable,ICharacterState
+	public class Player : Character,IDamageable,ICharacterState,ISaveToJson
 	{
 		public Inventory inven = new Inventory();
 		
@@ -279,6 +279,53 @@ namespace Characters
 		
 		public string CurrentState(){
 			return "";
+		}
+		
+		public String ToJsonString(){
+			Json json = new Json();
+			json.OpenObject(Name);
+			json.AddItem("Name",Name);
+			json.AddItem("Hp",Hp);
+			json.AddItem("Mp",Mp);
+			json.AddItem("MaxHp",MaxHp);
+			json.AddItem("MaxMp",MaxMp);
+			json.AddItem("AttackPower",AttackPower);
+			json.AddItem("Defense",Defense);
+			json.AddItem("AttackSpeed",AttackSpeed);
+			
+			json.AddJsonAbleList<TextAndPosition>("ReactionMessage",ReactionMessage,true);
+			json.AddJsonAbleList<TextAndPosition>("AttackMessage",AttackMessage,true);
+			
+			json.AddJsonAbleList("QuestList",QuestList,true);
+			json.AddJsonAbleObject(inven);
+			json.AddJsonAbleObject(Weapon);
+			json.AddJsonAbleObject(Armor);
+
+			json.CloseObject();
+			return json.JsonString;
+		}
+		
+		public void JsonToObject(String jsonString){
+			Json json = new Json();
+			json.JsonString = jsonString;
+			Console.WriteLine(jsonString);
+			this.Name = json.GetItem("Name");
+			this.Hp = int.Parse(json.GetItem("Hp"));
+			this.Mp = int.Parse(json.GetItem("Mp"));
+			this.MaxHp = int.Parse(json.GetItem("MaxHp"));
+			this.MaxMp = int.Parse(json.GetItem("MaxMp"));
+			this.AttackPower = int.Parse(json.GetItem("AttackPower"));
+			this.Defense = int.Parse(json.GetItem("Defense"));
+			this.AttackSpeed = int.Parse(json.GetItem("AttackSpeed"));
+		
+			this.ReactionMessage = json.GetJsonAbleList<TextAndPosition>("ReactionMessage");
+			this.AttackMessage = json.GetJsonAbleList<TextAndPosition>("AttackMessage");
+			
+			this.QuestList = json.GetJsonAbleList<Quest>("QuestList");
+			
+			this.inven = json.GetJsonAbleObject<Inventory>(inven.ToString());
+			this.Weapon = json.GetJsonAbleObject<Weapon>("Weapon");
+			this.Armor = json.GetJsonAbleObject<Armor>("Armor");
 		}
 		
 		//protected Player(Player that):base(that){}
@@ -682,15 +729,16 @@ namespace Characters
 			
 			//json.AddItem("DeathEvent",)
 			
-			json.AddJsonAbleList<TextAndPosition>("SelectMessage",SelectMessage,true);
-			json.AddJsonAbleList<TextAndPosition>("SpawnMessage",SpawnMessage,true);
-			json.AddJsonAbleList<TextAndPosition>("StateMessage",StateMessage,true);
-			json.AddJsonAbleList<TextAndPosition>("BlockMessage",BlockMessage,true);
-			json.AddJsonAbleList<TextAndPosition>("DodgeMessage",DodgeMessage,true);
-			json.AddJsonAbleList<TextAndPosition>("ReactionMessage",ReactionMessage,true);
-			json.AddJsonAbleList<TextAndPosition>("PlayerReactionMessage",PlayerReactionMessage,true);
-			json.AddJsonAbleList<TextAndPosition>("PreAttackMessage",PreAttackMessage,true);
-			json.AddJsonAbleList<TextAndPosition>("AttackMessage",AttackMessage,true);
+			//적대적 NPC설정시 필요한 정보 Json저장 테스트를위해 일단 주석처리했다.
+			// json.AddJsonAbleList<TextAndPosition>("SelectMessage",SelectMessage,true);
+			// json.AddJsonAbleList<TextAndPosition>("SpawnMessage",SpawnMessage,true);
+			// json.AddJsonAbleList<TextAndPosition>("StateMessage",StateMessage,true);
+			// json.AddJsonAbleList<TextAndPosition>("BlockMessage",BlockMessage,true);
+			// json.AddJsonAbleList<TextAndPosition>("DodgeMessage",DodgeMessage,true);
+			// json.AddJsonAbleList<TextAndPosition>("ReactionMessage",ReactionMessage,true);
+			// json.AddJsonAbleList<TextAndPosition>("PlayerReactionMessage",PlayerReactionMessage,true);
+			// json.AddJsonAbleList<TextAndPosition>("PreAttackMessage",PreAttackMessage,true);
+			// json.AddJsonAbleList<TextAndPosition>("AttackMessage",AttackMessage,true);
 			
 			json.AddJsonAbleList<TextAndPosition>("GreetMessage",GreetMessage,true);
 			json.AddJsonAbleList<TextAndPosition>("ConversationMessage",ConversationMessage,true);
@@ -712,12 +760,51 @@ namespace Characters
 		}
 		
 		public void JsonToObject(String jsonString){
-		
+			Json json = new Json();
+			json.JsonString = jsonString;
+			Console.WriteLine(jsonString);
+			this.Name = json.GetItem("Name");
+			this.Hp = int.Parse(json.GetItem("Hp"));
+			this.Mp = int.Parse(json.GetItem("Mp"));
+			this.MaxHp = int.Parse(json.GetItem("MaxHp"));
+			this.MaxMp = int.Parse(json.GetItem("MaxMp"));
+			this.AttackPower = int.Parse(json.GetItem("AttackPower"));
+			this.Defense = int.Parse(json.GetItem("Defense"));
+			this.AttackSpeed = int.Parse(json.GetItem("AttackSpeed"));
+			this.SpawnChance = int.Parse(json.GetItem("SpawnChance"));
+			this.IsSpawn = bool.Parse(json.GetItem("IsSpawn"));
+			this.IsSpawnOnce = bool.Parse(json.GetItem("IsSpawnOnce"));
+			
+			//적대적 NPC설정시 필요한 정보 Json저장 테스트를위해 일단 주석처리했다.
+			// this.SelectMessage = json.GetJsonAbleList<TextAndPosition>("SelectMessage");
+			// this.SpawnMessage = json.GetJsonAbleList<TextAndPosition>("SpawnMessage");
+			// this.StateMessage = json.GetJsonAbleList<TextAndPosition>("StateMessage");
+			// this.BlockMessage = json.GetJsonAbleList<TextAndPosition>("BlockMessage");
+			// this.DodgeMessage = json.GetJsonAbleList<TextAndPosition>("DodgeMessage");
+			// this.ReactionMessage = json.GetJsonAbleList<TextAndPosition>("ReactionMessage");
+			// this.PlayerReactionMessage = json.GetJsonAbleList<TextAndPosition>("PlayerReactionMessage");
+			// this.PreAttackMessage = json.GetJsonAbleList<TextAndPosition>("PreAttackMessage");
+			// this.AttackMessage = json.GetJsonAbleList<TextAndPosition>("AttackMessage");
+			
+			this.GreetMessage = json.GetJsonAbleList<TextAndPosition>("GreetMessage");
+			this.ConversationMessage = json.GetJsonAbleList<TextAndPosition>("ConversationMessage");
+			this.QuestAcceptMessage = json.GetJsonAbleList<TextAndPosition>("QuestAcceptMessage");
+			this.QuestRejectMessage = json.GetJsonAbleList<TextAndPosition>("QuestRejectMessage");
+			this.QuestCompleteMassage = json.GetJsonAbleList<TextAndPosition>("QuestCompleteMassage");
+			this.RevisitGreetMessage = json.GetJsonAbleList<TextAndPosition>("RevisitGreetMessage");
+			this.RevisitConversationMessage = json.GetJsonAbleList<TextAndPosition>("RevisitConversationMessage");
+			this.RevisitQuestAcceptMessage = json.GetJsonAbleList<TextAndPosition>("RevisitQuestAcceptMessage");
+			this.RevisitQuestRejectMessage = json.GetJsonAbleList<TextAndPosition>("RevisitQuestRejectMessage");
+			this.PreQuestMessage = json.GetJsonAbleList<TextAndPosition>("PreQuestMessage");
+			this.RevisitPreQuestMessage = json.GetJsonAbleList<TextAndPosition>("RevisitPreQuestMessage");
+			this.QuestIntroductionMessage = json.GetJsonAbleList<TextAndPosition>("QuestIntroductionMessage");
+			this.CompleteQuestListMessage = json.GetJsonAbleList<TextAndPosition>("CompleteQuestListMessage");
+			this.PreCompleteQuestListMessage = json.GetJsonAbleList<TextAndPosition>("PreCompleteQuestListMessage");
 		}
 	
 	}
 	
-	public class CharacterList : ISaveToJson{
+	public class CharacterListControler{
 		Dictionary<String,Player> PlayerDictionary{get;set;}
 		Dictionary<String,Enemy> EnemyDictionary{get;set;}
 		Dictionary<String,NPC> NpcDictionary{get;set;}
@@ -730,7 +817,7 @@ namespace Characters
 		Enemy enemy;
 		NPC npc;
 		
-		public CharacterList(){
+		public CharacterListControler(){
 			PlayerDictionary = new Dictionary<String,Player>();
 			EnemyDictionary = new Dictionary<String,Enemy>();
 			NpcDictionary = new Dictionary<String,NPC>();
@@ -1087,6 +1174,28 @@ namespace Characters
 			NpcList = new List<NPC>(NpcDictionary.Values);
 		}
 		
+		public void SetEnemyDictionaryAsList(List<Enemy> list){
+			EnemyList = list;
+			EnemyDictionary = new Dictionary<String,Enemy>();
+			foreach(Enemy e in list){
+				EnemyDictionary.Add(e.Name,e);
+			}
+		}
+		public void SetNpcDictionaryAsList(List<NPC> list){
+			NpcList = list;
+			NpcDictionary = new Dictionary<String,NPC>();
+			foreach(NPC n in list){
+				NpcDictionary.Add(n.Name,n);
+			}
+		}
+		public void SetPlayerDictionaryAsList(List<Player> list){
+			PlayerList = list;
+			PlayerDictionary = new Dictionary<String,Player>();
+			foreach(Player p in list){
+				PlayerDictionary.Add(p.Name,p);
+			}
+		}
+		
 		public NPC GetNpcOriginal(String name){ //원본임. 복사할 필요가 없다고 판단 2021.12.31
 			try{
 				return NpcDictionary[name];
@@ -1129,17 +1238,27 @@ namespace Characters
 			return PlayerDictionary[name];
 		}
 		
-		public String ToJsonString()
+		public String EnemyListToJsonString()
 		{
 			Json json = new Json();
 			json.AddJsonAbleList<Enemy>("Enemys",EnemyList);
 			return json.JsonString;
 		}
 		
-		public void JsonToObject(String jsonString)
+		public String NpcListToJsonString()
 		{
-			
+			Json json = new Json();
+			json.AddJsonAbleList<NPC>("NPCs",NpcList);
+			return json.JsonString;
 		}
+		
+		public String PlayerListToJsonString()
+		{
+			Json json = new Json();
+			json.AddJsonAbleList<Player>("Players",PlayerList);
+			return json.JsonString;
+		}
+		
 		
 		/*public Character GetCharacter(String Name){
 			return characterList[Name];

@@ -45,7 +45,7 @@ public static class ItemData{
 public static class PlayData{
 	public static String savePoint = "c1";
 	public static String currentChoice = "c1"; //첫 화면
-	public static CharacterList CList = new CharacterList();
+	public static CharacterListControler CList = DataManager.LoadCharacters();
 	public static Choice currentOpenChoice; //현재 Display되고 있는 Choice를 담는변수. 접근에 주의!!
 	public static Choice accessAbleChoice; //접근할 Choice를 담는다
 	
@@ -108,8 +108,12 @@ namespace Game
 			// Choice choice1 = new Choice();
 			// choice1.JsonToObject(jString);
 			
-			String jString2 = CList.ToJsonString();
-			WriteFile(DataPath.ENEMY_PATH,jString2);
+			//CreateDirectoryAndFile(DataPath.ENEMY_PATH);
+			// String jString2 = CList.EnemyListToJsonString();
+			// WriteFile(DataPath.ENEMY_PATH,jString2,FileMode.CreateNew);
+			// jString2 = CList.NpcListToJsonString();
+			// WriteFile(DataPath.NPC_PATH,jString2,FileMode.CreateNew);
+			
 			
 			//testLog(choice1.SelectText[0].text);
 			
@@ -144,26 +148,31 @@ namespace Game
 			
 			
 			
-			player = CList.GetPlayer("용사");
+		    // player = CList.GetPlayer("용사");
 			
-			player.inven.AddItem(new Item());
-			player.inven.AddItem(itemList.GetItem("전설의검"));
-			player.inven.AddItem(new Item(){Name = "HP물약"});
-			player.inven.AddItem(new Item(){Name = "MP물약"});
-			player.inven.AddItem(new Item(){Name = "무색 프리즘"});
-			player.inven.AddItem(new Item(){Name = "???"});
-			player.inven.AddItem(new Weapon(){Name = "낡은 검",ItemExplan="이것은 네후쉽이 파는 검 중\n하나로 낡아 오히려 도움이\n되지 않을것 같은 검이다.",AttackPower = -3,AttackSpeed = 1});
-			player.inven.AddItem(new Item(){Name = "고장난 시계"});
-			player.inven.AddItem(new Item(){Name = "꿀"});
-			player.inven.AddItem(new Item(){Name = "향로"});
-			player.inven.AddItem(new Item(){Name = "피리"});
-			player.inven.AddItem(new Item(){Name = "파리"});
-			player.inven.AddItem(new Armor(){Name = "낡은 방패",ItemExplan="이것은 네후쉽이 파는 방패 중\n하나로 공격을 막을 수 있을지\n장담할 수 없다.",Defense = 1});
-			player.inven.AddItem(new Armor(){Name = "황금 갑옷",ItemExplan="보기만해도 눈이 부시는 황금 \n갑옷 이다. 과연 방어력은 어\n떨지..",Defense = 10});
-			player.inven.AddItem(new Item(){Name = "네후쉽의 수프"});
-			player.inven.AddItem(new Item(){Name = "Red 프리즘"});
-			player.inven.AddItem(new Item(){Name = "??????"});
+			// player.inven.AddItem(new Item());
+			// player.inven.AddItem(itemList.GetItem("전설의검"));
+			// player.inven.AddItem(new Item(){Name = "HP물약"});
+			// player.inven.AddItem(new Item(){Name = "MP물약"});
+			// player.inven.AddItem(new Item(){Name = "무색 프리즘"});
+			// player.inven.AddItem(new Item(){Name = "???"});
+			// player.inven.AddItem(new Weapon(){Name = "낡은 검",ItemExplan="이것은 네후쉽이 파는 검 중\n하나로 낡아 오히려 도움이\n되지 않을것 같은 검이다.",AttackPower = -3,AttackSpeed = 1});
+			// player.inven.AddItem(new Item(){Name = "고장난 시계"});
+			// player.inven.AddItem(new Item(){Name = "꿀"});
+			// player.inven.AddItem(new Item(){Name = "향로"});
+			// player.inven.AddItem(new Item(){Name = "피리"});
+			// player.inven.AddItem(new Item(){Name = "파리"});
+			// player.inven.AddItem(new Armor(){Name = "낡은 방패",ItemExplan="이것은 네후쉽이 파는 방패 중\n하나로 공격을 막을 수 있을지\n장담할 수 없다.",Defense = 1});
+			// player.inven.AddItem(new Armor(){Name = "황금 갑옷",ItemExplan="보기만해도 눈이 부시는 황금 \n갑옷 이다. 과연 방어력은 어\n떨지..",Defense = 10});
+			// player.inven.AddItem(new Item(){Name = "네후쉽의 수프"});
+			// player.inven.AddItem(new Item(){Name = "Red 프리즘"});
+			// player.inven.AddItem(new Item(){Name = "??????"});
 			
+			 // player.Weapon = (Weapon)itemList.GetItem("전설의검");
+			 // player.Armor = new Armor(){Name = "황금 갑옷",ItemExplan="보기만해도 눈이 부시는 황금 \n갑옷 이다. 과연 방어력은 어\n떨지..",Defense = 10};
+			
+			 // jString2 = CList.PlayerListToJsonString();
+			 // WriteFile(DataPath.PLAYER_PATH,jString2,FileMode.CreateNew);
 			
 			Task.Factory.StartNew(BattleCal);	
 			
@@ -1384,3 +1393,16 @@ QuickDelegate = ()=>{
 //2022.02.12
 //대부분의 서치는 위에 방식으로 바꿧다.
 //MyJson에 GetJsonAbleList메소드가 문제다 해결하자
+
+//2022.02.13
+//오늘은 서치방식 변경, 괄호 확인하는 메소드 추가
+//그래서 choice 객체 저장,불러오기,객체화까지 모두 성공했다! 짝짝짝
+//내일은 데이터를 저장하고 불러오는 메소드를 구현해보자
+
+//2022.02.14
+//CharacterList의 이름을 CharacterListControler로 바꾸고
+//Enemy,NPC,Player의 데이터를 Json형식으로 저장하고 불러오는 기능을 구현하였다.
+//결과는 대성공!
+//이제 게임 데이터들을 파일로 저장할 수 있다.
+//하나씩 차근차근 옮기는 작업을 해보자.
+//Inventory에 Item이 하나도 없을경우 오류가 발생하는것 같다. 함 보자.

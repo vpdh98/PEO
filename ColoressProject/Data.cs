@@ -69,7 +69,7 @@ public class Scenario{
 		public int Count{get;set;}
 		
 		public Scenario(){ //지금은 choice생성할때 SelectText,OnlyShowText중 하나라도 없으면 실행 불가
-			CharacterList characterList = new CharacterList();
+			CharacterListControler characterList = new CharacterListControler();
 			
 			clikX = 15;
 			clikY = 7;

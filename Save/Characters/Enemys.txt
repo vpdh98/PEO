@@ -53,6 +53,7 @@
             }
         ],
         "SpawnMessage":[
+    ,
             "TextAndPosition":{
                 "text":"반투명한 초록빛깔, 바닥에 눌러붙은 듯한 탱글탱글한 점액질",
                 "x":"0",
@@ -81,6 +82,7 @@
             }
         ],
         "StateMessage":[
+    ,
             "TextAndPosition":{
                 "text":"탱글 탱글 함을 과시하고 있다.",
                 "x":"0",
@@ -135,6 +137,7 @@
             }
         ],
         "BlockMessage":[
+    ,
             "TextAndPosition":{
                 "text":"슬라임이 맥없이 팅겨나갔다.",
                 "x":"0",
@@ -163,6 +166,7 @@
             }
         ],
         "DodgeMessage":[
+    ,
             "TextAndPosition":{
                 "text":"점액질 덩어리를 가볍게 피해냈다.",
                 "x":"0",
@@ -191,6 +195,7 @@
             }
         ],
         "ReactionMessage":[
+    ,
             "TextAndPosition":{
                 "text":"슬라임의 점액질이 아주 조금 튀었다.",
                 "x":"0",
@@ -245,6 +250,7 @@
             }
         ],
         "PlayerReactionMessage":[
+    ,
             "TextAndPosition":{
                 "text":"말랑말랑 기분이 좋다.",
                 "x":"0",
@@ -299,6 +305,7 @@
             }
         ],
         "PreAttackMessage":[
+    ,
             "TextAndPosition":{
                 "text":"내가 머뭇거리는 사이 슬라임이 튀어올랐다.",
                 "x":"0",
@@ -314,6 +321,7 @@
             }
         ],
         "AttackMessage":[
+    ,
             "TextAndPosition":{
                 "text":"슬라임의 몸통박치기!!",
                 "x":"0",
@@ -383,6 +391,7 @@
             }
         ],
         "SpawnMessage":[
+    ,
             "TextAndPosition":{
                 "text":"초점 없는 눈동자,",
                 "x":"0",
@@ -411,6 +420,7 @@
             }
         ],
         "StateMessage":[
+    ,
             "TextAndPosition":{
                 "text":"나를 향해 미친듯이 달려온다.",
                 "x":"0",
@@ -465,6 +475,7 @@
             }
         ],
         "BlockMessage":[
+    ,
             "TextAndPosition":{
                 "text":"망자는 뒤로 넘어졌다.",
                 "x":"0",
@@ -493,6 +504,7 @@
             }
         ],
         "DodgeMessage":[
+    ,
             "TextAndPosition":{
                 "text":"망자의 손톱이 코앞을 스친다.",
                 "x":"0",
@@ -521,6 +533,7 @@
             }
         ],
         "ReactionMessage":[
+    ,
             "TextAndPosition":{
                 "text":"효과가 없는듯 그대로 달려든다.",
                 "x":"0",
@@ -575,6 +588,7 @@
             }
         ],
         "PlayerReactionMessage":[
+    ,
             "TextAndPosition":{
                 "text":"망자의 손톱이 힘없이 부딪쳤다. 간지럽지도 않다.",
                 "x":"0",
@@ -629,6 +643,7 @@
             }
         ],
         "PreAttackMessage":[
+    ,
             "TextAndPosition":{
                 "text":"나보다 망자가 더 빠르게 움직였다.",
                 "x":"0",
@@ -644,6 +659,7 @@
             }
         ],
         "AttackMessage":[
+    ,
             "TextAndPosition":{
                 "text":"망자의 손톱 할퀴기!",
                 "x":"0",
@@ -713,6 +729,7 @@
             }
         ],
         "SpawnMessage":[
+    ,
             "TextAndPosition":{
                 "text":"온몸이 초록색인 이성잃은 괴물..",
                 "x":"0",
@@ -741,6 +758,7 @@
             }
         ],
         "StateMessage":[
+    ,
             "TextAndPosition":{
                 "text":"멀뚱히 서있다.",
                 "x":"0",
@@ -795,6 +813,7 @@
             }
         ],
         "BlockMessage":[
+    ,
             "TextAndPosition":{
                 "text":"달려들던 헐크는 그대로 막혔다.",
                 "x":"0",
@@ -823,6 +842,7 @@
             }
         ],
         "DodgeMessage":[
+    ,
             "TextAndPosition":{
                 "text":"헐크가 내가 있던 자리를 지난다.",
                 "x":"0",
@@ -851,6 +871,7 @@
             }
         ],
         "ReactionMessage":[
+    ,
             "TextAndPosition":{
                 "text":"간지러운듯 콧웃음을 친다.",
                 "x":"0",
@@ -905,6 +926,7 @@
             }
         ],
         "PlayerReactionMessage":[
+    ,
             "TextAndPosition":{
                 "text":"헐크의 거대한 주먹이 솜방망이 처럼 느껴진다.",
                 "x":"0",
@@ -959,6 +981,7 @@
             }
         ],
         "PreAttackMessage":[
+    ,
             "TextAndPosition":{
                 "text":"헐크에게 눈을 돌린 순간 눈앞에서 헐크는 사라졌다.",
                 "x":"0",
@@ -974,6 +997,7 @@
             }
         ],
         "AttackMessage":[
+    ,
             "TextAndPosition":{
                 "text":"헐크의 주먹 내려치기!",
                 "x":"0",
@@ -1043,6 +1067,7 @@
             }
         ],
         "SpawnMessage":[
+    ,
             "TextAndPosition":{
                 "text":"야생의 경민이가 출현했다.",
                 "x":"0",
@@ -1071,6 +1096,7 @@
             }
         ],
         "StateMessage":[
+    ,
             "TextAndPosition":{
                 "text":"곧장이라도 날아올듯 팔팔하다.",
                 "x":"0",
@@ -1125,6 +1151,7 @@
             }
         ],
         "BlockMessage":[
+    ,
             "TextAndPosition":{
                 "text":"경민이를 막았다.",
                 "x":"0",
@@ -1153,6 +1180,7 @@
             }
         ],
         "DodgeMessage":[
+    ,
             "TextAndPosition":{
                 "text":"냉장고를 피했다.",
                 "x":"0",
@@ -1181,6 +1209,7 @@
             }
         ],
         "ReactionMessage":[
+    ,
             "TextAndPosition":{
                 "text":"간지러운듯 콧웃음을 친다.",
                 "x":"0",
@@ -1235,6 +1264,7 @@
             }
         ],
         "PlayerReactionMessage":[
+    ,
             "TextAndPosition":{
                 "text":"간지러운데..?",
                 "x":"0",
@@ -1290,6 +1320,7 @@
             }
         ],
         "PreAttackMessage":[
+    ,
             "TextAndPosition":{
                 "text":"눈깜짝할 사이 경민이가 배치기를 시도한다.",
                 "x":"0",
@@ -1305,6 +1336,7 @@
             }
         ],
         "AttackMessage":[
+    ,
             "TextAndPosition":{
                 "text":"경민이의 배치기!!!",
                 "x":"0",

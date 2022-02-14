@@ -56,8 +56,13 @@ namespace MyJson{
 			depth--;
 			JsonString += "\n"+GetTap(depth)+"]";
 			objectCount = 0;
-			if(!isItem)
+			if(!isItem){
 				itemCount = 0;
+				objectCount = 0;
+			}else{
+				itemCount++;
+				objectCount++;
+			}
 			//arrayDepth--;
 			//arrayCount++;
 			return JsonString;
@@ -71,8 +76,18 @@ namespace MyJson{
 			return JsonString;
 		}
 		public String AddJsonAbleObject(ISaveToJson obj){
-			String objJsonString = obj.ToJsonString();
-			String[] temp = objJsonString.Split('\n');
+			String objJsonString = "";
+			String[] temp;
+			if(obj == null)
+			{
+				return JsonString;//temp = (obj.ToString()+":null").Split('\n');
+			}
+			else
+			{
+				objJsonString = obj.ToJsonString();
+				temp = objJsonString.Split('\n');
+			}
+			
 			JsonString += ((objectCount > 0)?",\n":"");
 			for(int i = 0;i<temp.Length;i++){
 				if(i == temp.Length-1){
@@ -186,9 +201,13 @@ namespace MyJson{
 			
 			
 			index = JsonIndexOf(KeyTaging(key,ITEM_TAG),index);
-			if(index > endIndex || index == -1){
-				throw new Exception("찾는 아이템이 해당 객체에 없습니다.key->"+KeyTaging(key,ITEM_TAG)+"<-key\n");
+			if(endIndex == -1){
+				throw new Exception("올바른 형식의 객체가 아닙니다.key->"+KeyTaging(key,ITEM_TAG)+"<-key\n"+JsonString);
 			}
+			if(index == -1){
+				throw new Exception("찾는 아이템이 해당 객체에 없습니다.key->"+KeyTaging(key,ITEM_TAG)+"<-key\n"+JsonString);
+			}
+			
 			
 			if(index >= 0){
 				index = JsonIndexOf(":",index);
@@ -204,6 +223,8 @@ namespace MyJson{
 				temp+=JsonString[i];
 			}
 			temp = temp.Replace("\"","");//밸류 양옆에 "제거
+			//깊이를 표현하기 위해 추가된 tap(공백4칸)을 제거
+			temp = temp.Replace("    ","");
 			
 			return temp;
 		}
@@ -224,18 +245,12 @@ namespace MyJson{
 				throw new Exception("해당 객체가 없습니다.");
 			}
 			
-			depthCount = DepthCounting(index);
-			endIndex = index;
 			//해당 객체의 끝의 인덱스를 저장, 찾은 아이템이 그 endIndex보다 큰 index위치에 있으면 검색 종료
-			do{
-				endIndex++;
-				endIndex = JsonIndexOf("}",endIndex);
-				if(endIndex == -1) throw new Exception("올바른 객체 형태가 아님 key->"+key+"<-key\n");
-			}while(depthCount != DepthCounting(endIndex));
+			endIndex = IndexOfCompleteBracket(JsonString,index,'{','}');
 			
 			//Key값의 위치에 있는 객체 text전체를 temp에 넣음
 			temp = "";
-			for(int i=index;i<endIndex;i++){
+			for(int i=index;i<endIndex+1;i++){
 				temp+=JsonString[i];
 			}
 			obj.JsonToObject(temp);

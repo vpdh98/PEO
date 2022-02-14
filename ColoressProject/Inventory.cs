@@ -2,9 +2,10 @@ using System;
 using System.Collections.Generic;
 using static Define;
 using static GameWindows;
+using MyJson;
 
 
-public class Inventory {
+public class Inventory : ISaveToJson{
 	public List<Item> InventoryList{get;set;}
 	Choice invenCho;
 	Dictionary<String,Item> invenListObject;
@@ -138,6 +139,20 @@ public class Inventory {
 				OutInven = true;			
 			}
 		return;
+	}
+	
+	public String ToJsonString(){
+		Json json = new Json();
+		json.OpenObject("Inventory");
+		json.AddJsonAbleList("InventoryList",InventoryList);
+		json.CloseObject();
+		return json.JsonString;
+		
+	}
+	public void JsonToObject(String jsonString){
+		Json json = new Json();
+		json.JsonString = jsonString;
+		this.InventoryList = json.GetJsonAbleList<Item>("InventoryList");
 	}
 	
 }

@@ -158,7 +158,7 @@ public class Weapon : Equipment{
 	
 	public override String ToJsonString(){
 		Json json = new Json();
-		json.OpenObject("Item");
+		json.OpenObject("Weapon");
 		json.AddItem("Name",Name);
 		json.AddItem("IsStackable",IsStackable);
 		json.AddItem("ItemExplan",ItemExplan);
@@ -166,7 +166,7 @@ public class Weapon : Equipment{
 		json.AddItem("IsEquip",IsEquip);
 		json.AddItem("AttackPower",AttackPower);
 		json.AddItem("AttackSpeed",AttackSpeed);
-		json.AddItem("AttackMessage",AttackMessage);
+		json.AddJsonAbleList("AttackMessage",AttackMessage);
 		json.CloseObject();
 		return json.JsonString;
 	}
@@ -205,7 +205,7 @@ public class Armor : Equipment{
 	
 	public override String ToJsonString(){
 		Json json = new Json();
-		json.OpenObject("Item");
+		json.OpenObject("Armor");
 		json.AddItem("Name",Name);
 		json.AddItem("IsStackable",IsStackable);
 		json.AddItem("ItemExplan",ItemExplan);
