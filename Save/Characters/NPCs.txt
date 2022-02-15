@@ -11,6 +11,7 @@
         "SpawnChance":"0",
         "IsSpawn":"False",
         "IsSpawnOnce":"False",
+        "DeathEvent":"null",
         "SelectMessage":[
             "TextAndPosition":{
                 "text":"noNamed",
@@ -175,6 +176,74 @@
                 "Highlight":"null",
                 "HighlightColor":"Black",
                 "Layout":"NO_LAYOUT"
+            }
+        ],
+        "QuestList":[
+    ,
+            "Quest":{
+                "QuestName":"슬라임 사냥",
+                "QuestContentsName":"SlimeHuntQuest",
+                "QuestReward":[
+                    "Reward":{
+                        "Name":"null"
+                    }
+                ],
+                "QuestCompleteMessage":"잘했네",
+                "isComplete":"False",
+                "isAccept":"False",
+                "isReject":"False"
+            },
+            "Quest":{
+                "QuestName":"망자 사냥",
+                "QuestContentsName":"DeadManHuntQuest",
+                "QuestReward":[
+                    "Reward":{
+                        "Name":"null"
+                    }
+                ],
+                "QuestCompleteMessage":"잘했네",
+                "isComplete":"False",
+                "isAccept":"False",
+                "isReject":"False"
+            },
+            "Quest":{
+                "QuestName":"폐가 방문",
+                "QuestContentsName":"VisitAbandonedHouse",
+                "QuestReward":[
+                    "Reward":{
+                        "Name":"null"
+                    }
+                ],
+                "QuestCompleteMessage":"잘했네",
+                "isComplete":"False",
+                "isAccept":"False",
+                "isReject":"False"
+            },
+            "Quest":{
+                "QuestName":"피부에 좋은 슬라임 젤",
+                "QuestContentsName":"GetSlimeJell",
+                "QuestReward":[
+                    "Reward":{
+                        "Name":"null"
+                    }
+                ],
+                "QuestCompleteMessage":"잘했네",
+                "isComplete":"False",
+                "isAccept":"False",
+                "isReject":"False"
+            },
+            "Quest":{
+                "QuestName":"testMeeting",
+                "QuestContentsName":"testMeeting",
+                "QuestReward":[
+                    "Reward":{
+                        "Name":"null"
+                    }
+                ],
+                "QuestCompleteMessage":"잘했네",
+                "isComplete":"False",
+                "isAccept":"False",
+                "isReject":"False"
             }
         ],
         "GreetMessage":[

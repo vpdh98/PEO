@@ -1,0 +1,178 @@
+"QuestList":[
+    "Quest":{
+        "QuestName":"슬라임 사냥",
+        "QuestContentsName":"SlimeHuntQuest",
+        "QuestReward":[
+            "ItemReward":{
+                "Name":"null",
+                "Items":[
+                    "Weapon":{
+                        "Name":"전설의검",
+                        "IsStackable":"False",
+                        "ItemExplan":"이것은 전설의 괴물
+                    헐크를 죽일 수 있다는
+                    전설의 검이다",
+                        "DropChance":"0",
+                        "IsEquip":"False",
+                        "AttackPower":"9999",
+                        "AttackSpeed":"99",
+                        "AttackMessage":[
+                            "TextAndPosition":{
+                                "text":"전설의 검은 마치 유성우와 같은 궤적을 남겼다.",
+                                "x":"0",
+                                "y":"0",
+                                "textDelay":"10",
+                                "color":"Black",
+                                "PriorityLayer":"0",
+                                "isStream":"False",
+                                "AlignH":"False",
+                                "Highlight":"null",
+                                "HighlightColor":"Black",
+                                "Layout":"NO_LAYOUT"
+                            },
+                            "TextAndPosition":{
+                                "text":"산을 가를듯한 기세로 검을 휘둘렀다.",
+                                "x":"0",
+                                "y":"0",
+                                "textDelay":"10",
+                                "color":"Black",
+                                "PriorityLayer":"0",
+                                "isStream":"False",
+                                "AlignH":"False",
+                                "Highlight":"null",
+                                "HighlightColor":"Black",
+                                "Layout":"NO_LAYOUT"
+                            },
+                            "TextAndPosition":{
+                                "text":"일섬",
+                                "x":"0",
+                                "y":"0",
+                                "textDelay":"10",
+                                "color":"Black",
+                                "PriorityLayer":"0",
+                                "isStream":"False",
+                                "AlignH":"False",
+                                "Highlight":"null",
+                                "HighlightColor":"Black",
+                                "Layout":"NO_LAYOUT"
+                            }
+                        ]
+                    },
+                    "Item":{
+                        "Name":"금반지",
+                        "IsStackable":"False",
+                        "ItemExplan":"아이템 설명",
+                        "DropChance":"0"
+                    },
+                    "Item":{
+                        "Name":"마을 공로 훈장",
+                        "IsStackable":"False",
+                        "ItemExplan":"아이템 설명",
+                        "DropChance":"0"
+                    }
+                ]
+            }
+        ],
+        "QuestCompleteMessage":"오! 역시 슬라임 정도는 아무것도 아닌건가? 고맙네.",
+        "isComplete":"False",
+        "isAccept":"False",
+        "isReject":"False"
+    },
+    "Quest":{
+        "QuestName":"망자 사냥",
+        "QuestContentsName":"DeadManHuntQuest",
+        "QuestReward":[
+            "ItemReward":{
+                "Name":"null",
+                "Items":[
+                    "Armor":{
+                        "Name":"황금갑옷",
+                        "IsStackable":"False",
+                        "ItemExplan":"전설의 황금갑옷
+                    전설적인 갑옷이다.
+                    전설적인 갑옷이여서 그런지
+                    순도 100%의 황금임에도
+                    꽤 높은 방어력을 자랑한다.",
+                        "DropChance":"0",
+                        "IsEquip":"False",
+                        "Defense":"10"
+                    }
+                ]
+            }
+        ],
+        "QuestCompleteMessage":"망자를 이리 쉽게 처리하다니. 대단하군!",
+        "isComplete":"False",
+        "isAccept":"False",
+        "isReject":"False"
+    },
+    "Quest":{
+        "QuestName":"폐가 방문",
+        "QuestContentsName":"VisitAbandonedHouse",
+        "QuestReward":[
+            "ItemReward":{
+                "Name":"null",
+                "Items":[
+                    "Item":{
+                        "Name":"지하실열쇠",
+                        "IsStackable":"False",
+                        "ItemExplan":"아이템 설명",
+                        "DropChance":"0"
+                    }
+                ]
+            }
+        ],
+        "QuestCompleteMessage":"날아다니는 냉장고가 습격했다고?
+    도데체 무슨 소릴 하는건가?
+    흐흠..아무튼 보상은 주겠네..",
+        "isComplete":"False",
+        "isAccept":"False",
+        "isReject":"False"
+    },
+    "Quest":{
+        "QuestName":"피부에 좋은 슬라임 젤",
+        "QuestContentsName":"GetSlimeJell",
+        "QuestReward":[
+            "ItemReward":{
+                "Name":"null",
+                "Items":[
+                    "Item":{
+                        "Name":"촌장의 일기",
+                        "IsStackable":"False",
+                        "ItemExplan":"xxxx.xx.xx
+                    곧 있으면 아내의 생일이다.
+                    요즘 벌레가 많아져
+                    아내의 피부건강이 걱정된다.
+                    슬라임 젤이면 아내의 피부
+                    건강을 지킬 수 있을 것이다.",
+                        "DropChance":"0"
+                    }
+                ]
+            }
+        ],
+        "QuestCompleteMessage":"오오 고맙구먼. 아내가 좋아하겠어!",
+        "isComplete":"False",
+        "isAccept":"False",
+        "isReject":"False"
+    },
+    "Quest":{
+        "QuestName":"testMeeting",
+        "QuestContentsName":"testMeeting",
+        "QuestReward":[
+            "ItemReward":{
+                "Name":"null",
+                "Items":[
+                    "Item":{
+                        "Name":"보상",
+                        "IsStackable":"False",
+                        "ItemExplan":"아이템 설명",
+                        "DropChance":"0"
+                    }
+                ]
+            }
+        ],
+        "QuestCompleteMessage":"그래 나일세.",
+        "isComplete":"False",
+        "isAccept":"False",
+        "isReject":"False"
+    }
+]

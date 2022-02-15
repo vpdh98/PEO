@@ -378,7 +378,7 @@ public static class BattleSystem{
 				GameManager.DespawnEnemy(globerEnemy.Name,PlayData.WorldMap.GetChoice(backField));
 			
 			if(globerEnemy.DeathEvent != null)
-				globerEnemy.DeathEvent();		//여기서 backField에 접근하므로 DespawnEnemy가 먼저 실행되어야한다.
+				PlayData.delegateList.ActionList[globerEnemy.DeathEvent]();		//여기서 backField에 접근하므로 DespawnEnemy가 먼저 실행되어야한다.
 				
 			battleAnd = true;
 			turnAnd = true;

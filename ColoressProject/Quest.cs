@@ -132,6 +132,7 @@ public class Quest : ICloneable,ISaveToJson{ //퀘스트 객체, 이걸 NPC와 P
 		json.JsonString = jsonString;
 		this.QuestName = json.GetItem("QuestName");
 		this.QuestContentsName = json.GetItem("QuestContentsName");
+		this.QuestReward = json.GetJsonAbleList<Reward>("QuestReward");
 	}
 }
 
@@ -429,7 +430,9 @@ public class Reward : ICloneable,ISaveToJson{ //퀘스트의 보상
 		return json.JsonString;
 	}
 	public virtual void JsonToObject(String jsonString){
-		
+		Json json = new Json();
+		json.JsonString = jsonString;
+		this.Name = json.GetItem("Name");
 	}
 	
 }
@@ -587,5 +590,11 @@ public class QuestData{
 			},
 			QuestCompleteMessage = new TextAndPosition("그래 나일세.",10){AlignH = true,Layout = TextLayout.ONLY_SHOW_DEFAULT}
 		});
+	}
+	
+	public String QuestListToJsonString(){
+		Json json = new Json();
+		json.AddJsonAbleList<Quest>("QuestList",QuestDatas);
+		return json.JsonString;
 	}
 }

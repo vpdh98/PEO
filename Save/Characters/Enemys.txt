@@ -11,6 +11,7 @@
         "SpawnChance":"70",
         "IsSpawn":"False",
         "IsSpawnOnce":"False",
+        "DeathEvent":"null",
         "SelectMessage":[
             "TextAndPosition":{
                 "text":"어 슬라임이다.",
@@ -349,6 +350,7 @@
         "SpawnChance":"50",
         "IsSpawn":"False",
         "IsSpawnOnce":"False",
+        "DeathEvent":"null",
         "SelectMessage":[
             "TextAndPosition":{
                 "text":"사람인가?",
@@ -687,6 +689,7 @@
         "SpawnChance":"10",
         "IsSpawn":"False",
         "IsSpawnOnce":"False",
+        "DeathEvent":"null",
         "SelectMessage":[
             "TextAndPosition":{
                 "text":"저게 뭐야!!!",
@@ -1025,6 +1028,7 @@
         "SpawnChance":"0",
         "IsSpawn":"False",
         "IsSpawnOnce":"True",
+        "DeathEvent":"spawnGyeonmin",
         "SelectMessage":[
             "TextAndPosition":{
                 "text":"야생의 경민이!!!!",

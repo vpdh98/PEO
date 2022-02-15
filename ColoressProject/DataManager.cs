@@ -11,6 +11,7 @@ static class DataPath{
 	public const String ENEMY_PATH = "Save/Characters/Enemys.txt";
 	public const String NPC_PATH = "Save/Characters/NPCs.txt";
 	public const String PLAYER_PATH = "Save/Characters/Players.txt";
+	public const String QUEST_PATH = "Save/Quests/QuestList.txt";
 }
 
 public static class DataManager{
@@ -61,6 +62,14 @@ public static class DataManager{
 		return list;
 	}
 	
+	public static List<Quest> LoadQuest(){
+		List<Quest> list = new List<Quest>();
+		String jsonString = ReadFile(DataPath.QUEST_PATH);
+		Json json = new Json();
+		json.JsonString = jsonString;
+		list = json.GetJsonAbleList<Quest>("QuestList");
+		return list;
+	}
 	///<summary>
 	///매개변수로 전달받은 경로에 디렉토리와 파일을 생성한다.
 	///해당 경로에 해당 파일이 이미 존재한다면 생성하지 않는다.

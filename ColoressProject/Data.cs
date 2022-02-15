@@ -22,6 +22,10 @@ public class DelegateList{
 						Quest tQuest = QuestControler.FindQuestByName(NpcQuestList,lastQuestName);
 						tQuest.TakeRewardAll();
 					});
+		actionList.Add("deathGyeonmin",()=>{
+						DamageSystem.backField = "c2";
+						PlayData.WorldMap.RemoveChoiceSelectText("c2",3);
+					});
 	}
 	
 	public Dictionary<String,Action> ActionList{

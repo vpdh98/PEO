@@ -347,7 +347,7 @@ namespace Characters
 		public bool IsSpawnOnce{get;set;} = false;		//이 몬스터가 한번만 스폰되는 몬스터인지를 나타내는 변수
 		
 		
-		public Action DeathEvent{get;set;} = null;
+		public String DeathEvent{get;set;} = null;
 		
 		
 		public List<TextAndPosition> SelectMessage{get;set;}
@@ -567,7 +567,7 @@ namespace Characters
 			json.AddItem("IsSpawn",IsSpawn);
 			json.AddItem("IsSpawnOnce",IsSpawnOnce);
 			
-			//json.AddItem("DeathEvent",)
+			json.AddItem("DeathEvent",DeathEvent);
 			
 			json.AddJsonAbleList<TextAndPosition>("SelectMessage",SelectMessage,true);
 			json.AddJsonAbleList<TextAndPosition>("SpawnMessage",SpawnMessage,true);
@@ -598,6 +598,8 @@ namespace Characters
 			this.SpawnChance = int.Parse(json.GetItem("SpawnChance"));
 			this.IsSpawn = bool.Parse(json.GetItem("IsSpawn"));
 			this.IsSpawnOnce = bool.Parse(json.GetItem("IsSpawnOnce"));
+			
+			this.DeathEvent = json.GetItem("DeathEvent");
 			
 			this.SelectMessage = json.GetJsonAbleList<TextAndPosition>("SelectMessage");
 			this.SpawnMessage = json.GetJsonAbleList<TextAndPosition>("SpawnMessage");
@@ -634,7 +636,10 @@ namespace Characters
 		public List<TextAndPosition> PreCompleteQuestListMessage{get;set;}
 	
 	
-		public NPC(){}
+		public NPC() : base()
+		{
+		
+		}
 		public NPC(string name,int hp,int mp,int attack_power,int defense,int attack_speed):base(name,hp,mp,attack_power,defense,attack_speed){}
 		
 		
@@ -686,7 +691,7 @@ namespace Characters
 		public string CurrentState(){
 			return "";
 		}
-		
+		//Npc를 클론할 일이 있을까
 		protected NPC(NPC that):base(that){
 				this.QuestList = (List<Quest>)ListClone<Quest>(that.QuestList);
 				
@@ -727,18 +732,20 @@ namespace Characters
 			json.AddItem("IsSpawn",IsSpawn);
 			json.AddItem("IsSpawnOnce",IsSpawnOnce);
 			
-			//json.AddItem("DeathEvent",)
+			json.AddItem("DeathEvent",DeathEvent);
 			
 			//적대적 NPC설정시 필요한 정보 Json저장 테스트를위해 일단 주석처리했다.
-			// json.AddJsonAbleList<TextAndPosition>("SelectMessage",SelectMessage,true);
-			// json.AddJsonAbleList<TextAndPosition>("SpawnMessage",SpawnMessage,true);
-			// json.AddJsonAbleList<TextAndPosition>("StateMessage",StateMessage,true);
-			// json.AddJsonAbleList<TextAndPosition>("BlockMessage",BlockMessage,true);
-			// json.AddJsonAbleList<TextAndPosition>("DodgeMessage",DodgeMessage,true);
-			// json.AddJsonAbleList<TextAndPosition>("ReactionMessage",ReactionMessage,true);
-			// json.AddJsonAbleList<TextAndPosition>("PlayerReactionMessage",PlayerReactionMessage,true);
-			// json.AddJsonAbleList<TextAndPosition>("PreAttackMessage",PreAttackMessage,true);
-			// json.AddJsonAbleList<TextAndPosition>("AttackMessage",AttackMessage,true);
+			 json.AddJsonAbleList<TextAndPosition>("SelectMessage",SelectMessage,true);
+			 json.AddJsonAbleList<TextAndPosition>("SpawnMessage",SpawnMessage,true);
+			 json.AddJsonAbleList<TextAndPosition>("StateMessage",StateMessage,true);
+			 json.AddJsonAbleList<TextAndPosition>("BlockMessage",BlockMessage,true);
+			 json.AddJsonAbleList<TextAndPosition>("DodgeMessage",DodgeMessage,true);
+			 json.AddJsonAbleList<TextAndPosition>("ReactionMessage",ReactionMessage,true);
+			 json.AddJsonAbleList<TextAndPosition>("PlayerReactionMessage",PlayerReactionMessage,true);
+			 json.AddJsonAbleList<TextAndPosition>("PreAttackMessage",PreAttackMessage,true);
+			 json.AddJsonAbleList<TextAndPosition>("AttackMessage",AttackMessage,true);
+			
+			json.AddJsonAbleList<Quest>("QuestList",QuestList,true);
 			
 			json.AddJsonAbleList<TextAndPosition>("GreetMessage",GreetMessage,true);
 			json.AddJsonAbleList<TextAndPosition>("ConversationMessage",ConversationMessage,true);
@@ -775,16 +782,20 @@ namespace Characters
 			this.IsSpawn = bool.Parse(json.GetItem("IsSpawn"));
 			this.IsSpawnOnce = bool.Parse(json.GetItem("IsSpawnOnce"));
 			
+			this.DeathEvent = json.GetItem("DeathEvent");
+			
 			//적대적 NPC설정시 필요한 정보 Json저장 테스트를위해 일단 주석처리했다.
-			// this.SelectMessage = json.GetJsonAbleList<TextAndPosition>("SelectMessage");
-			// this.SpawnMessage = json.GetJsonAbleList<TextAndPosition>("SpawnMessage");
-			// this.StateMessage = json.GetJsonAbleList<TextAndPosition>("StateMessage");
-			// this.BlockMessage = json.GetJsonAbleList<TextAndPosition>("BlockMessage");
-			// this.DodgeMessage = json.GetJsonAbleList<TextAndPosition>("DodgeMessage");
-			// this.ReactionMessage = json.GetJsonAbleList<TextAndPosition>("ReactionMessage");
-			// this.PlayerReactionMessage = json.GetJsonAbleList<TextAndPosition>("PlayerReactionMessage");
-			// this.PreAttackMessage = json.GetJsonAbleList<TextAndPosition>("PreAttackMessage");
-			// this.AttackMessage = json.GetJsonAbleList<TextAndPosition>("AttackMessage");
+			 this.SelectMessage = json.GetJsonAbleList<TextAndPosition>("SelectMessage");
+			 this.SpawnMessage = json.GetJsonAbleList<TextAndPosition>("SpawnMessage");
+			 this.StateMessage = json.GetJsonAbleList<TextAndPosition>("StateMessage");
+			 this.BlockMessage = json.GetJsonAbleList<TextAndPosition>("BlockMessage");
+			 this.DodgeMessage = json.GetJsonAbleList<TextAndPosition>("DodgeMessage");
+			 this.ReactionMessage = json.GetJsonAbleList<TextAndPosition>("ReactionMessage");
+			 this.PlayerReactionMessage = json.GetJsonAbleList<TextAndPosition>("PlayerReactionMessage");
+			 this.PreAttackMessage = json.GetJsonAbleList<TextAndPosition>("PreAttackMessage");
+			 this.AttackMessage = json.GetJsonAbleList<TextAndPosition>("AttackMessage");
+			
+			this.QuestList = json.GetJsonAbleList<Quest>("QuestList");
 			
 			this.GreetMessage = json.GetJsonAbleList<TextAndPosition>("GreetMessage");
 			this.ConversationMessage = json.GetJsonAbleList<TextAndPosition>("ConversationMessage");
@@ -1081,10 +1092,7 @@ namespace Characters
 					new TextAndPosition("경민이의 배치기!!!",10)
 				},
 				
-				DeathEvent = ()=>{
-					DamageSystem.backField = "c2";
-					PlayData.WorldMap.RemoveChoiceSelectText("c2",3);
-				}
+				DeathEvent = "spawnGyeonmin"
 			};
 			EnemyDictionary.Add(enemy.Name,enemy);
 			
@@ -1104,7 +1112,8 @@ namespace Characters
 			public List<TextAndPosition> PreQuestMessage{get;set;}
 			public List<TextAndPosition> RevisitPreQuestMessage{get;set;}
 			*/
-			QuestControler.AllQuestList = new QuestData().QuestDatas;
+			QuestControler.AllQuestList = DataManager.LoadQuest();
+			//testLog(QuestControler.GetQuestByName("슬라임 사냥").QuestName);
 			
 			npc = new NPC(){
 				Name = "촌장",

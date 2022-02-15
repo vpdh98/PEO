@@ -45,7 +45,7 @@ public static class ItemData{
 public static class PlayData{
 	public static String savePoint = "c1";
 	public static String currentChoice = "c1"; //첫 화면
-	public static CharacterListControler CList = DataManager.LoadCharacters();
+	public static CharacterListControler CList = new CharacterListControler();//DataManager.LoadCharacters();
 	public static Choice currentOpenChoice; //현재 Display되고 있는 Choice를 담는변수. 접근에 주의!!
 	public static Choice accessAbleChoice; //접근할 Choice를 담는다
 	
@@ -77,21 +77,9 @@ namespace Game
 		
 		public static void Main()
 		{
-			Json json = new Json();
-			json.OpenArray();
-			json.OpenObject("numbers");
-			json.AddItem("num1","1");
-			json.AddItem("num2","2");
-			json.CloseObject();
-			json.OpenObject("numbers2");
-			json.AddItem("num1","1");
-			json.AddItem("num2","2");
-			json.CloseObject();
-			json.CloseArray();
-			
 			String path = "test/a/a.txt";
-			CreateDirectoryAndFile(path);
-			
+			CreateDirectoryAndFile(DataPath.QUEST_PATH);
+			//InitAll();
 			
 			
 			//TextAndPosition tap1 = new TextAndPosition(200,"Start",13,5,true){PriorityLayer = 3};
@@ -109,10 +97,10 @@ namespace Game
 			// choice1.JsonToObject(jString);
 			
 			//CreateDirectoryAndFile(DataPath.ENEMY_PATH);
-			// String jString2 = CList.EnemyListToJsonString();
-			// WriteFile(DataPath.ENEMY_PATH,jString2,FileMode.CreateNew);
-			// jString2 = CList.NpcListToJsonString();
-			// WriteFile(DataPath.NPC_PATH,jString2,FileMode.CreateNew);
+			 String jString2 = CList.EnemyListToJsonString();
+			 WriteFile(DataPath.ENEMY_PATH,jString2,FileMode.CreateNew);
+			 jString2 = CList.NpcListToJsonString();
+			 WriteFile(DataPath.NPC_PATH,jString2,FileMode.CreateNew);
 			
 			
 			//testLog(choice1.SelectText[0].text);
@@ -132,6 +120,9 @@ namespace Game
 			
 			//DTG.SelectingText(keyInfo);
 			
+			
+			WriteFile(DataPath.QUEST_PATH,new QuestData().QuestListToJsonString(),FileMode.Create);
+			
 			Console.ReadKey();
 			
 			
@@ -148,31 +139,31 @@ namespace Game
 			
 			
 			
-		    // player = CList.GetPlayer("용사");
+		    player = CList.GetPlayer("용사");
 			
-			// player.inven.AddItem(new Item());
-			// player.inven.AddItem(itemList.GetItem("전설의검"));
-			// player.inven.AddItem(new Item(){Name = "HP물약"});
-			// player.inven.AddItem(new Item(){Name = "MP물약"});
-			// player.inven.AddItem(new Item(){Name = "무색 프리즘"});
-			// player.inven.AddItem(new Item(){Name = "???"});
-			// player.inven.AddItem(new Weapon(){Name = "낡은 검",ItemExplan="이것은 네후쉽이 파는 검 중\n하나로 낡아 오히려 도움이\n되지 않을것 같은 검이다.",AttackPower = -3,AttackSpeed = 1});
-			// player.inven.AddItem(new Item(){Name = "고장난 시계"});
-			// player.inven.AddItem(new Item(){Name = "꿀"});
-			// player.inven.AddItem(new Item(){Name = "향로"});
-			// player.inven.AddItem(new Item(){Name = "피리"});
-			// player.inven.AddItem(new Item(){Name = "파리"});
-			// player.inven.AddItem(new Armor(){Name = "낡은 방패",ItemExplan="이것은 네후쉽이 파는 방패 중\n하나로 공격을 막을 수 있을지\n장담할 수 없다.",Defense = 1});
-			// player.inven.AddItem(new Armor(){Name = "황금 갑옷",ItemExplan="보기만해도 눈이 부시는 황금 \n갑옷 이다. 과연 방어력은 어\n떨지..",Defense = 10});
-			// player.inven.AddItem(new Item(){Name = "네후쉽의 수프"});
-			// player.inven.AddItem(new Item(){Name = "Red 프리즘"});
-			// player.inven.AddItem(new Item(){Name = "??????"});
+			player.inven.AddItem(new Item());
+			player.inven.AddItem(itemList.GetItem("전설의검"));
+			player.inven.AddItem(new Item(){Name = "HP물약"});
+			player.inven.AddItem(new Item(){Name = "MP물약"});
+			player.inven.AddItem(new Item(){Name = "무색 프리즘"});
+			player.inven.AddItem(new Item(){Name = "???"});
+			player.inven.AddItem(new Weapon(){Name = "낡은 검",ItemExplan="이것은 네후쉽이 파는 검 중\n하나로 낡아 오히려 도움이\n되지 않을것 같은 검이다.",AttackPower = -3,AttackSpeed = 1});
+			player.inven.AddItem(new Item(){Name = "고장난 시계"});
+			player.inven.AddItem(new Item(){Name = "꿀"});
+			player.inven.AddItem(new Item(){Name = "향로"});
+			player.inven.AddItem(new Item(){Name = "피리"});
+			player.inven.AddItem(new Item(){Name = "파리"});
+			player.inven.AddItem(new Armor(){Name = "낡은 방패",ItemExplan="이것은 네후쉽이 파는 방패 중\n하나로 공격을 막을 수 있을지\n장담할 수 없다.",Defense = 1});
+			player.inven.AddItem(new Armor(){Name = "황금 갑옷",ItemExplan="보기만해도 눈이 부시는 황금 \n갑옷 이다. 과연 방어력은 어\n떨지..",Defense = 10});
+			player.inven.AddItem(new Item(){Name = "네후쉽의 수프"});
+			player.inven.AddItem(new Item(){Name = "Red 프리즘"});
+			player.inven.AddItem(new Item(){Name = "??????"});
 			
-			 // player.Weapon = (Weapon)itemList.GetItem("전설의검");
-			 // player.Armor = new Armor(){Name = "황금 갑옷",ItemExplan="보기만해도 눈이 부시는 황금 \n갑옷 이다. 과연 방어력은 어\n떨지..",Defense = 10};
+			 player.Weapon = (Weapon)itemList.GetItem("전설의검");
+			 player.Armor = new Armor(){Name = "황금 갑옷",ItemExplan="보기만해도 눈이 부시는 황금 \n갑옷 이다. 과연 방어력은 어\n떨지..",Defense = 10};
 			
-			 // jString2 = CList.PlayerListToJsonString();
-			 // WriteFile(DataPath.PLAYER_PATH,jString2,FileMode.CreateNew);
+			 jString2 = CList.PlayerListToJsonString();
+			 WriteFile(DataPath.PLAYER_PATH,jString2,FileMode.CreateNew);
 			
 			Task.Factory.StartNew(BattleCal);	
 			
@@ -387,7 +378,7 @@ namespace Game
 		}
 		
 		public static void InitAll(){
-			
+			QuestControler.AllQuestList = DataManager.LoadQuest();
 		}
 		
 		public static void InitDelegate(){
@@ -1406,3 +1397,11 @@ QuickDelegate = ()=>{
 //이제 게임 데이터들을 파일로 저장할 수 있다.
 //하나씩 차근차근 옮기는 작업을 해보자.
 //Inventory에 Item이 하나도 없을경우 오류가 발생하는것 같다. 함 보자.
+
+//2022.02.15
+//오늘은 데이터 파일화 작업을 계속 진행하였다.
+//NPC에 있는 QuestList를 List<Quest>에서 List<String>으로 바꾸려다가 그냥 객체를 가지고 있는 편이 더 다양한 기능을 구현하기에 용이할것 같아 놔둿다.
+//보니까 아직 Quest의 ISaveToJson 구현이 잘 안되있엇다. 내일 마저하자
+//그리고 Array를 Json화 하는 과정에서 Array 첫번째 Item의 앞에 ,가 출력되는 버그가 있는데
+//원인은 Array들끼리도 ,로 구분하기위해 ItemCount를 사용해 아이템처럼 취급하여 ,가 출력되게 해서 Item도 Array를 Item취급하게 되서 발생한 버그였다.
+//내일 ArryaCount를 따로 만들어 관리하면 해결될듯하다.

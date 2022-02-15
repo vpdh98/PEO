@@ -101,6 +101,17 @@ namespace MyJson{
 			return JsonString;
 		}
 		
+		public String AddList<T>(String name,List<T> list,bool isItem = false){
+			if(list == null) return "Error";
+			OpenArray(name);
+			for(int i = 0;i<list.Count;i++)
+			{
+				AddItem(i.ToString(),list[i]);
+			}
+			CloseArray(isItem);
+			return JsonString;
+		}
+		
 		//isItem이 true이면 해당 Array를 닫을때 아이템으로 인식해서 다음 Array를 쓰기할때 앞에 \n과 ,가 들어감
 		public String AddJsonAbleList<T>(String name,List<T> list,bool isItem = false) where T : ISaveToJson
 		{
@@ -229,6 +240,7 @@ namespace MyJson{
 			return temp;
 		}
 		
+		
 		public T GetJsonAbleObject<T>(String key) where T : ISaveToJson,new(){
 			int index = 0;
 			String temp = "";
@@ -304,11 +316,39 @@ namespace MyJson{
 			return obj;
 		}*/
 		
+		public List<String> GetStringList(String key){
+			int index = 0;
+			String temp = "";
+			List<String> list = new List<String>();
+			int endIndex = 0;
+			
+			index = JsonListIndexOf(KeyTaging(key,ARRAY_TAG),index);
+			if(index == -1) throw new Exception("해당하는 Array가 없습니다.key->"+KeyTaging(key,ARRAY_TAG)+"<-key\n");
+			
+			index = JsonIndexOf("[",index);//위에서 받은 [의 위치부터 시작해 value를 받아옴
+			endIndex = IndexOfCompleteBracket(JsonString,index,'[',']');
+			
+			
+			//Key값의 위치에 있는 배열 text 전체를 temp에 넣음
+			temp = "";
+			for(int i=index;i<endIndex+1;i++){
+				temp+=JsonString[i];
+			}
+			
+			index = 0;
+			int count = 0;
+			while(index != -1)
+			{
+				index = temp.IndexOf(":",index+1);
+				list.Add(GetValueBackColon(temp,index));
+			}
+			return list;
+		}
+		
 		public List<T> GetJsonAbleList<T>(String key) where T : ISaveToJson,new(){
 			int index = 0;
 			String temp = "";
 			List<T> list = new List<T>();
-			int depthCount = 0;
 			int endIndex = 0;
 			
 			index = JsonListIndexOf(KeyTaging(key,ARRAY_TAG),index);
@@ -343,7 +383,6 @@ namespace MyJson{
 				T obj = new T();
 				obj.JsonToObject(objectString);
 				list.Add(obj);
-				
 				objectString = "";
 				index = temp.IndexOf("{",endIndex);
 			}

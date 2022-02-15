@@ -63,7 +63,6 @@
             }
         ],
         "AttackMessage":[
-    ,
             "TextAndPosition":{
                 "text":"전설의 검은 마치 유성우와 같은 궤적을 남겼다.",
                 "x":"0",
