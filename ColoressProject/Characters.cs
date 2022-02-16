@@ -1112,7 +1112,7 @@ namespace Characters
 			public List<TextAndPosition> PreQuestMessage{get;set;}
 			public List<TextAndPosition> RevisitPreQuestMessage{get;set;}
 			*/
-			QuestControler.AllQuestList = DataManager.LoadQuest();
+			//QuestControler.AllQuestList = DataManager.LoadQuest();
 			//testLog(QuestControler.GetQuestByName("슬라임 사냥").QuestName);
 			
 			npc = new NPC(){

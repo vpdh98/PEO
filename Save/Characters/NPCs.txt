@@ -28,7 +28,6 @@
             }
         ],
         "SpawnMessage":[
-    ,
             "TextAndPosition":{
                 "text":"noNamed이다.",
                 "x":"0",
@@ -44,7 +43,6 @@
             }
         ],
         "BlockMessage":[
-    ,
             "TextAndPosition":{
                 "text":"막기성공",
                 "x":"0",
@@ -73,7 +71,6 @@
             }
         ],
         "DodgeMessage":[
-    ,
             "TextAndPosition":{
                 "text":"회피성공",
                 "x":"0",
@@ -102,7 +99,6 @@
             }
         ],
         "ReactionMessage":[
-    ,
             "TextAndPosition":{
                 "text":"noNamed 팅겨나갔다.",
                 "x":"0",
@@ -118,7 +114,6 @@
             }
         ],
         "PlayerReactionMessage":[
-    ,
             "TextAndPosition":{
                 "text":"1",
                 "x":"0",
@@ -147,7 +142,6 @@
             }
         ],
         "PreAttackMessage":[
-    ,
             "TextAndPosition":{
                 "text":"noNamed은 빨랐다.",
                 "x":"0",
@@ -163,7 +157,6 @@
             }
         ],
         "AttackMessage":[
-    ,
             "TextAndPosition":{
                 "text":"noNamed공격!",
                 "x":"0",
@@ -179,75 +172,9 @@
             }
         ],
         "QuestList":[
-    ,
-            "Quest":{
-                "QuestName":"슬라임 사냥",
-                "QuestContentsName":"SlimeHuntQuest",
-                "QuestReward":[
-                    "Reward":{
-                        "Name":"null"
-                    }
-                ],
-                "QuestCompleteMessage":"잘했네",
-                "isComplete":"False",
-                "isAccept":"False",
-                "isReject":"False"
-            },
-            "Quest":{
-                "QuestName":"망자 사냥",
-                "QuestContentsName":"DeadManHuntQuest",
-                "QuestReward":[
-                    "Reward":{
-                        "Name":"null"
-                    }
-                ],
-                "QuestCompleteMessage":"잘했네",
-                "isComplete":"False",
-                "isAccept":"False",
-                "isReject":"False"
-            },
-            "Quest":{
-                "QuestName":"폐가 방문",
-                "QuestContentsName":"VisitAbandonedHouse",
-                "QuestReward":[
-                    "Reward":{
-                        "Name":"null"
-                    }
-                ],
-                "QuestCompleteMessage":"잘했네",
-                "isComplete":"False",
-                "isAccept":"False",
-                "isReject":"False"
-            },
-            "Quest":{
-                "QuestName":"피부에 좋은 슬라임 젤",
-                "QuestContentsName":"GetSlimeJell",
-                "QuestReward":[
-                    "Reward":{
-                        "Name":"null"
-                    }
-                ],
-                "QuestCompleteMessage":"잘했네",
-                "isComplete":"False",
-                "isAccept":"False",
-                "isReject":"False"
-            },
-            "Quest":{
-                "QuestName":"testMeeting",
-                "QuestContentsName":"testMeeting",
-                "QuestReward":[
-                    "Reward":{
-                        "Name":"null"
-                    }
-                ],
-                "QuestCompleteMessage":"잘했네",
-                "isComplete":"False",
-                "isAccept":"False",
-                "isReject":"False"
-            }
+    
         ],
         "GreetMessage":[
-    ,
             "TextAndPosition":{
                 "text":"어서오시게 낮선/ 이여\.",
                 "x":"0",
@@ -263,7 +190,6 @@
             }
         ],
         "ConversationMessage":[
-    ,
             "TextAndPosition":{
                 "text":"나는 마을 촌장이라네.",
                 "x":"0",
@@ -305,7 +231,6 @@
             }
         ],
         "QuestAcceptMessage":[
-    ,
             "TextAndPosition":{
                 "text":"오 정말 고맙네. 잘부탁하네.",
                 "x":"0",
@@ -321,7 +246,6 @@
             }
         ],
         "QuestRejectMessage":[
-    ,
             "TextAndPosition":{
                 "text":"...정 그렇다면 어쩔 수 없지.",
                 "x":"0",
@@ -337,7 +261,6 @@
             }
         ],
         "QuestCompleteMassage":[
-    ,
             "TextAndPosition":{
                 "text":"대단하구먼! 고맙네.",
                 "x":"0",
@@ -353,7 +276,6 @@
             }
         ],
         "RevisitGreetMessage":[
-    ,
             "TextAndPosition":{
                 "text":"또 왔구먼. 편히 있다 가게나.",
                 "x":"0",
@@ -369,7 +291,6 @@
             }
         ],
         "RevisitConversationMessage":[
-    ,
             "TextAndPosition":{
                 "text":"슬라임은 마을 앞 초원에서 많이 나온다네.",
                 "x":"0",
@@ -385,7 +306,6 @@
             }
         ],
         "RevisitQuestAcceptMessage":[
-    ,
             "TextAndPosition":{
                 "text":"어짜피 해줄 거면서... 아.. 아무것도 아니네. 고맙네",
                 "x":"0",
@@ -401,7 +321,6 @@
             }
         ],
         "RevisitQuestRejectMessage":[
-    ,
             "TextAndPosition":{
                 "text":"이 늙은이를 놀리는겐가!",
                 "x":"0",
@@ -417,7 +336,6 @@
             }
         ],
         "PreQuestMessage":[
-    ,
             "TextAndPosition":{
                 "text":"제가 도울 일이 있습니까?",
                 "x":"40",
@@ -433,7 +351,6 @@
             }
         ],
         "RevisitPreQuestMessage":[
-    ,
             "TextAndPosition":{
                 "text":"그 일 아직 있습니까?",
                 "x":"0",
@@ -449,7 +366,6 @@
             }
         ],
         "QuestIntroductionMessage":[
-    ,
             "TextAndPosition":{
                 "text":"일은 많지. 자 골라보게.",
                 "x":"0",
@@ -465,7 +381,6 @@
             }
         ],
         "CompleteQuestListMessage":[
-    ,
             "TextAndPosition":{
                 "text":"오. 해결했다고?",
                 "x":"0",
@@ -481,7 +396,6 @@
             }
         ],
         "PreCompleteQuestListMessage":[
-    ,
             "TextAndPosition":{
                 "text":"해결했습니다.",
                 "x":"40",

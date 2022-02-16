@@ -26,7 +26,6 @@ namespace MyJson{
 		const String OBJECT_TAG = ":{";
 		const String DICTIONARY_TAG = ":[";
 		const String ITEM_TAG = ":\"";
-		
 		public String ErrorMessage{
 			get{
 				Error = false;
@@ -40,7 +39,11 @@ namespace MyJson{
 			return JsonString;
 		}
 		public String OpenArray(String name=null){
-			JsonString += ((itemCount > 0)?",\n":"")+GetTap(depth)+(name!=null?"\""+name+"\":":"")+"["+"\n";
+			if(JsonString.Length == 0){
+				JsonString += GetTap(depth)+(name!=null?"\""+name+"\":":"")+"["+"\n";
+			}else{
+				JsonString += ((itemCount > 0 || (JsonString[JsonString.Length-1]==']' || JsonString[JsonString.Length-1]=='}'))?",\n":"")+GetTap(depth)+(name!=null?"\""+name+"\":":"")+"["+"\n";
+			}
 			depth++;
 			//arrayDepth++;
 			return JsonString;
@@ -61,7 +64,7 @@ namespace MyJson{
 				objectCount = 0;
 			}else{
 				itemCount++;
-				objectCount++;
+				//objectCount++;
 			}
 			//arrayDepth--;
 			//arrayCount++;
@@ -88,7 +91,7 @@ namespace MyJson{
 				temp = objJsonString.Split('\n');
 			}
 			
-			JsonString += ((objectCount > 0)?",\n":"");
+			JsonString += ((objectCount > 0 || (JsonString[JsonString.Length-1]==']' || JsonString[JsonString.Length-1]=='}'))?",\n":"");
 			for(int i = 0;i<temp.Length;i++){
 				if(i == temp.Length-1){
 					JsonString += GetTap(depth)+temp[i];	
@@ -150,6 +153,11 @@ namespace MyJson{
 		public int JsonIndexOf(String str, int startIndex){
 			if(startIndex < 0) return -1;
 			return JsonString.IndexOf(str,startIndex);
+		}
+		
+		public int JsonLastIndexOf(String str, int startIndex){
+			if(startIndex < 0) return -1;
+			return JsonString.LastIndexOf(str,startIndex);
 		}
 		
 		public int JsonListIndexOf(String tagedKey, int startIndex){

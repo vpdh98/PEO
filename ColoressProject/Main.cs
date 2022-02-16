@@ -378,7 +378,7 @@ namespace Game
 		}
 		
 		public static void InitAll(){
-			QuestControler.AllQuestList = DataManager.LoadQuest();
+			//QuestControler.AllQuestList = DataManager.LoadQuest();
 		}
 		
 		public static void InitDelegate(){
@@ -1405,3 +1405,10 @@ QuickDelegate = ()=>{
 //그리고 Array를 Json화 하는 과정에서 Array 첫번째 Item의 앞에 ,가 출력되는 버그가 있는데
 //원인은 Array들끼리도 ,로 구분하기위해 ItemCount를 사용해 아이템처럼 취급하여 ,가 출력되게 해서 Item도 Array를 Item취급하게 되서 발생한 버그였다.
 //내일 ArryaCount를 따로 만들어 관리하면 해결될듯하다.
+//라고 생각했지만 생각보다 복잡한 문제인듯하다.
+//Object사이에 하나의 Item으로 Array를 넣게 되면 Array를 Item취급할 수 밖에 없는데 잘생각하고 해결해보자
+
+//2022.02.16
+//OpenArray할때와 AddJsonAbleObject에서 개행문자와 반점을 넣는 코드에 JsonString[JsonString.Length-1] == ']' || JsonString[JsonString.Length-1] == '}'를 추가해서 해결했다..
+//참고로 함수 2~3개 추가해서 해결하려다 마지막에 이 한줄이 생각나서 바로 성공했다.. 된잔ㄹ이나럼ㄴ;이ㅗㅎ;니러
+//다음부터는 충분히 조건을 생각해보고 문제를 해결해야겠다.
