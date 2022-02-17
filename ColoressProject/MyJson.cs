@@ -34,7 +34,11 @@ namespace MyJson{
 		}
 		
 		public String OpenObject(String name=null){
-			JsonString += ((objectCount > 0)?",\n":"")+GetTap(depth)+(name!=null?"\""+name+"\":":"")+"{"+"\n";
+			if(JsonString.Length == 0){
+				JsonString += GetTap(depth)+(name!=null?"\""+name+"\":":"")+"{"+"\n";
+			}else{
+				JsonString += ((objectCount > 0 || (JsonString[JsonString.Length-1]==']' || JsonString[JsonString.Length-1]=='}'))?",\n":"")+GetTap(depth)+(name!=null?"\""+name+"\":":"")+"{"+"\n";
+			}
 			depth++;
 			return JsonString;
 		}
@@ -48,11 +52,14 @@ namespace MyJson{
 			//arrayDepth++;
 			return JsonString;
 		}
-		public String CloseObject(){
+		public String CloseObject(bool isItem = false){
 			depth--;
 			JsonString += "\n"+GetTap(depth)+"}";
 			objectCount++;
-			itemCount = 0;
+			if(isItem)
+				itemCount++;
+			else
+				itemCount = 0;
 			return JsonString;
 		}
 		public String CloseArray(bool isItem = false){
@@ -353,6 +360,35 @@ namespace MyJson{
 			return list;
 		}
 		
+		public List<int> GetIntList(String key){
+			int index = 0;
+			String temp = "";
+			List<int> list = new List<int>();
+			int endIndex = 0;
+			
+			index = JsonListIndexOf(KeyTaging(key,ARRAY_TAG),index);
+			if(index == -1) throw new Exception("해당하는 Array가 없습니다.key->"+KeyTaging(key,ARRAY_TAG)+"<-key\n");
+			
+			index = JsonIndexOf("[",index);//위에서 받은 [의 위치부터 시작해 value를 받아옴
+			endIndex = IndexOfCompleteBracket(JsonString,index,'[',']');
+			
+			
+			//Key값의 위치에 있는 배열 text 전체를 temp에 넣음
+			temp = "";
+			for(int i=index;i<endIndex+1;i++){
+				temp+=JsonString[i];
+			}
+			
+			index = 0;
+			int count = 0;
+			while(index != -1)
+			{
+				index = temp.IndexOf(":",index+1);
+				list.Add(int.Parse(GetValueBackColon(temp,index)));
+			}
+			return list;
+		}
+		
 		public List<T> GetJsonAbleList<T>(String key) where T : ISaveToJson,new(){
 			int index = 0;
 			String temp = "";
@@ -401,6 +437,8 @@ namespace MyJson{
 			
 			return list;
 		}
+		
+		
 		
 		public bool IsCompleteObjectString(String jsonString){
 			if(jsonString.Contains("{")&&jsonString.Contains("}")){

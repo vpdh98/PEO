@@ -113,13 +113,15 @@ public class Quest : ICloneable,ISaveToJson{ //퀘스트 객체, 이걸 NPC와 P
 	// public bool isAccept = false; //퀘스트 수락 여부
 	// public bool isReject = false; //퀘스트 한번이라도 거절했는지
 	
-	public String ToJsonString(){
+	public virtual String ToJsonString(){
 		Json json = new Json();
 		json.OpenObject("Quest");
 		json.AddItem("QuestName",QuestName);
 		json.AddItem("QuestContentsName",QuestContentsName);
 		json.AddJsonAbleList("QuestReward",QuestReward,true);
-		json.AddItem("QuestCompleteMessage",QuestCompleteMessage);
+		json.OpenObject("QuestCompleteMessage");
+		json.AddJsonAbleObject(QuestCompleteMessage);
+		json.CloseObject(true);
 		json.AddItem("isComplete",isComplete);
 		json.AddItem("isAccept",isAccept);
 		json.AddItem("isReject",isReject);
@@ -127,12 +129,16 @@ public class Quest : ICloneable,ISaveToJson{ //퀘스트 객체, 이걸 NPC와 P
 		
 		return json.JsonString;
 	}
-	public void JsonToObject(String jsonString){
+	public virtual void JsonToObject(String jsonString){
 		Json json = new Json();
 		json.JsonString = jsonString;
 		this.QuestName = json.GetItem("QuestName");
 		this.QuestContentsName = json.GetItem("QuestContentsName");
 		this.QuestReward = json.GetJsonAbleList<Reward>("QuestReward");
+		this.QuestCompleteMessage = json.GetJsonAbleObject<TextAndPosition>("QuestCompleteMessage");
+		this.isComplete = bool.Parse(json.GetItem("isComplete"));
+		this.isAccept = bool.Parse(json.GetItem("isAccept"));
+		this.isReject = bool.Parse(json.GetItem("isReject"));
 	}
 }
 
@@ -196,6 +202,41 @@ public class HuntQuest : Quest
 	
 	public Object Clone(){
 		return new HuntQuest(this);
+	}
+	
+	public override String ToJsonString(){
+		Json json = new Json();
+		json.OpenObject("Quest");
+		json.AddList<String>("MonsterNameList",MonsterNameList,true);
+		json.AddList<int>("MonsterCount",MonsterCount,true);
+		json.AddList<int>("TargetNum",TargetNum,true);
+		json.AddItem("QuestName",QuestName);
+		json.AddItem("QuestContentsName",QuestContentsName);
+		json.AddJsonAbleList("QuestReward",QuestReward,true);
+		json.OpenObject("QuestCompleteMessage");
+		json.AddJsonAbleObject(QuestCompleteMessage);
+		json.CloseObject(true);
+		json.AddItem("isComplete",isComplete);
+		json.AddItem("isAccept",isAccept);
+		json.AddItem("isReject",isReject);
+		json.CloseObject();
+		
+		return json.JsonString;
+	}
+	public override void JsonToObject(String jsonString){
+		Json json = new Json();
+		json.JsonString = jsonString;
+		this.MonsterNameList = json.GetStringList("MonsterNameList");
+		this.MonsterCount = json.GetIntList("MonsterCount");
+		this.TargetNum = json.GetIntList("TargetNum");
+		
+		this.QuestName = json.GetItem("QuestName");
+		this.QuestContentsName = json.GetItem("QuestContentsName");
+		this.QuestReward = json.GetJsonAbleList<Reward>("QuestReward");
+		this.QuestCompleteMessage = json.GetJsonAbleObject<TextAndPosition>("QuestCompleteMessage");
+		this.isComplete = bool.Parse(json.GetItem("isComplete"));
+		this.isAccept = bool.Parse(json.GetItem("isAccept"));
+		this.isReject = bool.Parse(json.GetItem("isReject"));
 	}
 }
 

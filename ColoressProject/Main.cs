@@ -45,7 +45,7 @@ public static class ItemData{
 public static class PlayData{
 	public static String savePoint = "c1";
 	public static String currentChoice = "c1"; //첫 화면
-	public static CharacterListControler CList = new CharacterListControler();//DataManager.LoadCharacters();
+	public static CharacterListControler CList = DataManager.LoadCharacters();
 	public static Choice currentOpenChoice; //현재 Display되고 있는 Choice를 담는변수. 접근에 주의!!
 	public static Choice accessAbleChoice; //접근할 Choice를 담는다
 	
@@ -122,6 +122,19 @@ namespace Game
 			
 			
 			WriteFile(DataPath.QUEST_PATH,new QuestData().QuestListToJsonString(),FileMode.Create);
+			String questJsonString = ReadFile(DataPath.QUEST_PATH);
+			List<Quest> questList = new List<Quest>();
+			
+			Json asdfsg = new Json();
+			asdfsg.JsonString = questJsonString;
+			questList = asdfsg.GetJsonAbleList<Quest>("QuestList");
+			
+			
+			
+			asdfsg = new Json();
+			asdfsg.AddJsonAbleList<Quest>("QuestList",questList);
+			
+			WriteFile("Save/Quests/QuestList2.txt",asdfsg.JsonString,FileMode.Create);
 			
 			Console.ReadKey();
 			
@@ -139,31 +152,31 @@ namespace Game
 			
 			
 			
-		    player = CList.GetPlayer("용사");
+			 player = CList.GetPlayer("용사");
 			
-			player.inven.AddItem(new Item());
-			player.inven.AddItem(itemList.GetItem("전설의검"));
-			player.inven.AddItem(new Item(){Name = "HP물약"});
-			player.inven.AddItem(new Item(){Name = "MP물약"});
-			player.inven.AddItem(new Item(){Name = "무색 프리즘"});
-			player.inven.AddItem(new Item(){Name = "???"});
-			player.inven.AddItem(new Weapon(){Name = "낡은 검",ItemExplan="이것은 네후쉽이 파는 검 중\n하나로 낡아 오히려 도움이\n되지 않을것 같은 검이다.",AttackPower = -3,AttackSpeed = 1});
-			player.inven.AddItem(new Item(){Name = "고장난 시계"});
-			player.inven.AddItem(new Item(){Name = "꿀"});
-			player.inven.AddItem(new Item(){Name = "향로"});
-			player.inven.AddItem(new Item(){Name = "피리"});
-			player.inven.AddItem(new Item(){Name = "파리"});
-			player.inven.AddItem(new Armor(){Name = "낡은 방패",ItemExplan="이것은 네후쉽이 파는 방패 중\n하나로 공격을 막을 수 있을지\n장담할 수 없다.",Defense = 1});
-			player.inven.AddItem(new Armor(){Name = "황금 갑옷",ItemExplan="보기만해도 눈이 부시는 황금 \n갑옷 이다. 과연 방어력은 어\n떨지..",Defense = 10});
-			player.inven.AddItem(new Item(){Name = "네후쉽의 수프"});
-			player.inven.AddItem(new Item(){Name = "Red 프리즘"});
-			player.inven.AddItem(new Item(){Name = "??????"});
+			// player.inven.AddItem(new Item());
+			// player.inven.AddItem(itemList.GetItem("전설의검"));
+			// player.inven.AddItem(new Item(){Name = "HP물약"});
+			// player.inven.AddItem(new Item(){Name = "MP물약"});
+			// player.inven.AddItem(new Item(){Name = "무색 프리즘"});
+			// player.inven.AddItem(new Item(){Name = "???"});
+			// player.inven.AddItem(new Weapon(){Name = "낡은 검",ItemExplan="이것은 네후쉽이 파는 검 중\n하나로 낡아 오히려 도움이\n되지 않을것 같은 검이다.",AttackPower = -3,AttackSpeed = 1});
+			// player.inven.AddItem(new Item(){Name = "고장난 시계"});
+			// player.inven.AddItem(new Item(){Name = "꿀"});
+			// player.inven.AddItem(new Item(){Name = "향로"});
+			// player.inven.AddItem(new Item(){Name = "피리"});
+			// player.inven.AddItem(new Item(){Name = "파리"});
+			// player.inven.AddItem(new Armor(){Name = "낡은 방패",ItemExplan="이것은 네후쉽이 파는 방패 중\n하나로 공격을 막을 수 있을지\n장담할 수 없다.",Defense = 1});
+			// player.inven.AddItem(new Armor(){Name = "황금 갑옷",ItemExplan="보기만해도 눈이 부시는 황금 \n갑옷 이다. 과연 방어력은 어\n떨지..",Defense = 10});
+			// player.inven.AddItem(new Item(){Name = "네후쉽의 수프"});
+			// player.inven.AddItem(new Item(){Name = "Red 프리즘"});
+			// player.inven.AddItem(new Item(){Name = "??????"});
 			
-			 player.Weapon = (Weapon)itemList.GetItem("전설의검");
-			 player.Armor = new Armor(){Name = "황금 갑옷",ItemExplan="보기만해도 눈이 부시는 황금 \n갑옷 이다. 과연 방어력은 어\n떨지..",Defense = 10};
+			 // player.Weapon = (Weapon)itemList.GetItem("전설의검");
+			 // player.Armor = new Armor(){Name = "황금 갑옷",ItemExplan="보기만해도 눈이 부시는 황금 \n갑옷 이다. 과연 방어력은 어\n떨지..",Defense = 10};
 			
-			 jString2 = CList.PlayerListToJsonString();
-			 WriteFile(DataPath.PLAYER_PATH,jString2,FileMode.CreateNew);
+			 // jString2 = CList.PlayerListToJsonString();
+			 // WriteFile(DataPath.PLAYER_PATH,jString2,FileMode.CreateNew);
 			
 			Task.Factory.StartNew(BattleCal);	
 			
@@ -1412,3 +1425,15 @@ QuickDelegate = ()=>{
 //OpenArray할때와 AddJsonAbleObject에서 개행문자와 반점을 넣는 코드에 JsonString[JsonString.Length-1] == ']' || JsonString[JsonString.Length-1] == '}'를 추가해서 해결했다..
 //참고로 함수 2~3개 추가해서 해결하려다 마지막에 이 한줄이 생각나서 바로 성공했다.. 된잔ㄹ이나럼ㄴ;이ㅗㅎ;니러
 //다음부터는 충분히 조건을 생각해보고 문제를 해결해야겠다.
+
+//2022.02.17
+//오늘은 심각한 문제를 발견했다.
+//Object를 저장할때
+//Item,Weapon과 같이 Type을 Key값으로 저장하는데
+//저장할때는 이상이 없는데
+//불러올때 각각의 Type을 특정할 수 가 없어 모두 그 객체의 최상위 클래스의 형식으로 불러와져 데이터가 제데로 불러와지지 않는다.
+//타입을 특정할 수 있게 하는 함수를 추가해야된다.
+//현재 문제가 있는 클래스
+//Item과 그 자식클래스 Weapon,Armor 등
+//Reward와 그 자식클래스 ItemReward,EventReward 등
+//Quest와 그 자식클래스 HuntQuest,VisitQuest 등

@@ -1,0 +1,139 @@
+"QuestList":[
+    "Quest":{
+        "QuestName":"슬라임 사냥",
+        "QuestContentsName":"SlimeHuntQuest",
+        "QuestReward":[
+            "Reward":{
+                "Name":"null"
+            }
+        ],
+        "QuestCompleteMessage":{
+            "TextAndPosition":{
+                "text":"오! 역시 슬라임 정도는 아무것도 아닌건가? 고맙네.",
+                "x":"0",
+                "y":"0",
+                "textDelay":"10",
+                "color":"Black",
+                "PriorityLayer":"0",
+                "isStream":"False",
+                "AlignH":"True",
+                "Highlight":"null",
+                "HighlightColor":"Black",
+                "Layout":"ONLY_SHOW_DEFAULT"
+            }
+        },
+        "isComplete":"False",
+        "isAccept":"False",
+        "isReject":"False"
+    },
+    "Quest":{
+        "QuestName":"망자 사냥",
+        "QuestContentsName":"DeadManHuntQuest",
+        "QuestReward":[
+            "Reward":{
+                "Name":"null"
+            }
+        ],
+        "QuestCompleteMessage":{
+            "TextAndPosition":{
+                "text":"망자를 이리 쉽게 처리하다니. 대단하군!",
+                "x":"0",
+                "y":"0",
+                "textDelay":"10",
+                "color":"Black",
+                "PriorityLayer":"0",
+                "isStream":"False",
+                "AlignH":"True",
+                "Highlight":"null",
+                "HighlightColor":"Black",
+                "Layout":"ONLY_SHOW_DEFAULT"
+            }
+        },
+        "isComplete":"False",
+        "isAccept":"False",
+        "isReject":"False"
+    },
+    "Quest":{
+        "QuestName":"폐가 방문",
+        "QuestContentsName":"VisitAbandonedHouse",
+        "QuestReward":[
+            "Reward":{
+                "Name":"null"
+            }
+        ],
+        "QuestCompleteMessage":{
+            "TextAndPosition":{
+                "text":"날아다니는 냉장고가 습격했다고?
+            도데체 무슨 소릴 하는건가?
+            흐흠..아무튼 보상은 주겠네..",
+                "x":"0",
+                "y":"0",
+                "textDelay":"10",
+                "color":"Black",
+                "PriorityLayer":"0",
+                "isStream":"False",
+                "AlignH":"True",
+                "Highlight":"null",
+                "HighlightColor":"Black",
+                "Layout":"ONLY_SHOW_DEFAULT"
+            }
+        },
+        "isComplete":"False",
+        "isAccept":"False",
+        "isReject":"False"
+    },
+    "Quest":{
+        "QuestName":"피부에 좋은 슬라임 젤",
+        "QuestContentsName":"GetSlimeJell",
+        "QuestReward":[
+            "Reward":{
+                "Name":"null"
+            }
+        ],
+        "QuestCompleteMessage":{
+            "TextAndPosition":{
+                "text":"오오 고맙구먼. 아내가 좋아하겠어!",
+                "x":"0",
+                "y":"0",
+                "textDelay":"10",
+                "color":"Black",
+                "PriorityLayer":"0",
+                "isStream":"False",
+                "AlignH":"True",
+                "Highlight":"null",
+                "HighlightColor":"Black",
+                "Layout":"ONLY_SHOW_DEFAULT"
+            }
+        },
+        "isComplete":"False",
+        "isAccept":"False",
+        "isReject":"False"
+    },
+    "Quest":{
+        "QuestName":"testMeeting",
+        "QuestContentsName":"testMeeting",
+        "QuestReward":[
+            "Reward":{
+                "Name":"null"
+            }
+        ],
+        "QuestCompleteMessage":{
+            "TextAndPosition":{
+                "text":"그래 나일세.",
+                "x":"0",
+                "y":"0",
+                "textDelay":"10",
+                "color":"Black",
+                "PriorityLayer":"0",
+                "isStream":"False",
+                "AlignH":"True",
+                "Highlight":"null",
+                "HighlightColor":"Black",
+                "Layout":"ONLY_SHOW_DEFAULT"
+            }
+        },
+        "isComplete":"False",
+        "isAccept":"False",
+        "isReject":"False"
+    }
+]

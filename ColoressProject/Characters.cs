@@ -735,15 +735,15 @@ namespace Characters
 			json.AddItem("DeathEvent",DeathEvent);
 			
 			//적대적 NPC설정시 필요한 정보 Json저장 테스트를위해 일단 주석처리했다.
-			 json.AddJsonAbleList<TextAndPosition>("SelectMessage",SelectMessage,true);
-			 json.AddJsonAbleList<TextAndPosition>("SpawnMessage",SpawnMessage,true);
-			 json.AddJsonAbleList<TextAndPosition>("StateMessage",StateMessage,true);
-			 json.AddJsonAbleList<TextAndPosition>("BlockMessage",BlockMessage,true);
-			 json.AddJsonAbleList<TextAndPosition>("DodgeMessage",DodgeMessage,true);
-			 json.AddJsonAbleList<TextAndPosition>("ReactionMessage",ReactionMessage,true);
-			 json.AddJsonAbleList<TextAndPosition>("PlayerReactionMessage",PlayerReactionMessage,true);
-			 json.AddJsonAbleList<TextAndPosition>("PreAttackMessage",PreAttackMessage,true);
-			 json.AddJsonAbleList<TextAndPosition>("AttackMessage",AttackMessage,true);
+			 // json.AddJsonAbleList<TextAndPosition>("SelectMessage",SelectMessage,true);
+			 // json.AddJsonAbleList<TextAndPosition>("SpawnMessage",SpawnMessage,true);
+			 // json.AddJsonAbleList<TextAndPosition>("StateMessage",StateMessage,true);
+			 // json.AddJsonAbleList<TextAndPosition>("BlockMessage",BlockMessage,true);
+			 // json.AddJsonAbleList<TextAndPosition>("DodgeMessage",DodgeMessage,true);
+			 // json.AddJsonAbleList<TextAndPosition>("ReactionMessage",ReactionMessage,true);
+			 // json.AddJsonAbleList<TextAndPosition>("PlayerReactionMessage",PlayerReactionMessage,true);
+			 // json.AddJsonAbleList<TextAndPosition>("PreAttackMessage",PreAttackMessage,true);
+			 // json.AddJsonAbleList<TextAndPosition>("AttackMessage",AttackMessage,true);
 			
 			json.AddJsonAbleList<Quest>("QuestList",QuestList,true);
 			
@@ -785,15 +785,15 @@ namespace Characters
 			this.DeathEvent = json.GetItem("DeathEvent");
 			
 			//적대적 NPC설정시 필요한 정보 Json저장 테스트를위해 일단 주석처리했다.
-			 this.SelectMessage = json.GetJsonAbleList<TextAndPosition>("SelectMessage");
-			 this.SpawnMessage = json.GetJsonAbleList<TextAndPosition>("SpawnMessage");
-			 this.StateMessage = json.GetJsonAbleList<TextAndPosition>("StateMessage");
-			 this.BlockMessage = json.GetJsonAbleList<TextAndPosition>("BlockMessage");
-			 this.DodgeMessage = json.GetJsonAbleList<TextAndPosition>("DodgeMessage");
-			 this.ReactionMessage = json.GetJsonAbleList<TextAndPosition>("ReactionMessage");
-			 this.PlayerReactionMessage = json.GetJsonAbleList<TextAndPosition>("PlayerReactionMessage");
-			 this.PreAttackMessage = json.GetJsonAbleList<TextAndPosition>("PreAttackMessage");
-			 this.AttackMessage = json.GetJsonAbleList<TextAndPosition>("AttackMessage");
+			 // this.SelectMessage = json.GetJsonAbleList<TextAndPosition>("SelectMessage");
+			 // this.SpawnMessage = json.GetJsonAbleList<TextAndPosition>("SpawnMessage");
+			 // this.StateMessage = json.GetJsonAbleList<TextAndPosition>("StateMessage");
+			 // this.BlockMessage = json.GetJsonAbleList<TextAndPosition>("BlockMessage");
+			 // this.DodgeMessage = json.GetJsonAbleList<TextAndPosition>("DodgeMessage");
+			 // this.ReactionMessage = json.GetJsonAbleList<TextAndPosition>("ReactionMessage");
+			 // this.PlayerReactionMessage = json.GetJsonAbleList<TextAndPosition>("PlayerReactionMessage");
+			 // this.PreAttackMessage = json.GetJsonAbleList<TextAndPosition>("PreAttackMessage");
+			 // this.AttackMessage = json.GetJsonAbleList<TextAndPosition>("AttackMessage");
 			
 			this.QuestList = json.GetJsonAbleList<Quest>("QuestList");
 			

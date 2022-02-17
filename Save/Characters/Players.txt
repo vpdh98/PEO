@@ -6,8 +6,8 @@
         "MaxHp":"10",
         "MaxMp":"0",
         "AttackPower":"5",
-        "Defense":"11",
-        "AttackSpeed":"101",
+        "Defense":"1",
+        "AttackSpeed":"2",
         "ReactionMessage":[
             "TextAndPosition":{
                 "text":"맞은..건가..?",
@@ -64,7 +64,7 @@
         ],
         "AttackMessage":[
             "TextAndPosition":{
-                "text":"전설의 검은 마치 유성우와 같은 궤적을 남겼다.",
+                "text":"나는 오른쪽 주먹을 힘껏 내질렀다! ",
                 "x":"0",
                 "y":"0",
                 "textDelay":"10",
@@ -77,7 +77,7 @@
                 "Layout":"NO_LAYOUT"
             },
             "TextAndPosition":{
-                "text":"산을 가를듯한 기세로 검을 휘둘렀다.",
+                "text":"나는 날라차기를 시도했다!",
                 "x":"0",
                 "y":"0",
                 "textDelay":"10",
@@ -90,7 +90,7 @@
                 "Layout":"NO_LAYOUT"
             },
             "TextAndPosition":{
-                "text":"일섬",
+                "text":"나는 마구잡이로 팔을 마구마구 돌렸다!",
                 "x":"0",
                 "y":"0",
                 "textDelay":"10",
@@ -285,68 +285,6 @@
                     "DropChance":"0"
                 }
             ]
-        },
-        "Weapon":{
-            "Name":"전설의검",
-            "IsStackable":"False",
-            "ItemExplan":"이것은 전설의 괴물
-        헐크를 죽일 수 있다는
-        전설의 검이다",
-            "DropChance":"0",
-            "IsEquip":"True",
-            "AttackPower":"9999",
-            "AttackSpeed":"99",
-            "AttackMessage":[
-                "TextAndPosition":{
-                    "text":"전설의 검은 마치 유성우와 같은 궤적을 남겼다.",
-                    "x":"0",
-                    "y":"0",
-                    "textDelay":"10",
-                    "color":"Black",
-                    "PriorityLayer":"0",
-                    "isStream":"False",
-                    "AlignH":"False",
-                    "Highlight":"null",
-                    "HighlightColor":"Black",
-                    "Layout":"NO_LAYOUT"
-                },
-                "TextAndPosition":{
-                    "text":"산을 가를듯한 기세로 검을 휘둘렀다.",
-                    "x":"0",
-                    "y":"0",
-                    "textDelay":"10",
-                    "color":"Black",
-                    "PriorityLayer":"0",
-                    "isStream":"False",
-                    "AlignH":"False",
-                    "Highlight":"null",
-                    "HighlightColor":"Black",
-                    "Layout":"NO_LAYOUT"
-                },
-                "TextAndPosition":{
-                    "text":"일섬",
-                    "x":"0",
-                    "y":"0",
-                    "textDelay":"10",
-                    "color":"Black",
-                    "PriorityLayer":"0",
-                    "isStream":"False",
-                    "AlignH":"False",
-                    "Highlight":"null",
-                    "HighlightColor":"Black",
-                    "Layout":"NO_LAYOUT"
-                }
-            ]
-        },
-        "Armor":{
-            "Name":"황금 갑옷",
-            "IsStackable":"False",
-            "ItemExplan":"보기만해도 눈이 부시는 황금 
-        갑옷 이다. 과연 방어력은 어
-        떨지..",
-            "DropChance":"0",
-            "IsEquip":"True",
-            "Defense":"10"
         }
     }
 ]
