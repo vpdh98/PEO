@@ -28,4 +28,5 @@ arr.GetLength(0) -> 행
 arr.GetLenght(1) -> 열
 arr.GetLength(x) -> 그 x 차원의 크기
 
-
+중복 제거
+arr.Distinct();
