@@ -7,7 +7,7 @@ int[] arr = {1,2,3,4};
 
 System.Array
 주요 속성
-Rank 배열의 차원 수를 가져옴
+Rank 배열의 차원 수를 가져옴(1차원 배열 -> 1, 2차원 배열 -> 2)
 Length 모든 차원에서 배열의 요소수를 가져옴
 
 주요 메소드
@@ -23,5 +23,9 @@ ForEach(배열,Action타입 매개변수)
 Resize(배열의 주소값,새 배열의 크기)
  해당 배열의 길이를 늘림
 
+다차원 배열에서의 행과 열의 길이
+arr.GetLength(0) -> 행
+arr.GetLenght(1) -> 열
+arr.GetLength(x) -> 그 x 차원의 크기
 
 
